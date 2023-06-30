@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serial;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -22,9 +23,10 @@ import java.time.LocalDateTime;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("t_task")
+@TableName("t_task_base")
 public class TaskPO extends TaskBase {
 
+    @Serial
     private static final long serialVersionUID = 5761423598479646566L;
 
 
@@ -48,6 +50,5 @@ public class TaskPO extends TaskBase {
      * 是否删除 0未删除 1已删除
      */
     @TableField(value = "is_deleted")
-    @TableLogic
     private Long deleted;
 }

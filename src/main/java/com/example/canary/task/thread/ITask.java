@@ -1,4 +1,4 @@
-package com.example.canary.task.core;
+package com.example.canary.task.thread;
 
 import com.example.canary.util.DateUtils;
 import lombok.Data;
@@ -50,7 +50,7 @@ public abstract class ITask implements Runnable {
         LocalDateTime endTime = LocalDateTime.now();
         Duration duration = Duration.between(startTime, endTime);
         Instant instant = new CronTrigger(this.cornExpression).nextExecution(new SimpleTriggerContext());
-        log.info("【{}】执行完毕，开始时间：{}，结束时间：{}，执行耗时：{} ms，下次执行时间：{}", taskName, startTime, endTime, duration.toMillis(), DateUtils.toLocalDateTime(instant));
+        log.info("{} 执行完毕，开始时间：{}，结束时间：{}，执行耗时：{} ms，下次执行时间：{}", taskName, startTime, endTime, duration.toMillis(), DateUtils.toLocalDateTime(instant));
     }
 
     public abstract void execute();

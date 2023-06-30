@@ -1,9 +1,11 @@
 package com.example.canary.task.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -18,13 +20,14 @@ import java.io.Serializable;
 @Data
 public class TaskBase implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -5765905120230979856L;
 
     /**
      * id
      */
-    @TableId(type = IdType.ASSIGN_UUID)
-    private String id;
+    @TableId(type = IdType.AUTO)
+    private Long id;
 
     /**
      * 名称
@@ -63,7 +66,9 @@ public class TaskBase implements Serializable {
 
     /**
      * 是否禁用
+     * @see com.example.canary.common.enums.DisabledStatusEnum
      */
+    @TableField(value = "is_disabled")
     private Integer disabled;
 
 }

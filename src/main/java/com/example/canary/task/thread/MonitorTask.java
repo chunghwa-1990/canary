@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
 /**
  * 监测任务
  *
- * @ClassName MoniterTask
+ * @ClassName MonitorTask
  * @Description 监测
  * @Author zhaohongliang
  * @Date 2023-06-30 17:51
  * @Since 1.0
  */
 @Slf4j
-public class MoniterTask extends ITask {
+public class MonitorTask extends ITask {
 
     @Autowired
     private TaskRepository taskRepository;

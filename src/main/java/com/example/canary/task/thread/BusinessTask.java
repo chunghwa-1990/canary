@@ -1,6 +1,5 @@
 package com.example.canary.task.thread;
 
-import com.example.canary.task.thread.ITask;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
@@ -8,24 +7,24 @@ import java.lang.reflect.Method;
 /**
  * 线程任务
  *
- * @ClassName TaskRunnable
+ * @ClassName BusinessTask
  * @Description 线程任务
  * @Author zhaohongliang
  * @Date 2023-06-29 23:51
  * @Since 1.0
  */
 @Slf4j
-public class TaskRunnable extends ITask {
+public class BusinessTask extends ITask {
 
     private Object object;
 
     private Method method;
 
 
-    public TaskRunnable() {
+    public BusinessTask() {
     }
 
-    public TaskRunnable(String taskName, String cornExpression, Object object, Method method) {
+    public BusinessTask(String taskName, String cornExpression, Object object, Method method) {
         super(taskName, cornExpression);
         this.object = object;
         this.method = method;
