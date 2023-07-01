@@ -33,7 +33,40 @@ public class TaskRepositoryImpl implements TaskRepository {
     @Override
     public List<TaskPO> listEnableTask() {
         LambdaQueryWrapper<TaskPO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(TaskPO::getDeleted, DisabledStatusEnum.TRUE.getCode());
+        queryWrapper.eq(TaskPO::getDisabled, DisabledStatusEnum.FALSE.getCode());
         return taskMapper.selectList(queryWrapper);
+    }
+
+    /**
+     * insert
+     *
+     * @param taskPo
+     * @return
+     */
+    @Override
+    public int insert(TaskPO taskPo) {
+        return taskMapper.insert(taskPo);
+    }
+
+    /**
+     * update
+     *
+     * @param taskPo
+     * @return
+     */
+    @Override
+    public int update(TaskPO taskPo) {
+        return taskMapper.updateById(taskPo);
+    }
+
+    /**
+     * delete
+     *
+     * @param taskId
+     * @return
+     */
+    @Override
+    public int deleteById(String taskId) {
+        return taskMapper.deleteById(taskId);
     }
 }

@@ -1,8 +1,10 @@
 package com.example.canary.task.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.beans.BeanUtils;
 
-import java.io.Serializable;
+import java.io.Serial;
 
 /**
  * 任务
@@ -13,9 +15,16 @@ import java.io.Serializable;
  * @Date 2023-06-29 10:10
  * @Since 1.0
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class TaskAO implements Serializable {
+public class TaskAO extends TaskBase {
 
+    @Serial
     private static final long serialVersionUID = 8270693936284012737L;
 
+    public TaskPO convertToPo() {
+        TaskPO taskPo = new TaskPO();
+        BeanUtils.copyProperties(this, taskPo);
+        return taskPo;
+    }
 }

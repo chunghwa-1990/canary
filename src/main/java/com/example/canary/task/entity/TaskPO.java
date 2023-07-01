@@ -50,5 +50,5 @@ public class TaskPO extends TaskBase {
      * 是否删除 0未删除 1已删除
      */
     @TableField(value = "is_deleted")
-    private Long deleted;
+    private String deleted;
 }

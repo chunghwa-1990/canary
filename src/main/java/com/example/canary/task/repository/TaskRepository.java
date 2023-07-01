@@ -16,9 +16,34 @@ import java.util.List;
 public interface TaskRepository {
 
     /**
-     * 启用的任务
+     * enable task list
      *
      * @return
      */
     List<TaskPO> listEnableTask();
+
+    /**
+     * insert
+     *
+     * @param taskPo
+     * @return
+     */
+    int insert(TaskPO taskPo);
+
+    /**
+     * update
+     *
+     * @param taskPo
+     * @return
+     */
+    int update(TaskPO taskPo);
+
+    /**
+     * delete
+     *
+     * @param taskId task primary key
+     * @return response
+     */
+    int deleteById(String taskId);
+
 }

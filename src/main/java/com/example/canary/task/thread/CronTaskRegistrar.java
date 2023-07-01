@@ -120,7 +120,7 @@ public class CronTaskRegistrar implements InitializingBean {
                 Object object = SpringContext.getBean(beanName);
                 Method method = clazz.getMethod(taskPo.getMethodName());
                 ITask task = new BusinessTask(taskPo.getName(), taskPo.getCronExpression(), object, method);
-                this.addCronTask(taskPo.getId().toString(), task, task.getCornExpression());
+                this.addCronTask(taskPo.getId(), task, task.getCornExpression());
             } catch (ClassNotFoundException e) {
                 log.error("启动 {} 任务失败，原因：找不到 {} 类，异常信息：{}", taskPo.getName(),  taskPo.getClassName(), e.getMessage());
             } catch (NoSuchMethodException e) {

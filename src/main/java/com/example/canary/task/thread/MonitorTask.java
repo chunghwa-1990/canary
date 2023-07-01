@@ -34,7 +34,7 @@ public class MonitorTask extends ITask {
     @Override
     public void execute() {
         List<TaskPO> tasks = taskRepository.listEnableTask();
-        Set<Long> taskIds = tasks.stream().map(TaskPO::getId).collect(Collectors.toSet());
+        Set<String> taskIds = tasks.stream().map(TaskPO::getId).collect(Collectors.toSet());
         Map<String, ScheduledTaskHolder> scheduledTaskHolderMap = cronTaskRegistrar.getScheduledTaskHolderMap();
         if (CollectionUtils.isEmpty(scheduledTaskHolderMap)) {
             tasks.forEach(task -> {

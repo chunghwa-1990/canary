@@ -3,6 +3,11 @@ package com.example.canary.task.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.example.canary.common.entity.ValidGroup;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.io.Serial;
@@ -26,12 +31,14 @@ public class TaskBase implements Serializable {
     /**
      * id
      */
-    @TableId(type = IdType.AUTO)
-    private Long id;
+    @TableId(type = IdType.ASSIGN_UUID)
+    @NotBlank(groups = { ValidGroup.Edit.class })
+    private String id;
 
     /**
      * 名称
      */
+    @NotBlank(groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
     private String name;
 
     /**
@@ -47,16 +54,19 @@ public class TaskBase implements Serializable {
     /**
      * 表达式
      */
+    @NotBlank(groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
     private String cronExpression;
 
     /**
      * 类名
      */
+    @NotBlank(groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
     private String className;
 
     /**
      * 方法名
      */
+    @NotBlank(groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
     private String methodName;
 
     /**
@@ -68,6 +78,8 @@ public class TaskBase implements Serializable {
      * 是否禁用
      * @see com.example.canary.common.enums.DisabledStatusEnum
      */
+    @Max(value = 1, groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
+    @Min(value = 0, groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
     @TableField(value = "is_disabled")
     private Integer disabled;
 
