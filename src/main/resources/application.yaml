@@ -21,7 +21,6 @@ mybatis-plus:
   global-config:
     banner: on
     db-config:
-      # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
       logic-delete-field: deleted
 
 
