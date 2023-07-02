@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import org.hibernate.validator.constraints.Range;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -78,8 +79,7 @@ public class TaskBase implements Serializable {
      * 是否禁用
      * @see com.example.canary.common.enums.DisabledStatusEnum
      */
-    @Max(value = 1, groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
-    @Min(value = 0, groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
+    @Range(min = 0, max = 1, groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
     @TableField(value = "is_disabled")
     private Integer disabled;
 

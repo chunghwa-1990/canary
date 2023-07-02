@@ -46,4 +46,11 @@ public interface TaskRepository {
      */
     int deleteById(String taskId);
 
+    /**
+     * select by primary key
+     *
+     * @param taskId task primary key
+     * @return
+     */
+    TaskPO selectById(String taskId);
 }

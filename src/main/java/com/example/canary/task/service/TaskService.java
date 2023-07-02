@@ -51,4 +51,13 @@ public interface TaskService {
      */
     @SuppressWarnings("rawtypes")
     ResultEntity deleteTask(String taskId);
+
+    /**
+     * execute
+     *
+     * @param taskId task primary key
+     * @return response result
+     */
+    @SuppressWarnings("rawtypes")
+    ResultEntity executeTask(String taskId);
 }

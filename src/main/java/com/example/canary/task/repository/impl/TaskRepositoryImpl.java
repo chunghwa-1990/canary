@@ -69,4 +69,15 @@ public class TaskRepositoryImpl implements TaskRepository {
     public int deleteById(String taskId) {
         return taskMapper.deleteById(taskId);
     }
+
+    /**
+     * select by primary key
+     *
+     * @param taskId task primary key
+     * @return
+     */
+    @Override
+    public TaskPO selectById(String taskId) {
+        return taskMapper.selectById(taskId);
+    }
 }

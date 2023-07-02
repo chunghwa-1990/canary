@@ -7,6 +7,7 @@ import com.example.canary.task.entity.TaskAO;
 import com.example.canary.task.entity.TaskQuery;
 import com.example.canary.task.entity.TaskVO;
 import com.example.canary.task.service.TaskService;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Date 2023-06-29 10:18
  * @Since 1.0
  */
+@Validated
 @RestController
 @RequestMapping("/task")
 public class TaskController {
@@ -77,8 +79,21 @@ public class TaskController {
      */
     @DeleteMapping("/delete")
     @SuppressWarnings("rawtypes")
-    public ResultEntity deleteTask(@NotNull String taskId) {
+    public ResultEntity deleteTask(@NotBlank String taskId) {
         return taskService.deleteTask(taskId);
     }
+
+    /**
+     * execute
+     *
+     * @param taskId task primary key
+     * @return response result
+     */
+    @GetMapping("/execute")
+    @SuppressWarnings("rawtypes")
+    public ResultEntity executeTask(@NotBlank String taskId) {
+        return taskService.executeTask(taskId);
+    }
+
 
 }
