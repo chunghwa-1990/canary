@@ -60,4 +60,22 @@ public interface TaskService {
      */
     @SuppressWarnings("rawtypes")
     ResultEntity executeTask(String taskId);
+
+    /**
+     * start
+     *
+     * @param taskId task primary key
+     * @return response result
+     */
+    @SuppressWarnings("rawtypes")
+    ResultEntity startTask(String taskId);
+
+    /**
+     * stop
+     *
+     * @param taskId task primary key
+     * @return response result
+     */
+    @SuppressWarnings("rawtypes")
+    ResultEntity stopTask(String taskId);
 }

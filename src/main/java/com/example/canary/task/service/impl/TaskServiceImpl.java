@@ -153,7 +153,58 @@ public class TaskServiceImpl implements TaskService {
         cronTaskRegistrar.executeCronTask(task);
 
         return ResultEntity.success();
+    }
 
+    /**
+     * start
+     *
+     * @param taskId task primary key
+     * @return response result
+     */
+    @Override
+    @SuppressWarnings("rawtypes")
+    public ResultEntity startTask(String taskId) {
+        TaskPO taskPo = taskRepository.selectById(taskId);
+        if (taskPo == null) {
+            return ResultEntity.fail();
+        }
+
+        Object object = null;
+        Method method = null;
+        try {
+            Class<?> clazz = Class.forName(taskPo.getClassName());
+            String beanName = com.example.canary.util.StringUtils.toLowerCamelCase(clazz.getSimpleName());
+            object = SpringContext.getBean(beanName);
+            method = clazz.getMethod(taskPo.getMethodName());
+        } catch (ClassNotFoundException e) {
+            log.error("启动 {} 任务失败，原因：找不到 {} 类，异常信息：{}", taskPo.getName(),  taskPo.getClassName(), e.getMessage());
+            return ResultEntity.fail("启动 " + taskPo.getName() + " 任务失败，原因：找不到" + taskPo.getClassName() + "类");
+        } catch (NoSuchMethodException e) {
+            log.error("启动 {} 任务失败，原因：找不到 {} 方法，异常信息：{}", taskPo.getName(), taskPo.getMethodName(), e.getMessage());
+            return ResultEntity.fail("启动 " + taskPo.getName() + " 任务失败，原因：找不到" + taskPo.getMethodName() + "方法");
+        }
+
+        ITask task = new BusinessTask(taskPo.getName(), taskPo.getCronExpression(), object, method);
+        cronTaskRegistrar.addCronTask(taskPo.getId(), task, task.getCornExpression());
+
+        return ResultEntity.success();
+    }
+
+    /**
+     * stop
+     *
+     * @param taskId task primary key
+     * @return response result
+     */
+    @Override
+    @SuppressWarnings("rawtypes")
+    public ResultEntity stopTask(String taskId) {
+        TaskPO taskPo = taskRepository.selectById(taskId);
+        if (taskPo == null) {
+            return ResultEntity.fail();
+        }
+        cronTaskRegistrar.removeCronTask(taskId);
+        return ResultEntity.success();
     }
 
 }

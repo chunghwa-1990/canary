@@ -95,5 +95,28 @@ public class TaskController {
         return taskService.executeTask(taskId);
     }
 
+    /**
+     * start
+     *
+     * @param taskId task primary key
+     * @return response result
+     */
+    @GetMapping("/start")
+    @SuppressWarnings("rawtypes")
+    public ResultEntity startTask(@NotBlank String taskId) {
+        return taskService.startTask(taskId);
+    }
+
+    /**
+     * stop
+     *
+     * @param taskId task primary key
+     * @return response result
+     */
+    @GetMapping("/stop")
+    @SuppressWarnings("rawtypes")
+    public ResultEntity stopTask(@NotBlank String taskId) {
+        return taskService.stopTask(taskId);
+    }
 
 }
