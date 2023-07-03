@@ -1,7 +1,11 @@
 package com.example.canary.common.enums;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
  * <p>响应状态码枚举类</p>
@@ -12,9 +16,12 @@ import lombok.Getter;
  * @Date 2022-11-24 16:35
  * @Since 1.0
  */
-@Getter
-@AllArgsConstructor
-public class ResultCodeEnum {
+@Data
+public class ResultCodeEnum implements Serializable {
+
+
+    @Serial
+    private static final long serialVersionUID = -2511905271366688555L;
 
     @Getter
     @AllArgsConstructor
@@ -67,12 +74,12 @@ public class ResultCodeEnum {
         /**
          * 状态码
          */
-        private Integer code;
+        private final Integer code;
 
         /**
          * 信息内容
          */
-        private String message;
+        private final String message;
 
     }
 

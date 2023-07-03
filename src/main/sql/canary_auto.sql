@@ -16,7 +16,7 @@ CREATE TABLE `t_task_base` (
     `class_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '类名',
     `method_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '方法名',
     `method_params` varchar(200) DEFAULT NULL COMMENT '方法参数',
-    `is_disabled` tinyint DEFAULT '0' COMMENT '是否禁用, 0:否 1:是',
+    `is_disabled` tinyint DEFAULT '0' COMMENT '是否禁用 0:否 1:是',
     `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
     `is_deleted` bigint DEFAULT '0' COMMENT '是否删除 0:否 非0:是',

@@ -11,8 +11,18 @@ package com.example.canary.common.enums;
  */
 public interface BaseEnum {
 
+    /**
+     * 获取状态码
+     *
+     * @return code
+     */
     Integer getCode();
 
+    /**
+     * 获取错误信息
+     *
+     * @return message
+     */
     String getMessage();
 
 }

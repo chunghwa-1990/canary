@@ -16,10 +16,23 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum DisabledStatusEnum implements BaseEnum {
 
+    /**
+     * 否
+     */
     FALSE(0, "否"),
+
+    /**
+     * 是
+     */
     TRUE(1, "是");
 
-    private Integer code;
+    /**
+     * 状态码
+     */
+    private final Integer code;
 
-    private String message;
+    /**
+     * 信息内容
+     */
+    private final String message;
 }
