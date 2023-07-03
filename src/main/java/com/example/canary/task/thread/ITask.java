@@ -8,9 +8,7 @@ import org.springframework.scheduling.support.SimpleTriggerContext;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * 线程任务抽象类
