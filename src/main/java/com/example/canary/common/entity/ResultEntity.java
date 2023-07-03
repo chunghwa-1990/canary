@@ -1,5 +1,6 @@
 package com.example.canary.common.entity;
 
+import com.example.canary.common.enums.BaseEnum;
 import com.example.canary.common.enums.ResultCodeEnum;
 import lombok.Data;
 
@@ -45,9 +46,9 @@ public class ResultEntity<T> implements Serializable {
      * 无参构造器
      */
     private ResultEntity() {
-        this.code = ResultCodeEnum.SUCCESS.getCode();
+        this.code = ResultCodeEnum.Common.SUCCESS.getCode();
         this.status = true;
-        this.message = ResultCodeEnum.SUCCESS.getMessage();
+        this.message = ResultCodeEnum.Common.SUCCESS.getMessage();
     }
 
     /**
@@ -56,21 +57,21 @@ public class ResultEntity<T> implements Serializable {
      * @param data
      */
     private ResultEntity(T data) {
-        this.code = ResultCodeEnum.SUCCESS.getCode();
+        this.code = ResultCodeEnum.Common.SUCCESS.getCode();
         this.status = true;
         this.data = data;
-        this.message = ResultCodeEnum.SUCCESS.getMessage();
+        this.message = ResultCodeEnum.Common.SUCCESS.getMessage();
     }
 
     /**
      * 带参构造器
      *
-     * @param codeEnum
+     * @param baseEnum
      */
-    private ResultEntity(ResultCodeEnum codeEnum) {
-        this.code = codeEnum.getCode();
+    private ResultEntity(BaseEnum baseEnum) {
+        this.code = baseEnum.getCode();
         this.status = false;
-        this.message = codeEnum.getMessage();
+        this.message = baseEnum.getMessage();
     }
 
     /**
@@ -79,7 +80,7 @@ public class ResultEntity<T> implements Serializable {
      * @param message
      */
     private ResultEntity(String message) {
-        this.code = ResultCodeEnum.ERROR.getCode();
+        this.code = ResultCodeEnum.Common.ERROR.getCode();
         this.status = false;
         this.message = message;
     }
@@ -124,18 +125,18 @@ public class ResultEntity<T> implements Serializable {
      * @return
      */
     public static <T> ResultEntity<T> fail() {
-        return new ResultEntity<>(ResultCodeEnum.ERROR);
+        return new ResultEntity<>(ResultCodeEnum.Common.ERROR);
     }
 
     /**
      *  fail method, default is server internal exception，but you can customize the code
      *
-     * @param codeEnum
+     * @param baseEnum
      * @param <T>
      * @return
      */
-    public static <T> ResultEntity<T> fail(ResultCodeEnum codeEnum) {
-        return new ResultEntity<>(codeEnum);
+    public static <T> ResultEntity<T> fail(BaseEnum baseEnum) {
+        return new ResultEntity<>(baseEnum);
     }
 
     /**
