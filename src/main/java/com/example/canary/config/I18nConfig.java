@@ -1,5 +1,6 @@
 package com.example.canary.config;
 
+import com.example.canary.common.constant.BaseConstant;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.LocaleResolver;
@@ -29,17 +30,27 @@ class I18nConfig {
     @Bean
     public LocaleChangeInterceptor getLocaleChangeInterceptor() {
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
-        localeChangeInterceptor.setParamName("lang");
+        localeChangeInterceptor.setParamName(BaseConstant.PARAM_KEY_LANG);
         return localeChangeInterceptor;
     }
 
     /**
      * i18n 解析器
+     * custom {@link com.example.canary.resolver.MyLocalResolver}
      *
      * @return
      */
     @Bean
     public LocaleResolver localeResolver() {
+
+        // accept
+
+        // session
+
+        // fixed
+
+        // custom
+
         // cookie 区域解析器
         CookieLocaleResolver cookieLocaleResolver = new CookieLocaleResolver();
         cookieLocaleResolver.setDefaultLocale(Locale.SIMPLIFIED_CHINESE);
