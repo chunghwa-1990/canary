@@ -1,6 +1,7 @@
 package com.example.canary.task.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.canary.common.annotation.ApiVersion;
 import com.example.canary.common.entity.ResultEntity;
 import com.example.canary.common.entity.ValidGroup;
 import com.example.canary.task.entity.TaskAO;
@@ -8,7 +9,6 @@ import com.example.canary.task.entity.TaskQuery;
 import com.example.canary.task.entity.TaskVO;
 import com.example.canary.task.service.TaskService;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Date 2023-06-29 10:18
  * @Since 1.0
  */
+@ApiVersion
 @Validated
 @RestController
 @RequestMapping("/task")

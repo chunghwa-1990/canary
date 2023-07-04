@@ -11,6 +11,10 @@ package com.example.canary.common.constant;
  */
 public class HeaderConstant {
 
+    private HeaderConstant() {
+
+    }
+
     /**
      * token
      */
