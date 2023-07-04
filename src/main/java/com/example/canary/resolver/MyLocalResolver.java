@@ -22,6 +22,7 @@ public class MyLocalResolver implements LocaleResolver {
 
     @Override
     public @NotNull Locale resolveLocale(HttpServletRequest request) {
+        // header: String lang = request.getHeader(BaseConstant.PARAM_KEY_LANG)
         String lang = request.getParameter(BaseConstant.PARAM_KEY_LANG);
         Locale locale = Locale.getDefault();
         if (StringUtils.hasText(lang)) {

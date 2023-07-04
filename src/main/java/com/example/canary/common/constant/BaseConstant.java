@@ -19,10 +19,5 @@ public class BaseConstant {
      * lang
      */
     public static final String PARAM_KEY_LANG = "lang";
-
-    /**
-     * version
-     */
-    public static final String PARAM_KEY_VERSION = "version";
-
+    
 }

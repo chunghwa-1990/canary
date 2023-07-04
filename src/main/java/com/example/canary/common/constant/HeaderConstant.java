@@ -28,5 +28,5 @@ public class HeaderConstant {
     /**
      * version
      */
-    public static final String HEADER_KEY_VERSION = "version";
+    public static final String HEADER_KEY_VERSION = "api-version";
 }
