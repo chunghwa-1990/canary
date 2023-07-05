@@ -73,7 +73,7 @@ public class ApiVersionCondition implements RequestCondition<ApiVersionCondition
         }
 
         // 增则匹配
-        Matcher matcher = URL_VERSION_PREFIX_PATTERN.matcher(versionStr);
+        Matcher matcher = HEAD_VERSION_PREFIX_PATTERN.matcher(versionStr);
         if (matcher.find()) {
             // 获得符合条件的apiVersionCondition
             int version = getVersionNumber(matcher.group());
