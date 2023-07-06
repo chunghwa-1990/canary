@@ -1,10 +1,10 @@
 package com.example.canary.task.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.canary.common.entity.ResultEntity;
+import com.example.canary.core.exception.ResultEntity;
+import com.example.canary.task.entity.TaskVO;
 import com.example.canary.task.entity.TaskAO;
 import com.example.canary.task.entity.TaskQuery;
-import com.example.canary.task.entity.TaskVO;
 
 /**
  * 任务

@@ -11,6 +11,10 @@ package com.example.canary.util;
  */
 public class StringUtils {
 
+    private StringUtils() {
+
+    }
+
     /**
      * 小驼峰命名
      *

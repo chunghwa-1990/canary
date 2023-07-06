@@ -15,6 +15,10 @@ import java.time.ZoneId;
  */
 public class DateUtils {
 
+    private DateUtils() {
+
+    }
+
     /**
      * Instant convert to LocalDateTime
      *

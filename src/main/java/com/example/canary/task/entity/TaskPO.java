@@ -1,15 +1,14 @@
 package com.example.canary.task.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.example.canary.task.entity.TaskBase;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serial;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**

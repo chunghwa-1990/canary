@@ -1,5 +1,6 @@
 package com.example.canary.task.entity;
 
+import com.example.canary.task.entity.TaskBase;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
