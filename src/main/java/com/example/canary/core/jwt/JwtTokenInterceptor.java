@@ -1,4 +1,4 @@
-package com.example.canary.common;
+package com.example.canary.core.jwt;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
