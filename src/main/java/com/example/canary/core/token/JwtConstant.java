@@ -1,4 +1,4 @@
-package com.example.canary.core.constant;
+package com.example.canary.core.token;
 
 /**
  * jwt常量池

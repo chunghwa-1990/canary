@@ -42,6 +42,10 @@ public class CronTaskRegistrar implements InitializingBean {
      */
     private final Map<String, ScheduledTaskHolder> scheduledTaskHolderMap = new ConcurrentHashMap<>(16);
 
+    public Map<String, ScheduledFuture<?>> getScheduledFutureMap() {
+        return scheduledFutureMap;
+    }
+
     public Map<String, ScheduledTaskHolder> getScheduledTaskHolderMap() {
         return scheduledTaskHolderMap;
     }

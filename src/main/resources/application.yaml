@@ -26,4 +26,8 @@ mybatis-plus:
     db-config:
       logic-delete-field: deleted
 
+token:
+  secret: canary
+  expires: 7200000
+
 

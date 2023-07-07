@@ -19,10 +19,10 @@ public interface BaseEnum {
     Integer getCode();
 
     /**
-     * 获取错误信息
+     * 获取描述
      *
      * @return message
      */
-    String getMessage();
+    String getDescription();
 
 }

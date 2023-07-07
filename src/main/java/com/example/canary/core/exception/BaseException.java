@@ -1,6 +1,5 @@
 package com.example.canary.core.exception;
 
-import com.example.canary.core.enums.BaseEnum;
 
 /**
  * 自定义异常抽象类
@@ -35,11 +34,11 @@ public abstract class BaseException extends RuntimeException {
     /**
      * 指定code通用异常
      *
-     * @param codeEnum
+     * @param errorEnum
      */
-    BaseException(BaseEnum codeEnum) {
-        super(codeEnum.getMessage());
-        this.code = codeEnum.getCode();
+    BaseException(ErrorEnum errorEnum) {
+        super(errorEnum.getMessage());
+        this.code = errorEnum.getCode();
     }
 
     /**
@@ -48,7 +47,7 @@ public abstract class BaseException extends RuntimeException {
      * @param code
      * @param message
      */
-    @Deprecated(since = "1.0", forRemoval = true)
+    // @Deprecated(since = "1.0", forRemoval = true)
     BaseException(Integer code, String message) {
         super(message);
         this.code = code;
@@ -67,12 +66,12 @@ public abstract class BaseException extends RuntimeException {
     /**
      * 指定code和cause通用异常
      *
-     * @param codeEnum
+     * @param errorEnum
      * @param cause
      */
-    BaseException(BaseEnum codeEnum, Throwable cause) {
+    BaseException(ErrorEnum errorEnum, Throwable cause) {
         super(cause);
-        this.code = codeEnum.getCode();
+        this.code = errorEnum.getCode();
     }
 
     /**
@@ -93,7 +92,7 @@ public abstract class BaseException extends RuntimeException {
      * @param message
      * @param cause
      */
-    @Deprecated(since = "1.0", forRemoval = true)
+    // @Deprecated(since = "1.0", forRemoval = true)
     BaseException(Integer code, String message, Throwable cause) {
         super(message, cause);
         this.code = code;

@@ -1,7 +1,8 @@
 package com.example.canary.task.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.example.canary.core.enums.DisabledStatusEnum;
+import com.example.canary.core.enums.BaseEnum;
+import com.example.canary.core.enums.StatusEnum;
 import com.example.canary.task.entity.TaskPO;
 import com.example.canary.task.mapper.TaskMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,8 @@ public class TaskRepositoryImpl implements TaskRepository {
     @Override
     public List<TaskPO> listEnableTask() {
         LambdaQueryWrapper<TaskPO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(TaskPO::getDisabled, DisabledStatusEnum.FALSE.getCode());
+        queryWrapper.eq(TaskPO::getDisabled, StatusEnum.Disabled.FALSE.getCode());
+        queryWrapper.eq(TaskPO::getDeleted, StatusEnum.Deleted.FALSE.getCode());
         return taskMapper.selectList(queryWrapper);
     }
 

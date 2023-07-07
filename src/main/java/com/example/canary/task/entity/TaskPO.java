@@ -46,7 +46,8 @@ public class TaskPO extends TaskBase {
     private LocalDateTime updateTime;
 
     /**
-     * 是否删除 0未删除 1已删除
+     * 是否删除
+     * @see com.example.canary.core.enums.StatusEnum.Deleted
      */
     @TableField(value = "is_deleted")
     private String deleted;

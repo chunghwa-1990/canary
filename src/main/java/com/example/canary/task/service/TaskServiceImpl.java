@@ -1,16 +1,16 @@
 package com.example.canary.task.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.canary.core.exception.ResultEntity;
 import com.example.canary.core.context.SpringContext;
-import com.example.canary.task.schedule.BusinessTask;
-import com.example.canary.task.schedule.CronTaskRegistrar;
-import com.example.canary.task.schedule.ITask;
-import com.example.canary.task.entity.TaskVO;
+import com.example.canary.core.exception.ResultEntity;
 import com.example.canary.task.entity.TaskAO;
 import com.example.canary.task.entity.TaskPO;
 import com.example.canary.task.entity.TaskQuery;
+import com.example.canary.task.entity.TaskVO;
 import com.example.canary.task.repository.TaskRepository;
+import com.example.canary.task.schedule.BusinessTask;
+import com.example.canary.task.schedule.CronTaskRegistrar;
+import com.example.canary.task.schedule.ITask;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,10 +61,7 @@ public class TaskServiceImpl implements TaskService {
     public ResultEntity saveTask(TaskAO taskAo) {
         TaskPO taskPo = taskAo.convertToPo();
         try {
-            int result = taskRepository.insert(taskPo);
-            if (result > 0) {
-                return ResultEntity.success();
-            }
+            taskRepository.insert(taskPo);
         } catch (Exception e) {
             Throwable cause = e.getCause();
             if (cause instanceof SQLIntegrityConstraintViolationException) {
@@ -73,9 +70,9 @@ public class TaskServiceImpl implements TaskService {
                     return ResultEntity.fail("task name has exist");
                 }
             }
-
+            return ResultEntity.fail();
         }
-        return ResultEntity.fail();
+        return ResultEntity.success();
     }
 
     /**
@@ -89,10 +86,7 @@ public class TaskServiceImpl implements TaskService {
     public ResultEntity updateTask(TaskAO taskAo) {
         TaskPO taskPo = taskAo.convertToPo();
         try {
-            int result = taskRepository.update(taskPo);
-            if (result > 0) {
-                return ResultEntity.success();
-            }
+            taskRepository.update(taskPo);
         } catch (Exception e) {
             Throwable cause = e.getCause();
             if (cause instanceof SQLIntegrityConstraintViolationException) {
@@ -101,9 +95,9 @@ public class TaskServiceImpl implements TaskService {
                     return ResultEntity.fail("task name has exist");
                 }
             }
-
+            return ResultEntity.fail();
         }
-        return ResultEntity.fail();
+        return ResultEntity.success();
     }
 
     /**

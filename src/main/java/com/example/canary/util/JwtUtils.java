@@ -4,9 +4,10 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.canary.core.constant.JwtConstant;
+import com.example.canary.core.token.JwtConstant;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
@@ -37,7 +38,43 @@ public class JwtUtils {
     /**
      * 签名密钥
      */
-    private static final String TOKEN_SECRET = "canary";
+    private static final String TOKEN_SECRET = "test1234";
+
+
+    /**
+     * 创建token
+     *
+     * @param claim
+     * @param audience
+     * @return
+     */
+    public static String createJwtToken(String claim, String... audience) {
+        // 有效起始时间
+        Date beginTime = new Date();
+        // 有效结束时间
+        Date endTime = new Date(System.currentTimeMillis() + AVAILABLE_TIME);
+
+        // header
+        Map<String, Object> header = new HashMap<>();
+        header.put("typ", "JWT");
+        header.put("alg", "HS256");
+
+        // 加密算法
+        Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
+
+        return JWT.create()
+                // header
+                .withHeader(header)
+                // payload
+                .withAudience(audience)
+                .withIssuedAt(beginTime)
+                .withExpiresAt(endTime)
+                .withClaim("data", claim)
+                // sign
+                .sign(algorithm);
+
+    }
+
 
     /**
      * 创建token
@@ -52,7 +89,7 @@ public class JwtUtils {
         // 有效结束时间
         Date endTime = new Date(System.currentTimeMillis() + AVAILABLE_TIME);
 
-        // hear
+        // header
         Map<String, Object> header = new HashMap<>();
         header.put("typ", "JWT");
         header.put("alg", "HS256");
@@ -74,7 +111,6 @@ public class JwtUtils {
         // sign
         return builder.sign(algorithm);
 
-
     }
 
     /**
@@ -83,10 +119,15 @@ public class JwtUtils {
      * @param token
      * @return
      */
-    public static DecodedJWT verify(String token) {
+    public static boolean verify(String token) {
         Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
         JWTVerifier verifier = JWT.require(algorithm).build();
-        return verifier.verify(token);
+        try {
+            verifier.verify(token);
+        } catch (JWTVerificationException e) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -168,6 +209,7 @@ public class JwtUtils {
         System.out.println(token);
         Thread.sleep(2000);
         System.out.println(JwtUtils.isExpired(token));
+        System.out.println(JwtUtils.verify(token));
         System.out.println(JwtUtils.getClaim(token, JwtConstant.CLAIM_DATA));
     }
 }

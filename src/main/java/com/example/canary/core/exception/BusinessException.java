@@ -11,6 +11,16 @@ import lombok.AllArgsConstructor;
  * @Date 2023-07-02 23:10
  * @Since 1.0
  */
-@AllArgsConstructor
 public class BusinessException extends BaseException {
+
+    public BusinessException() {
+    }
+
+    public BusinessException(String message) {
+        super(message);
+    }
+
+    public BusinessException(ErrorEnum errorEnum) {
+        super(errorEnum);
+    }
 }
