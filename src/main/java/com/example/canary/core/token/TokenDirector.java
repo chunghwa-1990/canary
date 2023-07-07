@@ -1,7 +1,6 @@
 package com.example.canary.core.token;
 
 import com.example.canary.sys.entity.UserBase;
-import com.example.canary.sys.entity.UserPO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
