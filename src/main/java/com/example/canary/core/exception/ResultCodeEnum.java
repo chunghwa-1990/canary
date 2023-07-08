@@ -30,12 +30,12 @@ public enum ResultCodeEnum implements ErrorEnum {
     /**
      * Bad Request
      */
-    BAD_REQUEST(400, "{ex.missing.request.parameter.message}"),
+    BAD_REQUEST(400, "bad request"),
 
     /**
      * Bad Request
      */
-    BAD_PART_REQUEST(400, "{ex.missing.request.part.message}"),
+    BAD_PART_REQUEST(400, "bad part request"),
 
     /**
      * Unauthorized
@@ -58,7 +58,7 @@ public enum ResultCodeEnum implements ErrorEnum {
     METHOD_NOT_ALLOWED(405, "method not allowed"),
 
     // token
-    TOKEN_ERROR(401, "{ex.token.error.message}");
+    TOKEN_ERROR(401, "token error or expired");
 
 
     /**

@@ -6,6 +6,7 @@ import com.example.canary.core.token.TokenDirector;
 import com.example.canary.core.token.TokenProperties;
 import com.example.canary.sys.entity.UserPO;
 import com.example.canary.task.schedule.CronTaskRegistrar;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +32,14 @@ class SystemServiceImplTest {
     private CronTaskRegistrar cronTaskRegistrar;
 
     @Test
-    void test() {
+    void test() throws JsonProcessingException {
 
         UserPO userPo = new UserPO();
         userPo.setAccount("test");
 
         TokenBuilder builder = new JwtTokenBuilder();
         TokenDirector director = new TokenDirector(builder);
-        String token = director.createToken(tokenProperties, userPo);
+        String token = director.createToken(tokenProperties, userPo.convertToVo());
         log.info(token);
 
         cronTaskRegistrar.getScheduledFutureMap().get("0").cancel(true);

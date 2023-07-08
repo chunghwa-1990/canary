@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.beans.BeanUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serial;
@@ -64,4 +65,10 @@ public class UserPO extends UserBase {
      */
     @TableField(value = "is_deleted")
     private String deleted;
+
+    public UserVO convertToVo() {
+        UserVO userVo = new UserVO();
+        BeanUtils.copyProperties(this, userVo);
+        return userVo;
+    }
 }

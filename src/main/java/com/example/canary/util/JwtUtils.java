@@ -38,7 +38,7 @@ public class JwtUtils {
     /**
      * 签名密钥
      */
-    private static final String TOKEN_SECRET = "test1234";
+    private static final String TOKEN_SECRET = "canary";
 
 
     /**
@@ -117,10 +117,11 @@ public class JwtUtils {
      * 校验token
      *
      * @param token
+     * @param secret
      * @return
      */
-    public static boolean verify(String token) {
-        Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
+    public static boolean verify(String token, String secret) {
+        Algorithm algorithm = Algorithm.HMAC256(secret);
         JWTVerifier verifier = JWT.require(algorithm).build();
         try {
             verifier.verify(token);
@@ -209,7 +210,7 @@ public class JwtUtils {
         System.out.println(token);
         Thread.sleep(2000);
         System.out.println(JwtUtils.isExpired(token));
-        System.out.println(JwtUtils.verify(token));
+        System.out.println(JwtUtils.verify(token, TOKEN_SECRET));
         System.out.println(JwtUtils.getClaim(token, JwtConstant.CLAIM_DATA));
     }
 }

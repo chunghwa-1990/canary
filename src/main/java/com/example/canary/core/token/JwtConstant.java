@@ -16,5 +16,5 @@ public class JwtConstant {
     /**
      * 载荷
      */
-    public static final String CLAIM_DATA = "data";
+    public static final String CLAIM_DATA = "userData";
 }

@@ -21,8 +21,6 @@ import java.util.Map;
 @Data
 public class JwtTokenBuilder implements TokenBuilder {
 
-    private static final String CLAIM_DATA = "userData";
-
     private String secret;
 
     private Long expires;
