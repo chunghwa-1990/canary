@@ -32,7 +32,7 @@ class SystemServiceImplTest {
     private CronTaskRegistrar cronTaskRegistrar;
 
     @Test
-    void test() throws JsonProcessingException {
+    void test() {
 
         UserPO userPo = new UserPO();
         userPo.setAccount("test");
