@@ -23,13 +23,18 @@ public class TokenConfig implements WebMvcConfigurer {
     /**
      * token 拦截器
      *
-     * @return
+     * @return TokenInterceptor
      */
     @Bean
     public TokenInterceptor getTokenInterceptor() {
         return new TokenInterceptor();
     }
 
+    /**
+     * 添加 token 拦截器
+     *
+     * @param registry 拦截器注册器
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         InterceptorRegistration interceptorRegistration = registry.addInterceptor(getTokenInterceptor());

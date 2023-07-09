@@ -8,9 +8,9 @@ import com.example.canary.task.entity.TaskPO;
 import com.example.canary.task.entity.TaskQuery;
 import com.example.canary.task.entity.TaskVO;
 import com.example.canary.task.repository.TaskRepository;
+import com.example.canary.task.schedule.AbstractTask;
 import com.example.canary.task.schedule.BusinessTask;
 import com.example.canary.task.schedule.CronTaskRegistrar;
-import com.example.canary.task.schedule.ITask;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -142,7 +142,7 @@ public class TaskServiceImpl implements TaskService {
             return ResultEntity.fail("启动 " + taskPo.getName() + " 任务失败，原因：找不到" + taskPo.getMethodName() + "方法");
         }
 
-        ITask task = new BusinessTask(taskPo.getName(), taskPo.getCronExpression(), object, method);
+        AbstractTask task = new BusinessTask(taskPo.getName(), taskPo.getCronExpression(), object, method);
         cronTaskRegistrar.executeCronTask(task);
 
         return ResultEntity.success();
@@ -177,7 +177,7 @@ public class TaskServiceImpl implements TaskService {
             return ResultEntity.fail("启动 " + taskPo.getName() + " 任务失败，原因：找不到" + taskPo.getMethodName() + "方法");
         }
 
-        ITask task = new BusinessTask(taskPo.getName(), taskPo.getCronExpression(), object, method);
+        AbstractTask task = new BusinessTask(taskPo.getName(), taskPo.getCronExpression(), object, method);
         cronTaskRegistrar.addCronTask(taskPo.getId(), task, task.getCornExpression());
 
         return ResultEntity.success();

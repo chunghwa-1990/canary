@@ -19,14 +19,14 @@ public class ScheduledTaskHolder {
     /**
      * task
      */
-    private ITask task;
+    private AbstractTask task;
 
     private ScheduledFuture<?> scheduledFuture;
 
     public ScheduledTaskHolder() {
     }
 
-    public ScheduledTaskHolder(ITask task, ScheduledFuture<?> scheduledFuture) {
+    public ScheduledTaskHolder(AbstractTask task, ScheduledFuture<?> scheduledFuture) {
         this.task = task;
         this.scheduledFuture = scheduledFuture;
     }

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @Since 1.0
  */
 @Slf4j
-public class MonitorTask extends ITask {
+public class MonitorTask extends AbstractTask {
 
     @Autowired
     private TaskRepository taskRepository;
@@ -31,6 +31,9 @@ public class MonitorTask extends ITask {
     @Autowired
     private CronTaskRegistrar cronTaskRegistrar;
 
+    /**
+     * override execute method
+     */
     @Override
     public void execute() {
         List<TaskPO> tasks = taskRepository.listEnableTask();

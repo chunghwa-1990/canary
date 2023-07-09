@@ -1,7 +1,6 @@
 package com.example.canary.util;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
@@ -31,28 +30,19 @@ public class JwtUtils {
     }
 
     /**
-     * token有效期，默认为2小时，单位(ms)
-     */
-    private static final int AVAILABLE_TIME = 1000 * 60 * 60 * 2;
-
-    /**
-     * 签名密钥
-     */
-    private static final String TOKEN_SECRET = "canary";
-
-
-    /**
      * 创建token
      *
-     * @param claim
-     * @param audience
+     * @param secret 密钥
+     * @param expires 过期间隔
+     * @param claim 载荷
+     * @param audience aud
      * @return
      */
-    public static String createJwtToken(String claim, String... audience) {
+    public static String createJwtToken(String secret, Long expires, String claim, String... audience) {
         // 有效起始时间
         Date beginTime = new Date();
         // 有效结束时间
-        Date endTime = new Date(System.currentTimeMillis() + AVAILABLE_TIME);
+        Date endTime = new Date(System.currentTimeMillis() + expires);
 
         // header
         Map<String, Object> header = new HashMap<>();
@@ -60,7 +50,7 @@ public class JwtUtils {
         header.put("alg", "HS256");
 
         // 加密算法
-        Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
+        Algorithm algorithm = Algorithm.HMAC256(secret);
 
         return JWT.create()
                 // header
@@ -69,58 +59,20 @@ public class JwtUtils {
                 .withAudience(audience)
                 .withIssuedAt(beginTime)
                 .withExpiresAt(endTime)
-                .withClaim("data", claim)
+                .withClaim(JwtConstant.CLAIM_DATA, claim)
                 // sign
                 .sign(algorithm);
-
-    }
-
-
-    /**
-     * 创建token
-     *
-     * @param claimMap
-     * @param audience
-     * @return
-     */
-    public static String createJwtToken(Map<String, String> claimMap, String... audience) {
-        // 有效起始时间
-        Date beginTime = new Date();
-        // 有效结束时间
-        Date endTime = new Date(System.currentTimeMillis() + AVAILABLE_TIME);
-
-        // header
-        Map<String, Object> header = new HashMap<>();
-        header.put("typ", "JWT");
-        header.put("alg", "HS256");
-
-        // 加密算法
-        Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
-
-        JWTCreator.Builder builder = JWT.create();
-        builder
-                // header
-                .withHeader(header)
-                // payload
-                .withAudience(audience)
-                .withIssuedAt(beginTime)
-                .withExpiresAt(endTime);
-        if (!CollectionUtils.isEmpty(claimMap)) {
-            claimMap.forEach(builder::withClaim);
-        }
-        // sign
-        return builder.sign(algorithm);
 
     }
 
     /**
      * 校验token
      *
-     * @param token
      * @param secret
+     * @param token
      * @return
      */
-    public static boolean verify(String token, String secret) {
+    public static boolean verify(String secret, String token) {
         Algorithm algorithm = Algorithm.HMAC256(secret);
         JWTVerifier verifier = JWT.require(algorithm).build();
         try {
@@ -204,13 +156,15 @@ public class JwtUtils {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        Map<String, String> claimMap = new HashMap<>();
-        claimMap.put(JwtConstant.CLAIM_DATA, "xxx");
-        String token = JwtUtils.createJwtToken(claimMap,"123456", "000");
+
+        String secret = "test1234";
+        long expires = 1000;
+
+        String token = JwtUtils.createJwtToken(secret, expires, "test","123456", "000");
         System.out.println(token);
         Thread.sleep(2000);
         System.out.println(JwtUtils.isExpired(token));
-        System.out.println(JwtUtils.verify(token, TOKEN_SECRET));
+        System.out.println(JwtUtils.verify(secret, token));
         System.out.println(JwtUtils.getClaim(token, JwtConstant.CLAIM_DATA));
     }
 }

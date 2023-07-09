@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,13 +20,32 @@ import java.util.Map;
 @Data
 public class JwtTokenBuilder implements TokenBuilder {
 
+    /**
+     * 密钥
+     */
     private String secret;
 
+    /**
+     * 过期间隔
+     */
     private Long expires;
 
+    /**
+     * aud
+     */
     private String audience;
 
+    /**
+     * 载荷
+     */
     private String claim;
+
+    /**
+     * 构建 token
+     *
+     * @return token
+     */
+    @Override
     public String build() {
         // 有效起始时间
         Date beginTime = new Date();
@@ -35,7 +53,7 @@ public class JwtTokenBuilder implements TokenBuilder {
         Date endTime = new Date(System.currentTimeMillis() + this.expires);
 
         // Header
-        Map<String, Object> header = new HashMap<>();
+        Map<String, Object> header = new HashMap<>(16);
         header.put("typ", "JWT");
         header.put("alg", "HS256");
 

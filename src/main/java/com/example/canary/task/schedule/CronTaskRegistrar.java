@@ -66,7 +66,7 @@ public class CronTaskRegistrar implements InitializingBean {
      *
      * @param task
      */
-    public void executeCronTask(ITask task) {
+    public void executeCronTask(AbstractTask task) {
         task.run();
     }
 
@@ -77,7 +77,7 @@ public class CronTaskRegistrar implements InitializingBean {
      * @param task
      * @param cronExpression
      */
-    public void addCronTask(String taskId, ITask task, String cronExpression) {
+    public void addCronTask(String taskId, AbstractTask task, String cronExpression) {
         ScheduledFuture<?> scheduledFuture = taskScheduler.schedule(task, new CronTrigger(cronExpression));
         ScheduledTaskHolder holder = new ScheduledTaskHolder(task, scheduledFuture);
         scheduledTaskHolderMap.put(taskId, holder);
@@ -123,7 +123,7 @@ public class CronTaskRegistrar implements InitializingBean {
                 String beanName = StringUtils.toLowerCamelCase(clazz.getSimpleName());
                 Object object = SpringContext.getBean(beanName);
                 Method method = clazz.getMethod(taskPo.getMethodName());
-                ITask task = new BusinessTask(taskPo.getName(), taskPo.getCronExpression(), object, method);
+                AbstractTask task = new BusinessTask(taskPo.getName(), taskPo.getCronExpression(), object, method);
                 this.addCronTask(taskPo.getId(), task, task.getCornExpression());
             } catch (ClassNotFoundException e) {
                 log.error("启动 {} 任务失败，原因：找不到 {} 类，异常信息：{}", taskPo.getName(),  taskPo.getClassName(), e.getMessage());

@@ -20,6 +20,13 @@ public record TokenDirector(TokenBuilder tokenBuilder) implements Serializable {
     @Serial
     private static final long serialVersionUID = 7705274326908657070L;
 
+    /**
+     * 生成 token
+     *
+     * @param tokenProperties 配置文件
+     * @param userVo user
+     * @return token
+     */
     public String createToken(TokenProperties tokenProperties, UserVO userVo) {
         // claim
         String claim = JSON.toJSONString(userVo);

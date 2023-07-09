@@ -9,6 +9,7 @@ import com.example.canary.sys.entity.UserVO;
 import com.example.canary.util.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,29 +36,29 @@ public class TokenInterceptor implements HandlerInterceptor {
     private TokenProperties tokenProperties;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) throws Exception {
         // token
         String token = request.getHeader(HeaderConstant.TOKEN);
         // secret
         String secret = tokenProperties.getSecret();
 
         // 校验token
-        if (!StringUtils.hasText(token) || !JwtUtils.verify(token, secret)) {
-            setResponse(request, response, HttpStatus.UNAUTHORIZED, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
+        if (!StringUtils.hasText(token) || !JwtUtils.verify(secret, token)) {
+            setResponse(response, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
             return false;
         }
 
         // 载荷
         String claimStr = JwtUtils.getClaimStr(token, JwtConstant.CLAIM_DATA);
         if (!StringUtils.hasText(claimStr)) {
-            setResponse(request, response, HttpStatus.UNAUTHORIZED, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
+            setResponse(response, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
             return false;
         }
 
         // user
         UserVO userVo = JSONObject.parseObject(claimStr, UserVO.class);
         if (userVo == null) {
-            setResponse(request, response, HttpStatus.UNAUTHORIZED, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
+            setResponse(response, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
             return false;
         }
 
@@ -67,20 +68,19 @@ public class TokenInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+    public void postHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler, ModelAndView modelAndView) throws Exception {
         HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void afterCompletion(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler, Exception ex) throws Exception {
         HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
     }
 
-    private static void setResponse(HttpServletRequest request,
-                                      HttpServletResponse response, HttpStatus httpStatus, ResultEntity<?> resultEntity) {
+    private static void setResponse(HttpServletResponse response, ResultEntity<?> resultEntity) {
 
         response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(httpStatus.value());
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         try (Writer writer = response.getWriter()) {
             writer.write(JSON.toJSONString(resultEntity));
             writer.flush();

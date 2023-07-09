@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 /**
  * 线程任务抽象类
  *
- * @ClassName ITask
+ * @ClassName AbstractTask
  * @Description 线程任务抽象类
  * @Author zhaohongliang
  * @Date 2023-06-29 23:54
@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
  */
 @Slf4j
 @Data
-public abstract class ITask implements Runnable {
+public abstract class AbstractTask implements Runnable {
 
     /**
      * 任务名称
@@ -33,14 +33,26 @@ public abstract class ITask implements Runnable {
      */
     private String cornExpression;
 
-    protected ITask() {
+    /**
+     * 无参构造
+     */
+    protected AbstractTask() {
     }
 
-    protected ITask(String taskName, String cornExpression) {
+    /**
+     * 全参构造
+     *
+     * @param taskName
+     * @param cornExpression
+     */
+    protected AbstractTask(String taskName, String cornExpression) {
         this.taskName = taskName;
         this.cornExpression = cornExpression;
     }
 
+    /**
+     * run method
+     */
     @Override
     public void run() {
         LocalDateTime startTime = LocalDateTime.now();
@@ -51,5 +63,8 @@ public abstract class ITask implements Runnable {
         log.info("{} 执行完毕，开始时间：{}，结束时间：{}，执行耗时：{} ms，下次执行时间：{}", taskName, startTime, endTime, duration.toMillis(), DateUtils.toLocalDateTime(instant));
     }
 
+    /**
+     * execute method
+     */
     public abstract void execute();
 }

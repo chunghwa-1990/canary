@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
  * @Since 1.0
  */
 @Slf4j
-public class BusinessTask extends ITask {
+public class BusinessTask extends AbstractTask {
 
     private Object object;
 
@@ -30,6 +30,9 @@ public class BusinessTask extends ITask {
         this.method = method;
     }
 
+    /**
+     * override execute method
+     */
     @Override
     public void execute() {
         try {
