@@ -5,7 +5,6 @@ import com.example.canary.core.api.ApiVersion;
 import com.example.canary.core.exception.ResultEntity;
 import com.example.canary.core.exception.ValidGroup;
 import com.example.canary.sys.entity.UserAO;
-import com.example.canary.sys.entity.UserPO;
 import com.example.canary.sys.entity.UserQuery;
 import com.example.canary.sys.entity.UserVO;
 import com.example.canary.sys.service.UserService;

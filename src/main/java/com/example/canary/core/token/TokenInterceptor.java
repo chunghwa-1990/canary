@@ -3,6 +3,8 @@ package com.example.canary.core.token;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.example.canary.core.constant.HeaderConstant;
+import com.example.canary.core.context.CanaryContext;
+import com.example.canary.core.context.CurrentUser;
 import com.example.canary.core.exception.ResultCodeEnum;
 import com.example.canary.core.exception.ResultEntity;
 import com.example.canary.sys.entity.UserVO;
@@ -62,7 +64,8 @@ public class TokenInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        // CurrentUser<UserVO> currentUser = new CurrentUser<>(userVo)
+        CurrentUser<UserVO> currentUser = new CurrentUser<>(userVo);
+        CanaryContext.setCurrentUser(currentUser);
 
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
@@ -74,11 +77,10 @@ public class TokenInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler, Exception ex) throws Exception {
-        HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
+        CanaryContext.removeCurrentUser();
     }
 
     private static void setResponse(HttpServletResponse response, ResultEntity<?> resultEntity) {
-
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         try (Writer writer = response.getWriter()) {
