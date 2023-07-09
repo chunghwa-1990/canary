@@ -1,6 +1,7 @@
 package com.example.canary.core.exception;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,8 +15,9 @@ import java.io.Serializable;
  * @Date 2023-07-01 11:30
  * @Since 1.0
  */
-@Data
-public class ResultEntity<T> implements Serializable {
+@Setter
+@Getter
+public class ResultEntity<T extends Serializable> implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 2507800881538446628L;
@@ -101,7 +103,7 @@ public class ResultEntity<T> implements Serializable {
      * @param <T>
      * @return
      */
-    public static <T> ResultEntity<T> success() {
+    public static <T extends Serializable> ResultEntity<T> success() {
         return new ResultEntity<>();
     }
 
@@ -112,7 +114,7 @@ public class ResultEntity<T> implements Serializable {
      * @param <T>
      * @return
      */
-    public static <T> ResultEntity<T> success(T data) {
+    public static <T extends Serializable> ResultEntity<T> success(T data) {
         return new ResultEntity<>(data);
     }
 
@@ -122,8 +124,9 @@ public class ResultEntity<T> implements Serializable {
      * @param <T>
      * @return
      */
-    public static <T> ResultEntity<T> fail() {
-        return new ResultEntity<>(ResultCodeEnum.ERROR);
+    public static <T extends Serializable> ResultEntity<T> fail() {
+        ErrorEnum errorEnum = ResultCodeEnum.ERROR;
+        return new ResultEntity<>(errorEnum);
     }
 
     /**
@@ -133,7 +136,7 @@ public class ResultEntity<T> implements Serializable {
      * @param <T>
      * @return
      */
-    public static <T> ResultEntity<T> fail(ErrorEnum errorEnum) {
+    public static <T extends Serializable> ResultEntity<T> fail(ErrorEnum errorEnum) {
         return new ResultEntity<>(errorEnum);
     }
 
@@ -144,7 +147,7 @@ public class ResultEntity<T> implements Serializable {
      * @param <T>
      * @return
      */
-    public static <T> ResultEntity<T> fail(String message) {
+    public static <T extends Serializable> ResultEntity<T> fail(String message) {
         return new ResultEntity<>(message);
     }
 
@@ -156,7 +159,7 @@ public class ResultEntity<T> implements Serializable {
      * @param <T>
      * @return
      */
-    public static <T> ResultEntity<T> fail(Integer code, String message) {
+    public static <T extends Serializable> ResultEntity<T> fail(Integer code, String message) {
         return new ResultEntity<>(code, message);
     }
 }

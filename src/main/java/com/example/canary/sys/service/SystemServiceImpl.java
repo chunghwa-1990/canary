@@ -59,8 +59,7 @@ public class SystemServiceImpl implements SystemService {
 
         TokenBuilder builder = new JwtTokenBuilder();
         TokenDirector director = new TokenDirector(builder);
-        String token = null;
-        token = director.createToken(tokenProperties, userPo.convertToVo());
+        String token = director.createToken(tokenProperties, userPo.convertToVo());
         LoginVO loginVo = new LoginVO(token);
         return ResultEntity.success(loginVo);
     }

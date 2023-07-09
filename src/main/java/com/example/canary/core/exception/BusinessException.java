@@ -1,7 +1,5 @@
 package com.example.canary.core.exception;
 
-import lombok.AllArgsConstructor;
-
 /**
  * business exception
  *

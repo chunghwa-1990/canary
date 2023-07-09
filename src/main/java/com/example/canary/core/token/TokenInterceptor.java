@@ -3,7 +3,6 @@ package com.example.canary.core.token;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.example.canary.core.constant.HeaderConstant;
-import com.example.canary.core.exception.BusinessException;
 import com.example.canary.core.exception.ResultCodeEnum;
 import com.example.canary.core.exception.ResultEntity;
 import com.example.canary.sys.entity.UserVO;
@@ -13,7 +12,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -38,22 +36,32 @@ public class TokenInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // token
         String token = request.getHeader(HeaderConstant.TOKEN);
-        if (!StringUtils.hasText(token) || !JwtUtils.verify(token)) {
-            // throw new BusinessException(ResultCodeEnum.TOKEN_ERROR)
+        // secret
+        String secret = tokenProperties.getSecret();
+
+        // 校验token
+        if (!StringUtils.hasText(token) || !JwtUtils.verify(token, secret)) {
             setResponse(request, response, HttpStatus.UNAUTHORIZED, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
             return false;
         }
+
+        // 载荷
         String claimStr = JwtUtils.getClaimStr(token, JwtConstant.CLAIM_DATA);
         if (!StringUtils.hasText(claimStr)) {
             setResponse(request, response, HttpStatus.UNAUTHORIZED, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
             return false;
         }
+
+        // user
         UserVO userVo = JSONObject.parseObject(claimStr, UserVO.class);
         if (userVo == null) {
             setResponse(request, response, HttpStatus.UNAUTHORIZED, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
             return false;
         }
+
+        // CurrentUser<UserVO> currentUser = new CurrentUser<>(userVo)
 
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }

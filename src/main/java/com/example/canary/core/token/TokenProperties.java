@@ -13,8 +13,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @Date 2023-07-06 13:28
  * @Since 1.0
  */
-@Getter
 @Setter
+@Getter
 @ConfigurationProperties(prefix = "token" )
 public class TokenProperties {
 

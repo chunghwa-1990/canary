@@ -2,6 +2,7 @@ package com.example.canary.sys.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,6 +17,7 @@ import java.io.Serializable;
  * @Since 1.0
  */
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class LoginVO implements Serializable {
 

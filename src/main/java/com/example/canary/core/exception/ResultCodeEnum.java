@@ -3,6 +3,8 @@ package com.example.canary.core.exception;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.io.Serializable;
+
 /**
  * <p>响应状态码枚举类</p>
  *
