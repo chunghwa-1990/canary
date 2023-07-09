@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
      */
     @ResponseBody
     @ExceptionHandler(value = BusinessException.class)
-    public ResultEntity<?> businessExceptionHandler(BusinessException ex) {
+    public ResultEntity<Object> businessExceptionHandler(BusinessException ex) {
         Integer code = ex.getCode();
         String defaultMessage = ex.getMessage();
         // 根据 message key 查询 i18n 实现国际化
@@ -65,7 +65,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     // @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
-    public ResultEntity<?> httpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException ex) {
+    public ResultEntity<Object> httpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException ex) {
         List<Object> args = new ArrayList<>();
         args.add(ex.getMethod());                   // 参数名称
         args.add(ex.getSupportedHttpMethods());     // 参数类型
@@ -85,7 +85,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     // @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
-    public ResultEntity<?> missingServletRequestParameterExceptionHandler(MissingServletRequestParameterException ex) {
+    public ResultEntity<Object> missingServletRequestParameterExceptionHandler(MissingServletRequestParameterException ex) {
         List<Object> args = new ArrayList<>();
         args.add(ex.getParameterName());     // 参数名称
         args.add(ex.getParameterType());     // 参数类型
@@ -104,7 +104,7 @@ public class GlobalExceptionHandler {
      */
     @ResponseBody
     @ExceptionHandler(value = MissingServletRequestPartException.class)
-    public ResultEntity<?> missingServletRequestPartExceptionHandler(MissingServletRequestPartException ex) {
+    public ResultEntity<Object> missingServletRequestPartExceptionHandler(MissingServletRequestPartException ex) {
         List<Object> args = new ArrayList<>();
         args.add(ex.getRequestPartName());      // 参数名称
         // message key
@@ -123,7 +123,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     // @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = ConstraintViolationException.class)
-    public ResultEntity<?> constraintViolationExceptionHandler(ConstraintViolationException ex) {
+    public ResultEntity<Object> constraintViolationExceptionHandler(ConstraintViolationException ex) {
         Set<ConstraintViolation<?>> constraintViolationSet = ex.getConstraintViolations();
         List<ConstraintViolation<?>> constraintViolations = new ArrayList<>(constraintViolationSet);
         List<Object> args = new ArrayList<>();
@@ -150,7 +150,7 @@ public class GlobalExceptionHandler {
      */
     @ResponseBody
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ResultEntity<?> methodArgumentNotValidHandler(MethodArgumentNotValidException ex) {
+    public ResultEntity<Object> methodArgumentNotValidHandler(MethodArgumentNotValidException ex) {
 
         // List<FieldError> allErrors = ex.getBindingResult().getFieldErrors();
         // List<ObjectError> allErrors = ex.getBindingResult().getAllErrors();
@@ -164,7 +164,7 @@ public class GlobalExceptionHandler {
         // 字段名称
         String field = fieldError.getField();
         // 注解名称
-        String messageKey = fieldError.getCode();
+        String messageKey = Optional.ofNullable(fieldError.getCode()).orElseGet(() -> "");
         // 默认异常提示
         String defauldMessage = fieldError.getDefaultMessage();
 
@@ -195,7 +195,7 @@ public class GlobalExceptionHandler {
      */
     @ResponseBody
     @ExceptionHandler(value = { RuntimeException.class })
-    public ResultEntity<?> RuntimeExceptionHandler(RuntimeException ex) {
+    public ResultEntity<Object> runtimeExceptionHandler(RuntimeException ex) {
         if (StringUtils.hasText(ex.getMessage())) {
             return ResultEntity.fail(ResultCodeEnum.ERROR.getCode(), ex.getMessage());
         }

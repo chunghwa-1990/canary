@@ -3,9 +3,6 @@ package com.example.canary.core.exception;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 /**
  * result entity
  *
@@ -17,10 +14,7 @@ import java.io.Serializable;
  */
 @Setter
 @Getter
-public class ResultEntity<T extends Serializable> implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 2507800881538446628L;
+public class ResultEntity<T> {
 
     /**
      * 响应状态码
@@ -100,10 +94,10 @@ public class ResultEntity<T extends Serializable> implements Serializable {
     /**
      * suceees method，but no result
      *
-     * @param <T>
      * @return
+     * @param <T>
      */
-    public static <T extends Serializable> ResultEntity<T> success() {
+    public static <T> ResultEntity<T> success() {
         return new ResultEntity<>();
     }
 
@@ -114,29 +108,28 @@ public class ResultEntity<T extends Serializable> implements Serializable {
      * @param <T>
      * @return
      */
-    public static <T extends Serializable> ResultEntity<T> success(T data) {
+    public static <T> ResultEntity<T> success(T data) {
         return new ResultEntity<>(data);
     }
 
     /**
      * fail method, default is server internal exception
      *
-     * @param <T>
      * @return
+     * @param <T>
      */
-    public static <T extends Serializable> ResultEntity<T> fail() {
-        ErrorEnum errorEnum = ResultCodeEnum.ERROR;
-        return new ResultEntity<>(errorEnum);
+    public static <T> ResultEntity<T> fail() {
+        return new ResultEntity<>(ResultCodeEnum.ERROR);
     }
 
     /**
-     *  fail method, default is server internal exception，but you can customize the code
+     * fail method, default is server internal exception，but you can customize the code
      *
      * @param errorEnum
-     * @param <T>
      * @return
+     * @param <T>
      */
-    public static <T extends Serializable> ResultEntity<T> fail(ErrorEnum errorEnum) {
+    public static <T> ResultEntity<T> fail(ErrorEnum errorEnum) {
         return new ResultEntity<>(errorEnum);
     }
 
@@ -144,10 +137,10 @@ public class ResultEntity<T extends Serializable> implements Serializable {
      * fail method, default is server internal exception，but you can customize the prompt
      *
      * @param message
-     * @param <T>
      * @return
+     * @param <T>
      */
-    public static <T extends Serializable> ResultEntity<T> fail(String message) {
+    public static <T> ResultEntity<T> fail(String message) {
         return new ResultEntity<>(message);
     }
 
@@ -156,10 +149,10 @@ public class ResultEntity<T extends Serializable> implements Serializable {
      *
      * @param code
      * @param message
-     * @param <T>
      * @return
+     * @param <T>
      */
-    public static <T extends Serializable> ResultEntity<T> fail(Integer code, String message) {
+    public static <T> ResultEntity<T> fail(Integer code, String message) {
         return new ResultEntity<>(code, message);
     }
 }

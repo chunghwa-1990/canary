@@ -6,9 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 /**
  * 当前用户
  *
@@ -22,10 +19,7 @@ import java.io.Serializable;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CurrentUser<T extends Serializable> implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = -2749072309978948753L;
+public class CurrentUser<T> {
 
     /**
      * id
@@ -37,6 +31,11 @@ public class CurrentUser<T extends Serializable> implements Serializable {
      */
     private T data;
 
+    /**
+     * 带参构造
+     *
+     * @param data
+     */
     public CurrentUser(T data) {
         this.data = data;
         if (data instanceof UserBase userBase) {
