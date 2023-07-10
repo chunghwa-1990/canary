@@ -68,9 +68,9 @@ class I18nConfig implements WebMvcConfigurer {
     }
 
     /**
-     * 注册拦截器
+     * 添加拦截器
      *
-     * @param registry
+     * @param registry 拦截器注册器
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

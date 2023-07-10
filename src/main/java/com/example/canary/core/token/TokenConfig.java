@@ -31,7 +31,7 @@ public class TokenConfig implements WebMvcConfigurer {
     }
 
     /**
-     * 添加 token 拦截器
+     * 添加拦截器
      *
      * @param registry 拦截器注册器
      */
