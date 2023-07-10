@@ -39,7 +39,12 @@ class SystemServiceImplTest {
 
         TokenBuilder builder = new JwtTokenBuilder();
         TokenDirector director = new TokenDirector(builder);
-        String token = director.createToken(tokenProperties, userPo.convertToVo());
+        String token = null;
+        try {
+            token = director.createToken(tokenProperties, userPo.convertToVo());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
         log.info(token);
 
         cronTaskRegistrar.getScheduledFutureMap().get("0").cancel(true);
