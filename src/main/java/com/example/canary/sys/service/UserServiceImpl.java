@@ -41,7 +41,6 @@ public class UserServiceImpl implements UserService {
             userRepository.insert(userPo);
         } catch (Exception e) {
             log.error(e.getMessage());
-            e.printStackTrace();
             Throwable cause = e.getCause();
             if (cause instanceof SQLIntegrityConstraintViolationException) {
                 String errorMessage = cause.getMessage();
@@ -68,7 +67,6 @@ public class UserServiceImpl implements UserService {
             userRepository.update(userPo);
         } catch (Exception e) {
             log.error(e.getMessage());
-            e.printStackTrace();
             Throwable cause = e.getCause();
             if (cause instanceof SQLIntegrityConstraintViolationException) {
                 String errorMessage = cause.getMessage();

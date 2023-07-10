@@ -1,5 +1,6 @@
 package com.example.canary.sys.service;
 
+import com.example.canary.core.exception.BusinessException;
 import com.example.canary.core.exception.ResultEntity;
 import com.example.canary.core.token.JwtTokenBuilder;
 import com.example.canary.core.token.TokenBuilder;
@@ -9,6 +10,7 @@ import com.example.canary.sys.entity.LoginAO;
 import com.example.canary.sys.entity.LoginVO;
 import com.example.canary.sys.entity.UserPO;
 import com.example.canary.sys.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,7 +61,12 @@ public class SystemServiceImpl implements SystemService {
 
         TokenBuilder builder = new JwtTokenBuilder();
         TokenDirector director = new TokenDirector(builder);
-        String token = director.createToken(tokenProperties, userPo.convertToVo());
+        String token = null;
+        try {
+            token = director.createToken(tokenProperties, userPo.convertToVo());
+        } catch (JsonProcessingException e) {
+            throw new BusinessException("create token has error");
+        }
         LoginVO loginVo = new LoginVO(token);
         return ResultEntity.success(loginVo);
     }

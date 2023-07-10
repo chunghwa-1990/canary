@@ -1,7 +1,5 @@
 package com.example.canary.core.token;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson2.JSONObject;
 import com.example.canary.core.constant.HeaderConstant;
 import com.example.canary.core.context.CanaryContext;
 import com.example.canary.core.context.CurrentUser;
@@ -9,6 +7,7 @@ import com.example.canary.core.exception.ResultCodeEnum;
 import com.example.canary.core.exception.ResultEntity;
 import com.example.canary.sys.entity.UserVO;
 import com.example.canary.util.JwtUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
@@ -57,8 +56,9 @@ public class TokenInterceptor implements HandlerInterceptor {
             return false;
         }
 
+        ObjectMapper objectMapper = new ObjectMapper();
         // user
-        UserVO userVo = JSONObject.parseObject(claimStr, UserVO.class);
+        UserVO userVo = objectMapper.readValue(claimStr, UserVO.class);
         if (userVo == null) {
             setResponse(response, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
             return false;
@@ -84,7 +84,8 @@ public class TokenInterceptor implements HandlerInterceptor {
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         try (Writer writer = response.getWriter()) {
-            writer.write(JSON.toJSONString(resultEntity));
+            ObjectMapper objectMapper = new ObjectMapper();
+            writer.write(objectMapper.writeValueAsString(resultEntity));
             writer.flush();
         } catch (IOException e) {
             log.error("response异常:" + e);

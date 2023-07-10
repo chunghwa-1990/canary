@@ -1,7 +1,8 @@
 package com.example.canary.core.token;
 
-import com.alibaba.fastjson2.JSON;
 import com.example.canary.sys.entity.UserVO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -27,9 +28,10 @@ public record TokenDirector(TokenBuilder tokenBuilder) implements Serializable {
      * @param userVo user
      * @return token
      */
-    public String createToken(TokenProperties tokenProperties, UserVO userVo) {
+    public String createToken(TokenProperties tokenProperties, UserVO userVo) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
         // claim
-        String claim = JSON.toJSONString(userVo);
+        String claim = objectMapper.writeValueAsString(userVo);
         tokenBuilder.setSecret(tokenProperties.getSecret());
         tokenBuilder.setExpires(tokenProperties.getExpires());
         tokenBuilder.setAudience(userVo.getId());
