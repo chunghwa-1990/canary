@@ -3,6 +3,8 @@ package com.example.canary.core.token;
 import com.example.canary.util.JwtUtils;
 import lombok.Data;
 
+import java.time.Duration;
+
 /**
  * jwt
  *
@@ -23,7 +25,7 @@ public class JwtTokenBuilder implements TokenBuilder {
     /**
      * 过期间隔
      */
-    private Long expires;
+    private Duration expires;
 
     /**
      * aud

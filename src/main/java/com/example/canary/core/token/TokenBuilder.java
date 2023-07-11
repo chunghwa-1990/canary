@@ -1,5 +1,7 @@
 package com.example.canary.core.token;
 
+import java.time.Duration;
+
 /**
  * jwt
  *
@@ -23,7 +25,7 @@ public interface TokenBuilder {
      *
      * @param expires 过期间隔
      */
-    void setExpires(Long expires);
+    void setExpires(Duration expires);
 
     /**
      * 设置 aud

@@ -9,6 +9,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.canary.core.token.JwtConstant;
 import org.springframework.util.CollectionUtils;
 
+import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -38,11 +39,11 @@ public class JwtUtils {
      * @param audience aud
      * @return
      */
-    public static String createJwtToken(String secret, Long expires, String claim, String... audience) {
+    public static String createJwtToken(String secret, Duration expires, String claim, String... audience) {
         // 有效起始时间
         Date beginTime = new Date();
         // 有效结束时间
-        Date endTime = new Date(System.currentTimeMillis() + expires);
+        Date endTime = new Date(System.currentTimeMillis() + expires.toMillis());
 
         // header
         Map<String, Object> header = new HashMap<>();
@@ -158,7 +159,7 @@ public class JwtUtils {
     public static void main(String[] args) throws InterruptedException {
 
         String secret = "test1234";
-        long expires = 1000;
+        Duration expires = Duration.ofMillis(1000);
 
         String token = JwtUtils.createJwtToken(secret, expires, "test","123456", "000");
         System.out.println(token);
