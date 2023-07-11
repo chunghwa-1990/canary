@@ -7,7 +7,6 @@ import com.example.canary.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
@@ -33,18 +32,9 @@ import java.util.concurrent.ScheduledFuture;
 public class CronTaskRegistrar implements InitializingBean {
 
     /**
-     * system task
-     */
-    private final Map<String, ScheduledFuture<?>> scheduledFutureMap = new ConcurrentHashMap<>(16);
-
-    /**
      * business task
      */
     private final Map<String, ScheduledTaskHolder> scheduledTaskHolderMap = new ConcurrentHashMap<>(16);
-
-    public Map<String, ScheduledFuture<?>> getScheduledFutureMap() {
-        return scheduledFutureMap;
-    }
 
     public Map<String, ScheduledTaskHolder> getScheduledTaskHolderMap() {
         return scheduledTaskHolderMap;
@@ -55,11 +45,6 @@ public class CronTaskRegistrar implements InitializingBean {
 
     @Autowired
     private TaskRepository taskRepository;
-
-    @Lazy
-    @Autowired
-    private MonitorTask monitorTask;
-
 
     /**
      * execute task
@@ -105,11 +90,7 @@ public class CronTaskRegistrar implements InitializingBean {
     private void registerCronTask() {
 
         // clear
-        scheduledFutureMap.clear();
-
-        // moniter task
-        ScheduledFuture<?> scheduledFuture = taskScheduler.schedule(monitorTask, new CronTrigger(monitorTask.getCornExpression()));
-        scheduledFutureMap.put("0", scheduledFuture);
+        scheduledTaskHolderMap.clear();
 
         // dynamic task
         List<TaskPO> tasks = taskRepository.listEnableTask();
@@ -126,7 +107,7 @@ public class CronTaskRegistrar implements InitializingBean {
                 AbstractTask task = new BusinessTask(taskPo.getName(), taskPo.getCronExpression(), object, method);
                 this.addCronTask(taskPo.getId(), task, task.getCornExpression());
             } catch (ClassNotFoundException e) {
-                log.error("启动 {} 任务失败，原因：找不到 {} 类，异常信息：{}", taskPo.getName(),  taskPo.getClassName(), e.getMessage());
+                log.error("启动 {} 任务失败，原因：找不到 {} 类，异常信息：{}", taskPo.getName(), taskPo.getClassName(), e.getMessage());
             } catch (NoSuchMethodException e) {
                 log.error("启动 {} 任务失败，原因：找不到 {} 方法，异常信息：{}", taskPo.getName(), taskPo.getMethodName(), e.getMessage());
             }

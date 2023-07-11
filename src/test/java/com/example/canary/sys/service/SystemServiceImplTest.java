@@ -47,8 +47,6 @@ class SystemServiceImplTest {
         }
         log.info(token);
 
-        cronTaskRegistrar.getScheduledFutureMap().get("0").cancel(true);
-
     }
 
 }

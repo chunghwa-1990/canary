@@ -39,16 +39,3 @@ spring:
           max-idle: 10
           # 连接池中的最小空闲连接
           min-idle: 5
-
-#  task:
-#    scheduling:
-#      # 线程池名称前缀
-#      thread-name-prefix: TaskExecutor-
-#      pool:
-#        # 线程池大小,默认为 1
-#        size: 20
-#      shutdown:
-#        # 应用关闭时，是否等待任务执行完成，默认为 false
-#        await-termination: true
-#        # 等待任务完成的最大时长，默认为 0, 单位为秒
-#        await-termination-period: 60
