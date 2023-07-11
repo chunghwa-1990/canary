@@ -19,6 +19,12 @@ import org.springframework.data.redis.core.RedisTemplate;
 @Configuration
 public class RedisConfig {
 
+    /**
+     * redis 模版
+     *
+     * @param redisConnectionFactory 默认使用 LettuceConnectionFactory
+     * @return template
+     */
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
