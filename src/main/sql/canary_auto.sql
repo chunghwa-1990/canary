@@ -4,9 +4,30 @@ CREATE DATABASE IF NOT EXISTS `canary` DEFAULT CHARACTER SET = `utf8mb4` DEFAULT
 
 USE `canary`;
 
+-- drop table s_sys_user
+DROP TABLE IF EXISTS `s_sys_user`;
+-- create table s_sys_user
+CREATE TABLE `s_sys_user` (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `account` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '名称（英文）',
+    `nick_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
+    `real_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '姓名',
+    `sex` tinyint DEFAULT '0' COMMENT '性别 0:男 1:女',
+    `mobile_no` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '手机号',
+    `password` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+    `salt` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+    `is_admin` tinyint DEFAULT '0',
+    `is_disabled` tinyint DEFAULT '0' COMMENT '是否禁用 0:否 1:是',
+    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    `is_deleted` bigint DEFAULT '0' COMMENT '是否删除 0:否 非0:是',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `udx_account_1` (`account`,`is_deleted`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户';
+
 -- drop table t_task_base
 DROP TABLE IF EXISTS `t_task_base`;
--- creae table t_task_base
+-- create table t_task_base
 CREATE TABLE `t_task_base` (
     `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
     `name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '名称',
