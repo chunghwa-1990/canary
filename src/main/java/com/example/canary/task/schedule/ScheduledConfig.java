@@ -1,9 +1,7 @@
 package com.example.canary.task.schedule;
 
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.task.TaskSchedulerBuilder;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -36,6 +34,7 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 @EnableAsync
 @Configuration
 @EnableScheduling
+@EnableConfigurationProperties(TaskProperties.class)
 public class ScheduledConfig implements SchedulingConfigurer {
 
     /**
@@ -45,13 +44,11 @@ public class ScheduledConfig implements SchedulingConfigurer {
      */
     @Bean
     public ThreadPoolTaskScheduler taskScheduler() {
-        log.info("Creating ThreadPoolTaskScheduler ...");
         ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
         taskScheduler.setPoolSize(20);
         taskScheduler.setThreadNamePrefix("TaskExecutor-");
         taskScheduler.setWaitForTasksToCompleteOnShutdown(true);
         taskScheduler.setAwaitTerminationSeconds(60);
-        log.info("Successfully started");
         return taskScheduler;
     }
 

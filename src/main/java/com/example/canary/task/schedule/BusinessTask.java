@@ -1,5 +1,7 @@
 package com.example.canary.task.schedule;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
@@ -10,17 +12,36 @@ import java.lang.reflect.Method;
  * @since 1.0
  * @author zhaohongliang
  */
+@EqualsAndHashCode(callSuper = true)
 @Slf4j
+@Data
 public class BusinessTask extends AbstractTask {
 
+    /**
+     * 类
+     */
     private Object object;
 
+    /**
+     * 方法
+     */
     private Method method;
 
 
+    /**
+     * 无参构造
+     */
     public BusinessTask() {
     }
 
+    /**
+     * 全参构造
+     *
+     * @param taskName
+     * @param cornExpression
+     * @param object
+     * @param method
+     */
     public BusinessTask(String taskName, String cornExpression, Object object, Method method) {
         super(taskName, cornExpression);
         this.object = object;

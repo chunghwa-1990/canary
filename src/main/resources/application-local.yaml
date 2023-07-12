@@ -20,7 +20,6 @@ spring:
       # 数据库连接超时时间,默认30秒，即30000
       connection-timeout: 30000
       connection-test-query: SELECT 1
-
   data:
     redis:
       host: localhost
@@ -39,3 +38,6 @@ spring:
           max-idle: 10
           # 连接池中的最小空闲连接
           min-idle: 5
+  task:
+    auto-execute: false
+    monitor-cron: 0/5 * * * * ?
