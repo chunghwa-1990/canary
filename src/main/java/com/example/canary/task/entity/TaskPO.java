@@ -2,7 +2,6 @@ package com.example.canary.task.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.example.canary.task.entity.TaskBase;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,11 +13,8 @@ import java.time.LocalDateTime;
 /**
  * 任务
  *
- * @ClassName TaskPO
- * @Description
- * @Author zhaohongliang
- * @Date 2023-06-28 17:27
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @EqualsAndHashCode(callSuper = true)
 @Data

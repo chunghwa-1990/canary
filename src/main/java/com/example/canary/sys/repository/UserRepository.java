@@ -5,11 +5,8 @@ import com.example.canary.sys.entity.UserPO;
 /**
  * user
  *
- * @ClassName UserRepository
- * @Description user
- * @Author zhaohongliang
- * @Date 2023-07-06 12:44
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 public interface UserRepository {
 

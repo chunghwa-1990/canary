@@ -17,9 +17,9 @@ import org.springframework.context.annotation.Configuration;
 /**
  * @ClassName SystemServiceImplTest
  * @Description
- * @Author zhaohongliang
- * @Date 2023-07-06 23:38
- * @Since 1.0
+ * @author zhaohongliang
+ * @since 2023-07-06 23:38
+ * @version 1.0
  */
 @Slf4j
 @SpringBootTest

@@ -8,11 +8,8 @@ import java.io.Serial;
 /**
  * user
  *
- * @ClassName UserVO
- * @Description user
- * @Author zhaohongliang
- * @Date 2023-07-06 12:35
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @EqualsAndHashCode(callSuper = true)
 @Data

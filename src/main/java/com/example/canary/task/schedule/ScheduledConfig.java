@@ -14,9 +14,6 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
 /**
  * 定时任务线程池
- *
- * @ClassName ScheduledConfig
- * @Description 定时任务线程池
  * 实现 SchedulingConfigurer 接口，必须以@Bean创建ThreadPoolTaskScheduler，不可以使用配置文件自动装配
  * spring:
  *   task:
@@ -31,9 +28,9 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
  *         await-termination: true
  *         # 等待任务完成的最大时长，默认为 0, 单位为秒
  *         await-termination-period: 60s
- * @Author zhaohongliang
- * @Date 2023-06-29 11:54
- * @Since 1.0
+ *
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Slf4j
 @EnableAsync

@@ -9,11 +9,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 /**
  * redis 配置
  *
- * @className RedisConfig
- * @Description redis 配置
- * @Author zhaohongliang
- * @Date 2023-07-10 20:44
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Slf4j
 @Configuration

@@ -18,11 +18,8 @@ import java.util.Map;
 /**
  * jwt工具类
  *
- * @ClassName JwtUtils
- * @Description jwt工具类
- * @Author zhaohongliang
- * @Date 2023-07-05 21:25
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 public class JwtUtils {
 

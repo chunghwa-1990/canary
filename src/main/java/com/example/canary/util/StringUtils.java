@@ -3,11 +3,8 @@ package com.example.canary.util;
 /**
  * 字符串工具类
  *
- * @ClassName StringUtils
- * @Description 字符串工具类
- * @Author zhaohongliang
- * @Date 2023-06-29 16:57
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 public class StringUtils {
 

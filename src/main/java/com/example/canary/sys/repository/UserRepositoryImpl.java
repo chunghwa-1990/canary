@@ -16,11 +16,8 @@ import java.nio.charset.StandardCharsets;
 /**
  * user
  *
- * @ClassName UserRepositoryImpl
- * @Description user
- * @Author zhaohongliang
- * @Date 2023-07-06 12:44
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Service
 public class UserRepositoryImpl implements UserRepository {

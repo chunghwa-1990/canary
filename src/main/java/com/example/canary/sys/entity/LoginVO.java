@@ -10,11 +10,8 @@ import java.io.Serializable;
 /**
  * login
  *
- * @ClassName LoginVO
- * @Description login
- * @Author zhaohongliang
- * @Date 2023-07-06 12:47
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Data
 @NoArgsConstructor

@@ -7,13 +7,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p>Api 版本号自定义注解</p>
+ * Api 版本号自定义注解
  *
- * @ClassName ApiVersion
- * @Description Api 版本号自定义注解
- * @Author zhaohongliang
- * @Date 2023-07-04 21:17
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Target({ ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)

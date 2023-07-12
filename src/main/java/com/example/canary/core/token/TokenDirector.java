@@ -10,11 +10,8 @@ import java.io.Serializable;
 /**
  * token 管理者
  *
- * @ClassName TokenDirector
- * @Description token 管理者
- * @Author zhaohongliang
- * @Date 2023-07-06 17:35
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 public record TokenDirector(TokenBuilder tokenBuilder) implements Serializable {
 

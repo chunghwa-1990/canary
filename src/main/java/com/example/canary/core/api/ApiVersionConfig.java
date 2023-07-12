@@ -7,11 +7,8 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 /**
  * api 版本配置
  *
- * @ClassName ApiVersionConfig
- * @Description api 版本配置
- * @Author zhaohongliang
- * @Date 2023-07-04 21:00
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Configuration
 public class ApiVersionConfig implements WebMvcRegistrations {

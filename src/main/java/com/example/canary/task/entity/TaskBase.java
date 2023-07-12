@@ -14,11 +14,8 @@ import java.io.Serializable;
 /**
  * 任务
  *
- * @ClassName TaskBase
- * @Description 任务
- * @Author zhaohongliang
- * @Date 2023-06-26 16:16
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Data
 public class TaskBase implements Serializable {

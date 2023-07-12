@@ -6,13 +6,10 @@ import lombok.Getter;
 import java.io.Serializable;
 
 /**
- * <p>响应状态码枚举类</p>
+ * 响应状态码枚举类
  *
- * @ClassName ResultCodeEnum
- * @Description
- * @Author zhaohongliang
- * @Date 2022-11-24 16:35
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Getter
 @AllArgsConstructor

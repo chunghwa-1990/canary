@@ -3,11 +3,8 @@ package com.example.canary.core.context;
 /**
  * Canary 上下文
  *
- * @ClassName CanaryContext
- * @Description Canary 上下文
- * @Author zhaohongliang
- * @Date 2023-07-09 23:23
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 public class CanaryContext {
 

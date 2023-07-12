@@ -3,11 +3,8 @@ package com.example.canary.core.enums;
 /**
  * 枚举接口
  *
- * @ClassName BaseEnum
- * @Description 枚举接口
- * @Author zhaohongliang
- * @Date 2023-07-02 21:00
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 public interface BaseEnum {
 

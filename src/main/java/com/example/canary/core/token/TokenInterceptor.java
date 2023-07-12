@@ -24,11 +24,8 @@ import java.io.Writer;
 /**
  * 拦截器
  *
- * @ClassName TokenInterceptor
- * @Description 拦截器
- * @Author zhaohongliang
- * @Date 2023-07-05 18:33
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Slf4j
 public class TokenInterceptor implements HandlerInterceptor {

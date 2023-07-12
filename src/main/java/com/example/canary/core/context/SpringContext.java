@@ -7,11 +7,8 @@ import org.springframework.context.ApplicationContextAware;
 /**
  * SpringBean 上下文
  *
- * @ClassName SpringContext
- * @Description SpringBean 上下文
- * @Author zhaohongliang
- * @Date 2023-06-29 17:13
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 public class SpringContext implements ApplicationContextAware {
 

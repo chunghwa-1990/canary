@@ -7,11 +7,8 @@ import com.example.canary.sys.entity.LoginVO;
 /**
  * system
  *
- * @ClassName SystemService
- * @Description system
- * @Author zhaohongliang
- * @Date 2023-07-06 21:58
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 public interface SystemService {
 

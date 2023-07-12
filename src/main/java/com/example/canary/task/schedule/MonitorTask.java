@@ -21,11 +21,8 @@ import java.util.stream.Collectors;
 /**
  * 监测任务
  *
- * @ClassName MonitorTask
- * @Description 监测
- * @Author zhaohongliang
- * @Date 2023-06-30 17:51
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Slf4j
 @Component

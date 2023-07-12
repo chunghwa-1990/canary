@@ -6,11 +6,8 @@ import lombok.Setter;
 /**
  * result entity
  *
- * @ClassName ResultEntity
- * @Description result entity
- * @Author zhaohongliang
- * @Date 2023-07-01 11:30
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Setter
 @Getter

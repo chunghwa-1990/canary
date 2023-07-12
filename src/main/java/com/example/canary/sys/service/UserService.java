@@ -6,11 +6,8 @@ import com.example.canary.sys.entity.UserAO;
 /**
  * user
  *
- * @ClassName UserService
- * @Description user
- * @Author zhaohongliang
- * @Date 2023-07-06 12:42
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 public interface UserService {
 

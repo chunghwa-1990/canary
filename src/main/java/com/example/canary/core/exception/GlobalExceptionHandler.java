@@ -27,11 +27,8 @@ import java.util.stream.Collectors;
 /**
  * 全局统一异常处理
  *
- * @ClassName GlobalExceptionHandler
- * @Description 全局统一异常处理
- * @Author zhaohongliang
- * @Date 2023-07-02 16:40
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {

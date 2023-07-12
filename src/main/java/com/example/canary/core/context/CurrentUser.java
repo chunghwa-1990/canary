@@ -9,11 +9,8 @@ import lombok.Setter;
 /**
  * 当前用户
  *
- * @ClassName CurrentUser
- * @Description 当前用户
- * @Author zhaohongliang
- * @Date 2023-07-09 00:31
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Setter
 @Getter

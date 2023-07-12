@@ -1,6 +1,5 @@
 package com.example.canary.task.entity;
 
-import com.example.canary.task.entity.TaskBase;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -9,11 +8,8 @@ import java.io.Serial;
 /**
  * 任务
  *
- * @ClassName TaskVO
- * @Description 任务
- * @Author zhaohongliang
- * @Date 2023-07-01 12:49
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @EqualsAndHashCode(callSuper = true)
 @Data

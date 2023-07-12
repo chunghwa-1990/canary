@@ -21,11 +21,8 @@ import java.util.concurrent.ScheduledFuture;
 /**
  * 动态处理定时任务
  *
- * @ClassName CronTaskRegistrar
- * @Description 动态处理定时任务
- * @Author zhaohongliang
- * @Date 2023-06-29 16:29
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Slf4j
 @Component

@@ -14,11 +14,8 @@ import java.time.LocalDateTime;
 /**
  * user
  *
- * @ClassName UserPO
- * @Description user
- * @Author zhaohongliang
- * @Date 2023-07-06 12:36
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @EqualsAndHashCode(callSuper = true)
 @Data

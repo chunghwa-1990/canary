@@ -5,11 +5,8 @@ import java.time.Duration;
 /**
  * jwt
  *
- * @ClassName TokenBuilder
- * @Description jwt
- * @Author zhaohongliang
- * @Date 2023-07-06 15:06
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 public interface TokenBuilder {
 

@@ -12,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @ClassName TokenPropertiesTest
  * @Description
- * @Author zhaohongliang
- * @Date 2023-07-11 16:22
- * @Since 1.0
+ * @author zhaohongliang
+ * @since 2023-07-11 16:22
+ * @version 1.0
  */
 @Slf4j
 @SpringBootTest

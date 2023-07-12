@@ -9,11 +9,8 @@ import java.time.Duration;
 /**
  * token properties
  *
- * @ClassName TokenProperties
- * @Description token properties
- * @Author zhaohongliang
- * @Date 2023-07-06 13:28
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Setter
 @Getter

@@ -15,11 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * system
  *
- * @ClassName SystemController
- * @Description system
- * @Author zhaohongliang
- * @Date 2023-07-06 12:46
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Validated
 @ApiVersion

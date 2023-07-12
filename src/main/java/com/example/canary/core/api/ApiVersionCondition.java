@@ -13,11 +13,8 @@ import java.util.regex.Pattern;
 /**
  * api 接口版本要求
  *
- * @ClassName ApiVersionCondition
- * @Description api 接口版本要求
- * @Author zhaohongliang
- * @Date 2023-07-04 22:28
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Slf4j
 public class ApiVersionCondition implements RequestCondition<ApiVersionCondition> {

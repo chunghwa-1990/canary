@@ -7,11 +7,8 @@ import java.lang.reflect.Method;
 /**
  * 线程任务
  *
- * @ClassName BusinessTask
- * @Description 线程任务
- * @Author zhaohongliang
- * @Date 2023-06-29 23:51
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Slf4j
 public class BusinessTask extends AbstractTask {

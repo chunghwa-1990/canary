@@ -5,13 +5,12 @@ import org.apache.commons.lang3.RandomStringUtils;
 /**
  * 随机字符串工具类
  *
- * @ClassName RandomUtils
- * @Description 随机字符串工具类
- * @Author zhaohongliang
- * @Date 2023-07-07 20:34
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 public class RandomUtils {
+
+    private RandomUtils() {}
     private static final char[] CHARS = new char[]{'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e',
             'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',

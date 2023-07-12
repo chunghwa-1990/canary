@@ -4,11 +4,8 @@ package com.example.canary.core.exception;
 /**
  * 自定义异常抽象类
  *
- * @ClassName BaseException
- * @Description 自定义异常抽象类
- * @Author zhaohongliang
- * @Date 2023-07-02 17:48
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 public abstract class BaseException extends RuntimeException {
 

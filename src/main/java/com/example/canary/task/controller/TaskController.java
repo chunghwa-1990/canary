@@ -22,11 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 任务
  *
- * @ClassName TaskController
- * @Description 任务
- * @Author zhaohongliang
- * @Date 2023-06-29 10:18
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @ApiVersion
 @Validated

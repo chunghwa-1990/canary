@@ -9,11 +9,8 @@ import org.springframework.stereotype.Repository;
 /**
  * user
  *
- * @ClassName UserMapper
- * @Description user
- * @Author zhaohongliang
- * @Date 2023-07-06 12:43
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Repository
 public interface UserMapper extends BaseMapper<UserPO> {

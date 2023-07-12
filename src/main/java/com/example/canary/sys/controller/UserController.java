@@ -21,11 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * user controller
  *
- * @ClassName UserController
- * @Description user controller
- * @Author zhaohongliang
- * @Date 2023-07-06 12:32
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Validated
 @ApiVersion

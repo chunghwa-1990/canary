@@ -16,11 +16,8 @@ import java.io.Serializable;
 /**
  * user
  *
- * @ClassName UserBase
- * @Description user
- * @Author zhaohongliang
- * @Date 2023-07-06 12:33
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Data
 public class UserBase implements Serializable {

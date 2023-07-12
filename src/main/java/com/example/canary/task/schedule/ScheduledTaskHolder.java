@@ -7,11 +7,8 @@ import java.util.concurrent.ScheduledFuture;
 /**
  * 定时任务包装类
  *
- * @ClassName ScheduledTaskHolder
- * @Description 定时任务包装类
- * @Author zhaohongliang
- * @Date 2023-06-30 15:58
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Data
 public class ScheduledTaskHolder {

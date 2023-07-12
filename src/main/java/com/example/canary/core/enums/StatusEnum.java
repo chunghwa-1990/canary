@@ -6,11 +6,8 @@ import lombok.Getter;
 /**
  * 状态枚举
  *
- * @ClassName StatusEnum
- * @Description 状态枚举
- * @Author zhaohongliang
- * @Date 2023-07-06 22:17
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 public class StatusEnum {
 

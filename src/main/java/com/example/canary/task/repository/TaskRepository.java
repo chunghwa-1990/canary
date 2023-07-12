@@ -7,11 +7,8 @@ import java.util.List;
 /**
  * 任务
  *
- * @ClassName TaskRepository
- * @Description 任务
- * @Author zhaohongliang
- * @Date 2023-06-29 16:33
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 public interface TaskRepository {
 

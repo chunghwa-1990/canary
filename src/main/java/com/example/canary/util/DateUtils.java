@@ -7,11 +7,8 @@ import java.time.ZoneId;
 /**
  * 日期工具类
  *
- * @ClassName DateUtils
- * @Description 日期工具类
- * @Author zhaohongliang
- * @Date 2023-06-30 00:03
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 public class DateUtils {
 

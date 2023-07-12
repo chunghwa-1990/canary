@@ -10,11 +10,8 @@ import java.io.Serializable;
 /**
  * login
  *
- * @ClassName LoginAO
- * @Description login
- * @Author zhaohongliang
- * @Date 2023-07-06 22:00
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Data
 public class LoginAO implements Serializable {

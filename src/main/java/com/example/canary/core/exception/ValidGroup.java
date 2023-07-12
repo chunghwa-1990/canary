@@ -5,11 +5,8 @@ import jakarta.validation.GroupSequence;
 /**
  * 分组校验
  *
- * @ClassName ValidGroup
- * @Description 分组校验
- * @Author zhaohongliang
- * @Date 2023-07-01 13:06
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 public class ValidGroup {
 

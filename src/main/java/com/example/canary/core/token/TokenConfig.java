@@ -11,11 +11,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 /**
  * token 配置
  *
- * @ClassName TokenConfig
- * @Description token 配置
- * @Author zhaohongliang
- * @Date 2023-07-06 13:19
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Configuration
 @EnableConfigurationProperties(TokenProperties.class)

@@ -13,11 +13,8 @@ import java.time.LocalDateTime;
 /**
  * 线程任务抽象类
  *
- * @ClassName AbstractTask
- * @Description 线程任务抽象类
- * @Author zhaohongliang
- * @Date 2023-06-29 23:54
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Slf4j
 @Data

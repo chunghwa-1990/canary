@@ -8,11 +8,8 @@ import java.time.Duration;
 /**
  * jwt
  *
- * @ClassName JwtTokenBuilder
- * @Description jwt
- * @Author zhaohongliang
- * @Date 2023-07-06 15:07
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Data
 public class JwtTokenBuilder implements TokenBuilder {

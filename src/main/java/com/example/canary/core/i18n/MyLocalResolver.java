@@ -11,11 +11,8 @@ import java.util.Locale;
 /**
  * 自定义区域解析器
  *
- * @ClassName MyLocalResolver
- * @Description 自定义区域解析器
- * @Author zhaohongliang
- * @Date 2023-07-03 16:59
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 public class MyLocalResolver implements LocaleResolver {
 

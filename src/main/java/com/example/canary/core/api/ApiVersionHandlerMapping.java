@@ -10,11 +10,8 @@ import java.lang.reflect.Method;
 /**
  * api version handlerMapping
  *
- * @ClassName ApiVersionHandlerMapping
- * @Description api version handlerMapping
- * @Author zhaohongliang
- * @Date 2023-07-04 21:14
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 public class ApiVersionHandlerMapping extends RequestMappingHandlerMapping {
 
@@ -36,8 +33,8 @@ public class ApiVersionHandlerMapping extends RequestMappingHandlerMapping {
         if (version == null) {
             return null;
         }
-        // int value = Integer.valueOf(version.value());
-        // Assert.isTrue(value >= 1, "Api Version Must be greater than or equal to 1");
+        // int value = Integer.valueOf(version.value())
+        // Assert.isTrue(value >= 1, "Api Version Must be greater than or equal to 1")
         return new ApiVersionCondition(version.value());
     }
 }

@@ -1,7 +1,6 @@
 package com.example.canary.task.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.example.canary.core.enums.BaseEnum;
 import com.example.canary.core.enums.StatusEnum;
 import com.example.canary.task.entity.TaskPO;
 import com.example.canary.task.mapper.TaskMapper;
@@ -13,11 +12,8 @@ import java.util.List;
 /**
  * 任务
  *
- * @ClassName TaskRepositoryImpl
- * @Description 任务
- * @Author zhaohongliang
- * @Date 2023-06-29 16:34
- * @Since 1.0
+ * @since 1.0
+ * @author zhaohongliang
  */
 @Service
 public class TaskRepositoryImpl implements TaskRepository {
