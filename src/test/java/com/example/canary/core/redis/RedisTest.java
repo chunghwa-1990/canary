@@ -1,16 +1,11 @@
 package com.example.canary.core.redis;
 
-import com.example.canary.task.schedule.ScheduledConfig;
+import com.example.canary.sys.entity.UserPO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.stereotype.Component;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.event.annotation.BeforeTestMethod;
 
 /**
  * redis test
@@ -27,9 +22,13 @@ class RedisTest {
 
     @Test
     void test() {
-        template.opsForValue().set("test", "123");
+        UserPO userPo = new UserPO();
+        userPo.setAccount("test");
+        template.opsForValue().set("test", userPo);
         Object object = template.opsForValue().get("test");
-        log.info(object.toString());
+        if (object != null) {
+            log.info(object.toString());
+        }
     }
 
 }
