@@ -41,11 +41,9 @@ public class TokenInterceptor implements HandlerInterceptor {
     public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) throws Exception {
         // token
         String token = request.getHeader(HeaderConstant.TOKEN);
-        // secret
-        String secret = tokenProperties.getSecret();
 
         // 校验token
-        if (!StringUtils.hasText(token) || !JwtUtils.verify(secret, token)) {
+        if (!StringUtils.hasText(token)) {
             setResponse(response, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
             return false;
         }
@@ -57,16 +55,23 @@ public class TokenInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        // 从redis获取载荷赋值给 ThreadLocal<CurrentUser>
+        // 从redis获取token
         Object object = template.opsForValue().get(userId);
         if (object == null) {
             setResponse(response, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
             return false;
         }
+
+        // 校验是否一致
         ObjectMapper objectMapper = new ObjectMapper();
-        String redisTokenStr = objectMapper.convertValue(object, String.class);
+        String redisToken = objectMapper.convertValue(object, String.class);
+        if (!token.equals(redisToken)) {
+            setResponse(response, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
+            return false;
+        }
+
         // 载荷
-        String claimStr = JwtUtils.getClaimStr(redisTokenStr, JwtConstant.CLAIM_DATA);
+        String claimStr = JwtUtils.getClaimStr(redisToken, JwtConstant.CLAIM_DATA);
         if (!StringUtils.hasText(claimStr)) {
             setResponse(response, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
             return false;
@@ -79,6 +84,7 @@ public class TokenInterceptor implements HandlerInterceptor {
             return false;
         }
 
+        // 把redis中token的载荷赋值给 ThreadLocal<CurrentUser>
         CurrentUser<UserVO> currentUser = new CurrentUser<>(userVo);
         CanaryContext.setCurrentUser(currentUser);
 
