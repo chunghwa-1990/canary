@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -33,6 +34,9 @@ public class TokenInterceptor implements HandlerInterceptor {
     @Autowired
     private TokenProperties tokenProperties;
 
+    @Autowired
+    private RedisTemplate<String, Object> template;
+
     @Override
     public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) throws Exception {
         // token
@@ -46,14 +50,28 @@ public class TokenInterceptor implements HandlerInterceptor {
             return false;
         }
 
+        // userId
+        String userId = JwtUtils.getAudience(token, 0);
+        if (!StringUtils.hasText(userId)) {
+            setResponse(response, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
+            return false;
+        }
+
+        // 从redis获取载荷赋值给 ThreadLocal<CurrentUser>
+        Object object = template.opsForValue().get(userId);
+        if (object == null) {
+            setResponse(response, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
+            return false;
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        String redisTokenStr = objectMapper.convertValue(object, String.class);
         // 载荷
-        String claimStr = JwtUtils.getClaimStr(token, JwtConstant.CLAIM_DATA);
+        String claimStr = JwtUtils.getClaimStr(redisTokenStr, JwtConstant.CLAIM_DATA);
         if (!StringUtils.hasText(claimStr)) {
             setResponse(response, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
             return false;
         }
 
-        ObjectMapper objectMapper = new ObjectMapper();
         // user
         UserVO userVo = objectMapper.readValue(claimStr, UserVO.class);
         if (userVo == null) {

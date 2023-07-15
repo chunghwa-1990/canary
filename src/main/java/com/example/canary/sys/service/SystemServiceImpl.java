@@ -13,6 +13,7 @@ import com.example.canary.sys.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
@@ -33,6 +34,9 @@ public class SystemServiceImpl implements SystemService {
 
     @Autowired
     private TokenProperties tokenProperties;
+
+    @Autowired
+    private RedisTemplate<String, Object> template;
 
     /**
      * login
@@ -64,6 +68,9 @@ public class SystemServiceImpl implements SystemService {
         } catch (JsonProcessingException e) {
             throw new BusinessException("create token has error");
         }
+
+        // redis
+        template.opsForValue().set(userPo.getId(), token);
         LoginVO loginVo = new LoginVO(token);
         return ResultEntity.success(loginVo);
     }

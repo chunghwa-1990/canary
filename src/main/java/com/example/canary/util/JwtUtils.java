@@ -1,6 +1,7 @@
 package com.example.canary.util;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
@@ -60,6 +61,44 @@ public class JwtUtils {
                 .withClaim(JwtConstant.CLAIM_DATA, claim)
                 // sign
                 .sign(algorithm);
+    }
+
+    /**
+     * 创建token
+     *
+     * @param secret 密钥
+     * @param expires 过期时间
+     * @param claimMap 载荷map
+     * @param audience aud
+     * @return
+     */
+    public static String createJwtToken(String secret, Duration expires, Map<String, String> claimMap, String... audience) {
+        // 有效起始时间
+        Date beginTime = new Date();
+        // 有效结束时间
+        Date endTime = new Date(System.currentTimeMillis() + expires.toMillis());
+
+        // header
+        Map<String, Object> header = new HashMap<>();
+        header.put("typ", "JWT");
+        header.put("alg", "HS256");
+
+        // 加密算法
+        Algorithm algorithm = Algorithm.HMAC256(secret);
+
+        JWTCreator.Builder builder = JWT.create();
+        builder
+                // header
+                .withHeader(header)
+                // payload
+                .withAudience(audience)
+                .withIssuedAt(beginTime)
+                .withExpiresAt(endTime);
+        if (!CollectionUtils.isEmpty(claimMap)) {
+            claimMap.forEach(builder::withClaim);
+        }
+        // sign
+        return builder.sign(algorithm);
 
     }
 
