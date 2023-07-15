@@ -27,5 +27,6 @@ public class TokenProperties {
     /**
      * 到期时间
      */
+    // @DurationUnit(value = ChronoUnit.SECONDS)
     private Duration expires;
 }

@@ -36,7 +36,7 @@ public class SystemServiceImpl implements SystemService {
     private TokenProperties tokenProperties;
 
     @Autowired
-    private RedisTemplate<String, Object> template;
+    private RedisTemplate<String, Object> redisTemplate;
 
     /**
      * login
@@ -70,7 +70,7 @@ public class SystemServiceImpl implements SystemService {
         }
 
         // redis
-        template.opsForValue().set(userPo.getId(), token);
+        redisTemplate.opsForValue().set(userPo.getId(), token);
         LoginVO loginVo = new LoginVO(token);
         return ResultEntity.success(loginVo);
     }

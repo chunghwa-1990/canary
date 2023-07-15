@@ -18,14 +18,14 @@ import org.springframework.data.redis.core.RedisTemplate;
 class RedisTest {
 
     @Autowired
-    private RedisTemplate<String, Object> template;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Test
     void test() {
         UserPO userPo = new UserPO();
         userPo.setAccount("test");
-        template.opsForValue().set("test", userPo);
-        Object object = template.opsForValue().get("test");
+        redisTemplate.opsForValue().set("test", userPo);
+        Object object = redisTemplate.opsForValue().get("test");
         if (object != null) {
             log.info(object.toString());
         }

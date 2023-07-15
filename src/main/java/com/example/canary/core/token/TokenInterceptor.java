@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 拦截器
@@ -35,7 +36,7 @@ public class TokenInterceptor implements HandlerInterceptor {
     private TokenProperties tokenProperties;
 
     @Autowired
-    private RedisTemplate<String, Object> template;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) throws Exception {
@@ -56,7 +57,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         }
 
         // 从redis获取token
-        Object object = template.opsForValue().get(userId);
+        Object object = redisTemplate.opsForValue().get(userId);
         if (object == null) {
             setResponse(response, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
             return false;
@@ -87,6 +88,9 @@ public class TokenInterceptor implements HandlerInterceptor {
         // 把redis中token的载荷赋值给 ThreadLocal<CurrentUser>
         CurrentUser<UserVO> currentUser = new CurrentUser<>(userVo);
         CanaryContext.setCurrentUser(currentUser);
+
+        // token续期
+        redisTemplate.expire(userId, tokenProperties.getExpires().toSeconds(), TimeUnit.SECONDS);
 
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
