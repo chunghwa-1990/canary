@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
 /**
  * SpringBean 上下文
@@ -11,6 +12,7 @@ import org.springframework.context.ApplicationContextAware;
  * @since 1.0
  * @author zhaohongliang
  */
+@Component
 public class SpringContext implements ApplicationContextAware {
 
     /**
@@ -19,20 +21,11 @@ public class SpringContext implements ApplicationContextAware {
     private static ApplicationContext context;
 
     /**
-     * 获取 application context
-     *
-     * @return
-     */
-    public static ApplicationContext getContext() {
-        return context;
-    }
-
-    /**
      * 设置 application context
      *
      * @param context
      */
-    public static void setContext(ApplicationContext context) {
+    private static void setContext(ApplicationContext context) {
         SpringContext.context = context;
     }
 
