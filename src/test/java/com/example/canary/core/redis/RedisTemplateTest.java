@@ -2,8 +2,8 @@ package com.example.canary.core.redis;
 
 import com.example.canary.sys.entity.UserPO;
 import com.example.canary.sys.repository.UserRepository;
+import com.example.canary.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,7 +26,7 @@ class RedisTemplateTest {
 
     @Test
     void test() {
-        String uuid = UUID.randomUUID().toString().replace("-", "");
+        String uuid = StringUtils.randomUUID();
         UserPO userPo = new UserPO();
         userPo.setId(uuid);
         userPo.setAccount("test123");
