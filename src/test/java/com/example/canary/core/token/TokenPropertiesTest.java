@@ -10,10 +10,7 @@ import java.time.Duration;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * @ClassName TokenPropertiesTest
- * @Description
  * @author zhaohongliang
- * @since 2023-07-11 16:22
  * @version 1.0
  */
 @Slf4j
@@ -27,7 +24,6 @@ class TokenPropertiesTest {
     void test() {
         Duration duration = tokenProperties.getExpires();
         log.info("expires:{}" , duration.toMillis());
-
     }
 
 }
