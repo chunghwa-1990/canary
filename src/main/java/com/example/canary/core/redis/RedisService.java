@@ -1,12 +1,7 @@
 package com.example.canary.core.redis;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -20,17 +15,10 @@ import java.util.concurrent.TimeUnit;
  * @since 1.0
  */
 @Slf4j
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class RedisService {
+public record RedisService(RedisTemplate<String, Object> redisTemplate) {
 
-    private Duration timeout;
-
-    private RedisTemplate<String, Object> redisTemplate;
-
-    public static RedisService create(Duration timeout, RedisTemplate<String, Object> redisTemplate) {
-        return new RedisService(timeout, redisTemplate);
+    public static RedisService create(RedisTemplate<String, Object> redisTemplate) {
+        return new RedisService(redisTemplate);
     }
 
     /**
