@@ -1,5 +1,8 @@
 package com.example.canary.core.redis;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -15,11 +18,12 @@ import java.util.concurrent.TimeUnit;
  * @since 1.0
  */
 @Slf4j
-public record RedisService(RedisTemplate<String, Object> redisTemplate) {
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class RedisService {
 
-    public static RedisService create(RedisTemplate<String, Object> redisTemplate) {
-        return new RedisService(redisTemplate);
-    }
+    private RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 设置普通对象

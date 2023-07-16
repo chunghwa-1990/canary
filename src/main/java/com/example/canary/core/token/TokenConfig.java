@@ -31,7 +31,7 @@ public class TokenConfig implements WebMvcConfigurer {
     @Bean
     @ConditionalOnMissingBean(TokenService.class)
     public TokenService tokenService(TokenProperties tokenProperties) {
-        return TokenService.create(tokenProperties);
+        return TokenBuilder.create(tokenProperties).build();
     }
 
     /**

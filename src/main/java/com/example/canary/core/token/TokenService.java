@@ -5,6 +5,10 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.example.canary.sys.entity.UserBase;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Duration;
@@ -18,11 +22,15 @@ import java.util.Map;
  * @since 1.0
  */
 @Slf4j
-public record TokenService(String secret, Duration timeout) {
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class TokenService {
 
-    public static TokenService create(TokenProperties tokenProperties) {
-        return new TokenService(tokenProperties.getSecret(), tokenProperties.getTimeout());
-    }
+   private String secret;
+
+   private Duration timeout;
 
     /**
      * 创建token

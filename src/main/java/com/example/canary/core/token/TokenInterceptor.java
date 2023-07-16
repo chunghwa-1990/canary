@@ -91,7 +91,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         CanaryContext.setCurrentUser(currentUser);
 
         // token续期
-        redisService.expire(userId, tokenService.timeout());
+        redisService.expire(userId, tokenService.getTimeout());
 
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }

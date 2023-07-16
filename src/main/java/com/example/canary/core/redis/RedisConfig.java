@@ -49,7 +49,7 @@ public class RedisConfig {
     @Bean
     @ConditionalOnMissingBean(RedisService.class)
     public RedisService redisService(RedisTemplate<String, Object> redisTemplate) {
-        return RedisService.create(redisTemplate);
+        return RedisBuild.create(redisTemplate).build();
     }
 
 

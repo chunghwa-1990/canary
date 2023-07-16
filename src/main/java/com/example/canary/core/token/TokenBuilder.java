@@ -1,5 +1,7 @@
 package com.example.canary.core.token;
 
+import org.springframework.boot.context.properties.PropertyMapper;
+
 import java.time.Duration;
 
 /**
@@ -8,40 +10,22 @@ import java.time.Duration;
  * @since 1.0
  * @author zhaohongliang
  */
-public interface TokenBuilder {
+public record TokenBuilder(String secret, Duration timeout) {
 
-    /**
-     * 设置密钥
-     *
-     * @param secret 密钥
-     */
-    void setSecret(String secret);
 
-    /**
-     * 设置过期间隔
-     *
-     * @param expires 过期间隔
-     */
-    void setExpires(Duration expires);
+    public static TokenBuilder create(TokenProperties properties) {
+        return new TokenBuilder(properties.getSecret(), properties.getTimeout());
+    }
 
-    /**
-     * 设置 aud
-     *
-     * @param audience aud
-     */
-    void setAudience(String audience);
+    public TokenService build() {
+        return configure(new TokenService());
+    }
 
-    /**
-     * 设置载荷
-     *
-     * @param claim 载荷
-     */
-    void setClaim(String claim);
+    public TokenService configure(TokenService service) {
+        PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+        map.from(this.secret).to(service::setSecret);
+        map.from(this.timeout).to(service::setTimeout);
+        return service;
+    }
 
-    /**
-     * 构建 token
-     *
-     * @return token
-     */
-    String build();
 }

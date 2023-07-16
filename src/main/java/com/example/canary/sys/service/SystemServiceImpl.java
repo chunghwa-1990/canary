@@ -67,7 +67,7 @@ public class SystemServiceImpl implements SystemService {
         }
 
         // redis
-        redisService.set(userPo.getId(), token, tokenService.timeout());
+        redisService.set(userPo.getId(), token, tokenService.getTimeout());
         LoginVO loginVo = new LoginVO(token);
         return ResultEntity.success(loginVo);
     }
