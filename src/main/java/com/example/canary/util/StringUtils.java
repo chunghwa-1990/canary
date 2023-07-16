@@ -1,5 +1,7 @@
 package com.example.canary.util;
 
+import java.util.UUID;
+
 /**
  * 字符串工具类
  *
@@ -10,6 +12,15 @@ public class StringUtils {
 
     private StringUtils() {
 
+    }
+
+    /**
+     * 生成UUID
+     *
+     * @return
+     */
+    public static String randomUUID() {
+        return UUID.randomUUID().toString().replace("-", "");
     }
 
     /**
