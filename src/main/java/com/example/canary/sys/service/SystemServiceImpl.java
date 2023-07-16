@@ -10,6 +10,7 @@ import com.example.canary.sys.entity.LoginAO;
 import com.example.canary.sys.entity.LoginVO;
 import com.example.canary.sys.entity.UserPO;
 import com.example.canary.sys.repository.UserRepository;
+import com.example.canary.util.RedisUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,7 @@ public class SystemServiceImpl implements SystemService {
         }
 
         // redis
-        redisTemplate.opsForValue().set(userPo.getId(), token);
+        redisTemplate.opsForValue().set(userPo.getId(), token, tokenProperties.getExpires());
         LoginVO loginVo = new LoginVO(token);
         return ResultEntity.success(loginVo);
     }
