@@ -14,10 +14,12 @@ import java.time.Duration;
  */
 @Setter
 @Getter
-@ConfigurationProperties(prefix = "token" )
+@ConfigurationProperties(prefix = TokenProperties.PREFIX )
 public class TokenProperties {
 
     private TokenProperties() {}
+
+    public static final String PREFIX = "token";
 
     /**
      * 密钥
@@ -25,8 +27,8 @@ public class TokenProperties {
     private String secret;
 
     /**
-     * 到期时间
+     * 过期时间
      */
     // @DurationUnit(value = ChronoUnit.SECONDS)
-    private Duration expires;
+    private Duration timeout;
 }

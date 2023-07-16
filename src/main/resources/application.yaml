@@ -32,6 +32,6 @@ mybatis-plus:
 
 token:
   secret: canary
-  expires: 7200s
+  timeout: 7200s
 
 

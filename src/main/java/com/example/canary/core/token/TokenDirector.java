@@ -30,7 +30,7 @@ public record TokenDirector(TokenBuilder tokenBuilder) implements Serializable {
         // claim
         String claim = objectMapper.writeValueAsString(userVo);
         tokenBuilder.setSecret(tokenProperties.getSecret());
-        tokenBuilder.setExpires(tokenProperties.getExpires());
+        tokenBuilder.setExpires(tokenProperties.getTimeout());
         tokenBuilder.setAudience(userVo.getId());
         tokenBuilder.setClaim(claim);
         return tokenBuilder.build();

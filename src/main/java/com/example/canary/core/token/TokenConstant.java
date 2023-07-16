@@ -6,9 +6,9 @@ package com.example.canary.core.token;
  * @since 1.0
  * @author zhaohongliang
  */
-public class JwtConstant {
+public class TokenConstant {
 
-    private JwtConstant() {}
+    private TokenConstant() {}
 
     /**
      * 载荷

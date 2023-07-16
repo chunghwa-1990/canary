@@ -22,7 +22,7 @@ class TokenPropertiesTest {
 
     @Test
     void test() {
-        Duration duration = tokenProperties.getExpires();
+        Duration duration = tokenProperties.getTimeout();
         log.info("expires:{}" , duration.toMillis());
     }
 

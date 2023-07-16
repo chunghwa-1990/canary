@@ -2,15 +2,13 @@ package com.example.canary.sys.service;
 
 import com.example.canary.core.exception.BusinessException;
 import com.example.canary.core.exception.ResultEntity;
-import com.example.canary.core.token.JwtTokenBuilder;
-import com.example.canary.core.token.TokenBuilder;
-import com.example.canary.core.token.TokenDirector;
+import com.example.canary.core.redis.RedisService;
+import com.example.canary.core.token.TokenService;
 import com.example.canary.core.token.TokenProperties;
 import com.example.canary.sys.entity.LoginAO;
 import com.example.canary.sys.entity.LoginVO;
 import com.example.canary.sys.entity.UserPO;
 import com.example.canary.sys.repository.UserRepository;
-import com.example.canary.util.RedisUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +32,10 @@ public class SystemServiceImpl implements SystemService {
     private UserRepository userRepository;
 
     @Autowired
-    private TokenProperties tokenProperties;
+    private TokenService tokenService;
 
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisService redisService;
 
     /**
      * login
@@ -61,17 +59,15 @@ public class SystemServiceImpl implements SystemService {
             return ResultEntity.fail("用户名或密码错误");
         }
 
-        TokenBuilder builder = new JwtTokenBuilder();
-        TokenDirector director = new TokenDirector(builder);
         String token = null;
         try {
-            token = director.createToken(tokenProperties, userPo.convertToVo());
+            token = tokenService.createJwtToken(userPo.convertToVo());
         } catch (JsonProcessingException e) {
             throw new BusinessException("create token has error");
         }
 
         // redis
-        redisTemplate.opsForValue().set(userPo.getId(), token, tokenProperties.getExpires());
+        redisService.set(userPo.getId(), token, tokenService.timeout());
         LoginVO loginVo = new LoginVO(token);
         return ResultEntity.success(loginVo);
     }

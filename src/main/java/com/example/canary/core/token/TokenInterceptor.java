@@ -5,6 +5,7 @@ import com.example.canary.core.context.CanaryContext;
 import com.example.canary.core.context.CurrentUser;
 import com.example.canary.core.exception.ResultCodeEnum;
 import com.example.canary.core.exception.ResultEntity;
+import com.example.canary.core.redis.RedisService;
 import com.example.canary.sys.entity.UserVO;
 import com.example.canary.util.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,10 +34,10 @@ import java.util.concurrent.TimeUnit;
 public class TokenInterceptor implements HandlerInterceptor {
 
     @Autowired
-    private TokenProperties tokenProperties;
+    private TokenService tokenService;
 
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisService redisService;
 
     @Override
     public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) throws Exception {
@@ -57,7 +58,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         }
 
         // 从redis获取token
-        Object object = redisTemplate.opsForValue().get(userId);
+        Object object = redisService.get(userId);
         if (object == null) {
             setResponse(response, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
             return false;
@@ -72,7 +73,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         }
 
         // 载荷
-        String claimStr = JwtUtils.getClaimStr(redisToken, JwtConstant.CLAIM_DATA);
+        String claimStr = JwtUtils.getClaimStr(redisToken, TokenConstant.CLAIM_DATA);
         if (!StringUtils.hasText(claimStr)) {
             setResponse(response, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
             return false;
@@ -90,7 +91,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         CanaryContext.setCurrentUser(currentUser);
 
         // token续期
-        redisTemplate.expire(userId, tokenProperties.getExpires().toSeconds(), TimeUnit.SECONDS);
+        redisService.expire(userId, tokenService.timeout());
 
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }

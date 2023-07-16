@@ -8,7 +8,6 @@ import java.time.Duration;
 /**
  * jwt
  *
- * @since 1.0
  * @author zhaohongliang
  */
 @Data

@@ -1,7 +1,9 @@
 package com.example.canary.core.redis;
 
+import com.example.canary.core.token.TokenProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -39,7 +41,18 @@ public class RedisConfig {
         return redisTemplate;
     }
 
-
+    /**
+     * redisService
+     *
+     * @param tokenProperties
+     * @param redisTemplate
+     * @return
+     */
+    @Bean
+    @ConditionalOnMissingBean(RedisService.class)
+    public RedisService redisService(TokenProperties tokenProperties, RedisTemplate<String, Object> redisTemplate) {
+        return RedisService.create(tokenProperties.getTimeout(), redisTemplate);
+    }
 
 
 }

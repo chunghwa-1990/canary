@@ -7,7 +7,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.canary.core.token.JwtConstant;
+import com.example.canary.core.token.TokenConstant;
 import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
@@ -58,7 +58,7 @@ public class JwtUtils {
                 .withAudience(audience)
                 .withIssuedAt(beginTime)
                 .withExpiresAt(endTime)
-                .withClaim(JwtConstant.CLAIM_DATA, claim)
+                .withClaim(TokenConstant.CLAIM_DATA, claim)
                 // sign
                 .sign(algorithm);
     }
@@ -202,6 +202,6 @@ public class JwtUtils {
         Thread.sleep(2000);
         System.out.println(JwtUtils.isExpired(token));
         System.out.println(JwtUtils.verify(secret, token));
-        System.out.println(JwtUtils.getClaim(token, JwtConstant.CLAIM_DATA));
+        System.out.println(JwtUtils.getClaim(token, TokenConstant.CLAIM_DATA));
     }
 }
