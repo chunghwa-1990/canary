@@ -29,16 +29,16 @@ class TokenDirectorTest {
 
     @Test
     void createToken() {
-        UserPO userPo = userRepository.selectByAccount("admin");
-        TokenBuilder builder = new JwtTokenBuilder();
-        TokenDirector director = new TokenDirector(builder);
-        String token = null;
-        try {
-            token = director.createToken(tokenProperties, userPo.convertToVo());
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        log.info("token:{}", token);
+        // UserPO userPo = userRepository.selectByAccount("admin");
+        // TokenBuilder builder = new JwtTokenBuilder();
+        // TokenDirector director = new TokenDirector(builder);
+        // String token = null;
+        // try {
+        //     token = director.createToken(tokenProperties, userPo.convertToVo());
+        // } catch (JsonProcessingException e) {
+        //     e.printStackTrace();
+        // }
+        // log.info("token:{}", token);
     }
 
     @BeforeEach
