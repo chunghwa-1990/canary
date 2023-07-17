@@ -31,8 +31,7 @@ DROP TABLE IF EXISTS `t_task_base`;
 CREATE TABLE `t_task_base` (
     `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
     `name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '名称',
-    `name_en` varchar(200) DEFAULT NULL COMMENT '名称（英文）',
-    `description` varchar(200) DEFAULT NULL COMMENT '描述',
+    `description` varchar(500) DEFAULT NULL COMMENT '描述',
     `cron_expression` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '表达式',
     `class_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '类名',
     `method_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '方法名',

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.example.canary.core.exception.ValidGroup;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
 import java.io.Serial;
@@ -37,13 +38,9 @@ public class TaskBase implements Serializable {
     private String name;
 
     /**
-     * 名称（英文）
-     */
-    private String nameEn;
-
-    /**
      * 描述
      */
+    @Length(max = 500, groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
     private String description;
 
     /**
