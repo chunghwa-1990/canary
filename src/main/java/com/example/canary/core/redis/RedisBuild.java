@@ -9,7 +9,21 @@ import org.springframework.data.redis.core.RedisTemplate;
  * @author zhaohongliang 2023-07-17 04:22
  * @since 1.0
  */
-public record RedisBuild(RedisTemplate<String, Object> redisTemplate) {
+public class RedisBuild {
+
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    public RedisBuild() {
+        this.redisTemplate = null;
+    }
+
+    public RedisBuild(RedisTemplate<String, Object> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
+
+    public RedisBuild redisTemplate(RedisTemplate<String, Object> redisTemplate) {
+        return new RedisBuild(redisTemplate);
+    }
 
     public static RedisBuild create(RedisTemplate<String, Object> redisTemplate) {
         return new RedisBuild(redisTemplate);

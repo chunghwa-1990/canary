@@ -31,4 +31,13 @@ public class TokenProperties {
      */
     // @DurationUnit(value = ChronoUnit.SECONDS)
     private Duration timeout;
+
+    /**
+     * Initialize a {@link TokenBuilder} with the state of this instance.
+     * @return a {@link TokenBuilder} initialized with the customizations defined on
+     * this instance
+     */
+    public TokenBuilder initializeTokenBuilder() {
+        return TokenBuilder.create(this);
+    }
 }
