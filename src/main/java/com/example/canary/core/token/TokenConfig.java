@@ -3,7 +3,6 @@ package com.example.canary.core.token;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -24,8 +23,10 @@ public class TokenConfig implements WebMvcConfigurer {
 
     /**
      * tokenService
-     * {@link TokenProperties} initializeTokenBuilder()
-     * {@link TokenBuilder} constructor() create() build()
+     * {@link TokenProperties} tokenProperties.initializeTokenBuilder().build()
+     * {@link TokenBuilder} new TokenBuilder("secret", Duration.ZERO).build()
+     * TokenBuilder.create().secret("secret").timeout(Duration.ZERO).build()
+     * TokenBuilder.create(tokenProperties).build()
      *
      * @param tokenProperties
      * @return
