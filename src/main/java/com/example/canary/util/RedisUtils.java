@@ -1,6 +1,6 @@
 package com.example.canary.util;
 
-import com.example.canary.core.context.SpringContext;
+import com.example.canary.common.context.SpringContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 

@@ -1,7 +1,7 @@
 package com.example.canary.task.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.example.canary.core.enums.StatusEnum;
+import com.example.canary.common.enums.StatusEnum;
 import com.example.canary.task.entity.TaskPO;
 import com.example.canary.task.mapper.TaskMapper;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -58,7 +58,7 @@ public class UserPO extends UserBase {
 
     /**
      * 是否删除
-     * @see com.example.canary.core.enums.StatusEnum.Deleted
+     * @see com.example.canary.common.enums.StatusEnum.Deleted
      */
     @TableField(value = "is_deleted")
     private String deleted;

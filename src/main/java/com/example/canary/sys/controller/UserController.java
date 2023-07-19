@@ -1,9 +1,9 @@
 package com.example.canary.sys.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.canary.core.api.ApiVersion;
-import com.example.canary.core.exception.ResultEntity;
-import com.example.canary.core.exception.ValidGroup;
+import com.example.canary.common.api.ApiVersion;
+import com.example.canary.common.exception.ResultEntity;
+import com.example.canary.common.exception.ValidGroup;
 import com.example.canary.sys.entity.UserAO;
 import com.example.canary.sys.entity.UserQuery;
 import com.example.canary.sys.entity.UserVO;

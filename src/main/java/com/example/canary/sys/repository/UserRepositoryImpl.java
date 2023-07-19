@@ -1,8 +1,7 @@
 package com.example.canary.sys.repository;
 
-import ch.qos.logback.core.testUtil.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.example.canary.core.enums.StatusEnum;
+import com.example.canary.common.enums.StatusEnum;
 import com.example.canary.sys.entity.UserPO;
 import com.example.canary.sys.mapper.UserMapper;
 import com.example.canary.util.RandomUtils;

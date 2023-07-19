@@ -3,7 +3,7 @@ package com.example.canary.task.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.example.canary.core.exception.ValidGroup;
+import com.example.canary.common.exception.ValidGroup;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -68,7 +68,7 @@ public class TaskBase implements Serializable {
 
     /**
      * 是否禁用
-     * @see com.example.canary.core.enums.StatusEnum.Disabled
+     * @see com.example.canary.common.enums.StatusEnum.Disabled
      */
     @Range(min = 0, max = 1, groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
     @TableField(value = "is_disabled")

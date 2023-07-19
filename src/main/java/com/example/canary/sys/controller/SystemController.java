@@ -1,7 +1,7 @@
 package com.example.canary.sys.controller;
 
-import com.example.canary.core.api.ApiVersion;
-import com.example.canary.core.exception.ResultEntity;
+import com.example.canary.common.api.ApiVersion;
+import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.LoginAO;
 import com.example.canary.sys.entity.LoginVO;
 import com.example.canary.sys.service.SystemService;

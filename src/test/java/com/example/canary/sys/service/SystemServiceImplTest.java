@@ -1,6 +1,6 @@
 package com.example.canary.sys.service;
 
-import com.example.canary.core.exception.ResultEntity;
+import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.LoginAO;
 import com.example.canary.sys.entity.LoginVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -9,8 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.io.Serializable;
 
 /**
  * @author zhaohongliang

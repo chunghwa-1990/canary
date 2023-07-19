@@ -1,16 +1,16 @@
 package com.example.canary.task.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.canary.core.context.SpringContext;
-import com.example.canary.core.exception.ResultEntity;
+import com.example.canary.common.context.SpringContext;
+import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.task.entity.TaskAO;
 import com.example.canary.task.entity.TaskPO;
 import com.example.canary.task.entity.TaskQuery;
 import com.example.canary.task.entity.TaskVO;
 import com.example.canary.task.repository.TaskRepository;
-import com.example.canary.task.schedule.AbstractTask;
-import com.example.canary.task.schedule.BusinessTask;
-import com.example.canary.task.schedule.CronTaskRegistrar;
+import com.example.canary.task.core.AbstractTask;
+import com.example.canary.task.core.BusinessTask;
+import com.example.canary.task.core.CronTaskRegistrar;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

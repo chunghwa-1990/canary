@@ -1,6 +1,6 @@
 package com.example.canary.sys.service;
 
-import com.example.canary.core.exception.ResultEntity;
+import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.UserAO;
 import com.example.canary.sys.entity.UserPO;
 import com.example.canary.sys.repository.UserRepository;

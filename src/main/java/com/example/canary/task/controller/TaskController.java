@@ -1,9 +1,9 @@
 package com.example.canary.task.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.canary.core.api.ApiVersion;
-import com.example.canary.core.exception.ResultEntity;
-import com.example.canary.core.exception.ValidGroup;
+import com.example.canary.common.api.ApiVersion;
+import com.example.canary.common.exception.ResultEntity;
+import com.example.canary.common.exception.ValidGroup;
 import com.example.canary.task.entity.TaskAO;
 import com.example.canary.task.entity.TaskQuery;
 import com.example.canary.task.service.TaskService;

@@ -1,10 +1,9 @@
 package com.example.canary.sys.service;
 
-import com.example.canary.core.exception.BusinessException;
-import com.example.canary.core.exception.ResultEntity;
-import com.example.canary.core.redis.RedisService;
-import com.example.canary.core.token.TokenService;
-import com.example.canary.core.token.TokenProperties;
+import com.example.canary.common.exception.BusinessException;
+import com.example.canary.common.exception.ResultEntity;
+import com.example.canary.common.redis.RedisService;
+import com.example.canary.common.token.TokenService;
 import com.example.canary.sys.entity.LoginAO;
 import com.example.canary.sys.entity.LoginVO;
 import com.example.canary.sys.entity.UserPO;
@@ -12,7 +11,6 @@ import com.example.canary.sys.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
