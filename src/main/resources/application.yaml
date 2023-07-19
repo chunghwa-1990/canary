@@ -18,17 +18,16 @@ server:
     encoding:
       charset: UTF-8
 
-mybatis:
-  mapper-locations: classpath:mapper/*.xml
+mybatis-plus:
+  global-config:
+    banner: off
+    db-config:
+      logic-delete-field: deleted
   configuration:
     map-underscore-to-camel-case: true
     use-column-label: true
-
-mybatis-plus:
-  global-config:
-    banner: on
-    db-config:
-      logic-delete-field: deleted
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:mapper/*.xml
 
 token:
   secret: canary
