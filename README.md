@@ -9,10 +9,11 @@
 
 #### 编译
 - maven
-```bash
+```powershell
 $ mvn clean install -Dmaven.test.skip=true
 ```
-- mavend
-```bash
+- maven-mind （推荐）
+```powershell
 $ mvnd clean install -Dmaven.test.skip=true 
 ```
+
