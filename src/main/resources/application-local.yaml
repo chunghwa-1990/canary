@@ -41,3 +41,6 @@ spring:
   task:
     auto-execute: false
     monitor-cron: 0/5 * * * * ?
+logging:
+  file:
+    path: /Users/zhaohongliang/Desktop
