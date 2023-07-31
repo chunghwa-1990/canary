@@ -41,6 +41,14 @@ spring:
   task:
     auto-execute: false
     monitor-cron: 0/5 * * * * ?
+
 logging:
+  config: classpath:logback-spring.xml
   file:
-    path: /Users/zhaohongliang/Desktop
+    path: /Users/zhaohongliang/Desktop/log
+  level:
+    com.example.canary: debug
+
+token:
+  secret: canary
+  timeout: 7200s
