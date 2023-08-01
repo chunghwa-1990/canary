@@ -3,7 +3,7 @@ spring:
   application:
     name: canary
   profiles:
-    active: local
+    active: '@profileActive@'
   messages:
     basename: i18n/messages
     encoding: UTF-8
