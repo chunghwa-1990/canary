@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.time.Duration;
+import java.util.Date;
 
 /**
  * token properties
@@ -27,10 +28,10 @@ public class TokenProperties {
     private String secret;
 
     /**
-     * 过期时间
+     * 过期时间, 默认: 7200000 毫秒
      */
     // @DurationUnit(value = ChronoUnit.SECONDS)
-    private Duration timeout;
+    private Duration timeout = Duration.ofMillis(7200000);
 
     /**
      * Initialize a {@link TokenBuilder} with the state of this instance.

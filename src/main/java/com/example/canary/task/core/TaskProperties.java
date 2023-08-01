@@ -18,12 +18,12 @@ public class TaskProperties {
     private TaskProperties() {}
 
     /**
-     * 是否自动执行
+     * 是否自动执行, 默认: true
      */
-    private Boolean autoExecute;
+    private Boolean autoExecute = true;
 
     /**
-     * 监测任务 cron
+     * 监测任务 cron, 默认: 每1小时执行一次
      */
-    private String monitorCron;
+    private String monitorCron = "0 0 /1 * * ? ";
 }
