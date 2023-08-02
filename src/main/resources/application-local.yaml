@@ -48,10 +48,10 @@ logging:
 
 task:
   # 是否开启 scheduled
-  auto-execute: true
+  auto-execute: false
   monitor:
     # 是否开启监测任务
-    enabled: true
+    enabled: false
     # 监测任务执行频率
     cron: 0/5 * * * * ?
 
