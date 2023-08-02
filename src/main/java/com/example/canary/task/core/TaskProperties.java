@@ -12,7 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @Setter
 @Getter
-@ConfigurationProperties("spring.task")
+@ConfigurationProperties("task")
 public class TaskProperties {
 
     private TaskProperties() {}
@@ -23,7 +23,25 @@ public class TaskProperties {
     private Boolean autoExecute = true;
 
     /**
-     * 监测任务 cron, 默认: 每1小时执行一次
+     * 监测任务
      */
-    private String monitorCron = "0 0 /1 * * ? ";
+    private final Monitor monitor = new Monitor();
+
+    /**
+     * 监测任务
+     */
+    @Setter
+    @Getter
+    public static class Monitor {
+
+        /**
+         * 是否开启监测任务
+         */
+        private Boolean enabled = true;
+
+        /**
+         * 监测任务 cron, 默认: 每1小时执行一次
+         */
+        private String monitorCron = "0 0 /1 * * ? ";
+    }
 }

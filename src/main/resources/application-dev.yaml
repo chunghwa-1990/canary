@@ -38,9 +38,6 @@ spring:
           max-idle: 10
           # 连接池中的最小空闲连接
           min-idle: 5
-  task:
-    auto-execute: false
-    monitor-cron: 0/5 * * * * ?
 
 logging:
   config: classpath:logback-spring.xml
@@ -48,6 +45,15 @@ logging:
     path: /Users/zhaohongliang/Desktop/log
   level:
     com.example.canary: debug
+
+task:
+  # 是否开启 scheduled
+  auto-execute: true
+  monitor:
+    # 是否开启监测任务
+    enabled: true
+    # 监测任务执行频率
+    cron: 0/5 * * * * ?
 
 token:
   secret: canary

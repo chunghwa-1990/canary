@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-@ConditionalOnProperty(value = "spring.task.auto-execute")
+@ConditionalOnProperty(value = "task.monitor.enabled")
 public class MonitorTask {
 
     @Autowired
@@ -33,7 +33,7 @@ public class MonitorTask {
     private CronTaskRegistrar cronTaskRegistrar;
 
     @Async
-    @Scheduled(cron = "${spring.task.monitor-cron}")
+    @Scheduled(cron = "${task.monitor.cron}")
     protected void execute() {
         List<TaskPO> tasks = taskRepository.listEnableTask();
         Set<String> taskIds = tasks.stream().map(TaskPO::getId).collect(Collectors.toSet());
