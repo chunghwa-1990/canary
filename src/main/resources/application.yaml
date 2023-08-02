@@ -26,9 +26,18 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     use-column-label: true
-    # log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    # log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
   mapper-locations: classpath:mapper/*.xml
 
+management:
+  endpoints:
+    web:
+      exposure:
+        # 开启 shutdown 端点访问
+        include: shutdown
+  endpoint:
+    shutdown:
+      # 开启 shutdown 实现优雅停服
+      enabled: true
 
 
