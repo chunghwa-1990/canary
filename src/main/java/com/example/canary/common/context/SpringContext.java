@@ -1,6 +1,7 @@
 package com.example.canary.common.context;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.annotation.Nullable;
+import lombok.Getter;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
  * @since 1.0
  * @author zhaohongliang
  */
+@Getter
 @Component
 public class SpringContext implements ApplicationContextAware {
 
@@ -23,14 +25,14 @@ public class SpringContext implements ApplicationContextAware {
     /**
      * 设置 application context
      *
-     * @param context
+     * @param context application上下文
      */
     private static void setContext(ApplicationContext context) {
         SpringContext.context = context;
     }
 
     @Override
-    public void setApplicationContext(@NotNull ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@Nullable ApplicationContext applicationContext) throws BeansException {
         SpringContext.setContext(applicationContext);
     }
 

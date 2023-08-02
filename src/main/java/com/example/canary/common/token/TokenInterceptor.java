@@ -9,9 +9,10 @@ import com.example.canary.common.redis.RedisService;
 import com.example.canary.sys.entity.UserVO;
 import com.example.canary.util.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,7 +39,7 @@ public class TokenInterceptor implements HandlerInterceptor {
     private RedisService redisService;
 
     @Override
-    public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) throws Exception {
+    public boolean preHandle(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull Object handler) throws Exception {
         // token
         String token = request.getHeader(HeaderConstant.TOKEN);
 
@@ -95,12 +96,12 @@ public class TokenInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void postHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler, ModelAndView modelAndView) throws Exception {
+    public void postHandle(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull Object handler, @Nullable ModelAndView modelAndView) throws Exception {
         HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
     }
 
     @Override
-    public void afterCompletion(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler, Exception ex) throws Exception {
+    public void afterCompletion(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull Object handler, @Nullable Exception ex) {
         CanaryContext.removeCurrentUser();
     }
 

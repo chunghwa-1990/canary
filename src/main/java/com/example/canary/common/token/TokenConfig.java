@@ -28,8 +28,8 @@ public class TokenConfig implements WebMvcConfigurer {
      * TokenBuilder.create().secret("secret").timeout(Duration.ZERO).build()
      * TokenBuilder.create(tokenProperties).build()
      *
-     * @param tokenProperties
-     * @return
+     * @param tokenProperties token 配置文件
+     * @return tokenService
      */
     @Bean
     @ConditionalOnMissingBean(TokenService.class)
