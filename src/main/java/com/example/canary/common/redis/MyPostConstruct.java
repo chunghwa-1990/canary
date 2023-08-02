@@ -1,6 +1,7 @@
 package com.example.canary.common.redis;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -16,5 +17,10 @@ public class MyPostConstruct {
     @PostConstruct
     public void test() {
       log.info("MyPostConstruct");
+    }
+
+    @PreDestroy
+    public void destroy() {
+        log.info("destroy");
     }
 }
