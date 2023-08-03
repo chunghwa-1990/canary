@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * user controller
+ * 用户
  *
  * @since 1.0
  * @author zhaohongliang
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @ApiVersion
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/sys/user")
 public class UserController {
 
     @Autowired
