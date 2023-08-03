@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("s_sys_user")
+@TableName("s_sys_role")
 public class UserPO extends UserBase {
 
     @Serial
