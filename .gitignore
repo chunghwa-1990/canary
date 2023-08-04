@@ -23,7 +23,17 @@
 hs_err_pid*
 replay_pid*
 
-/target
-.idea
-*.iml
+# project
+HELP.md
+target/
 *.pid
+*.port
+
+# IntelliJ IDEA
+.idea
+*.iws
+*.iml
+*.ipr
+
+# VS Code
+.vscode/
