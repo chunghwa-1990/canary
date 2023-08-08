@@ -4,6 +4,8 @@ spring:
     name: canary
   profiles:
     active: '@profileActive@'
+  pid:
+    file: ./canary.pid
   messages:
     basename: i18n/messages
     encoding: UTF-8
