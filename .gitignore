@@ -28,6 +28,7 @@ HELP.md
 target/
 *.pid
 *.port
+.java-version
 
 # IntelliJ IDEA
 .idea
