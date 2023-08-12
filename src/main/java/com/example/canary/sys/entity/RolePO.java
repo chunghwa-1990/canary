@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("sys_role")
+@TableName("s_sys_role")
 public class RolePO extends RoleBase {
 
     private static final long serialVersionUID = 5390080297645288091L;
