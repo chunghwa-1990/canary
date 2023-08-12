@@ -25,6 +25,9 @@ CREATE TABLE `s_sys_user` (
     UNIQUE KEY `udx_account_1` (`account`,`is_deleted`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户';
 
+INSERT INTO `s_sys_user` (`id`, `account`, `nick_name`, `real_name`, `sex`, `mobile_no`, `password`, `salt`, `is_admin`, `is_disabled`, `create_time`, `update_time`, `is_deleted`) VALUES
+    (1, 'admin', 'admin', 'admin', 0, NULL, 'aad73b27954f58c9acf3994ab1250574', 'EtbGTE', 1, 0, '2023-07-07 20:54:40', '2023-07-07 20:56:12', '0');
+
 -- drop table t_task_base
 DROP TABLE IF EXISTS `t_task_base`;
 -- create table t_task_base
