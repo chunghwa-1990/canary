@@ -1,5 +1,10 @@
 package com.example.canary.sys.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.canary.common.exception.ResultEntity;
+import com.example.canary.sys.entity.RoleQuery;
+import com.example.canary.sys.entity.RoleVO;
+
 /**
  * 角色
  *
@@ -7,4 +12,12 @@ package com.example.canary.sys.service;
  * @since 1.0
  */
 public interface RoleService {
+
+    /**
+     * pages
+     *
+     * @param query
+     * @return
+     */
+    ResultEntity<Page<RoleVO>> pagesRole(RoleQuery query);
 }
