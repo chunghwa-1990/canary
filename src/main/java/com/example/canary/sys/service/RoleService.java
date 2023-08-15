@@ -37,6 +37,15 @@ public interface RoleService {
      * @param roleAo
      * @return
      */
-    @suppressWarnings("rawtypes")
+    @SuppressWarnings("rawtypes")
     ResultEntity updateRole(RoleAO roleAo);
+
+    /**
+     * delete
+     *
+     * @param roleId
+     * @return
+     */
+    @SuppressWarnings("rawtypes")
+    ResultEntity deleteRole(String roleId);
 }

@@ -50,4 +50,16 @@ public class RoleServiceImpl implements RoleService{
     public ResultEntity updateRole(RoleAO roleAo) {
         return null;
     }
+
+    /**
+     * delete
+     *
+     * @param roleId
+     * @return
+     */
+    @Override
+    @SuppressWarnings("rawtypes")
+    public ResultEntity deleteRole(String roleId) {
+        return null;
+    }
 }

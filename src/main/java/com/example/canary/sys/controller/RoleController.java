@@ -8,6 +8,7 @@ import com.example.canary.sys.entity.RoleAO;
 import com.example.canary.sys.entity.RoleQuery;
 import com.example.canary.sys.entity.RoleVO;
 import com.example.canary.sys.service.RoleService;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,5 +63,17 @@ public class RoleController {
     @SuppressWarnings("rawtypes")
     public ResultEntity updateRole(@Validated({ ValidGroup.Add.class }) @RequestBody RoleAO roleAo) {
         return roleService.updateRole(roleAo);
+    }
+
+    /**
+     * delete
+     *
+     * @param roleId
+     * @return
+     */
+    @RequestMapping("/dtelete")
+    @SuppressWarnings("rawtypes")
+    public ResultEntity deleteRole(@NotNull String roleId) {
+        return roleService.deleteRole(roleId);
     }
 }
