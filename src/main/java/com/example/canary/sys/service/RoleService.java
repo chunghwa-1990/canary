@@ -30,4 +30,13 @@ public interface RoleService {
      */
     @SuppressWarnings("rawtypes")
     ResultEntity saveRole(RoleAO roleAo);
+
+    /**
+     * update
+     *
+     * @param roleAo
+     * @return
+     */
+    @suppressWarnings("rawtypes")
+    ResultEntity updateRole(RoleAO roleAo);
 }

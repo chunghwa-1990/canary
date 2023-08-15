@@ -38,4 +38,16 @@ public class RoleServiceImpl implements RoleService{
     public ResultEntity saveRole(RoleAO roleAo) {
         return null;
     }
+
+    /**
+     * update
+     *
+     * @param roleAo
+     * @return
+     */
+    @Override
+    @SuppressWarnings("rawtypes")
+    public ResultEntity updateRole(RoleAO roleAo) {
+        return null;
+    }
 }

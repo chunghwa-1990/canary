@@ -51,4 +51,16 @@ public class RoleController {
     public ResultEntity saveRole(@Validated({ ValidGroup.Add.class }) @RequestBody RoleAO roleAo) {
         return roleService.saveRole(roleAo);
     }
+
+    /**
+     * update
+     *
+     * @param roleAo
+     * @return
+     */
+    @RequestMapping("/update")
+    @SuppressWarnings("rawtypes")
+    public ResultEntity updateRole(@Validated({ ValidGroup.Add.class }) @RequestBody RoleAO roleAo) {
+        return roleService.updateRole(roleAo);
+    }
 }
