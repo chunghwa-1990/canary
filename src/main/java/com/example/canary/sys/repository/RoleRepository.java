@@ -1,5 +1,7 @@
 package com.example.canary.sys.repository;
 
+import com.example.canary.sys.entity.RolePO;
+
 /**
  * 角色
  *
@@ -7,4 +9,28 @@ package com.example.canary.sys.repository;
  * @since 1.0
  */
 public interface RoleRepository {
+
+    /**
+     * insert
+     *
+     * @param rolePo
+     * @return
+     */
+    int insert(RolePO rolePo);
+
+    /**
+     * update
+     *
+     * @param rolePo
+     * @return
+     */
+    int update(RolePO rolePo);
+
+    /**
+     * delete
+     *
+     * @param roleId
+     * @return
+     */
+    int deleteById(String roleId);
 }

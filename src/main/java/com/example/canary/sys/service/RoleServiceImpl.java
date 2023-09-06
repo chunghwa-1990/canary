@@ -3,9 +3,16 @@ package com.example.canary.sys.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.RoleAO;
+import com.example.canary.sys.entity.RolePO;
 import com.example.canary.sys.entity.RoleQuery;
 import com.example.canary.sys.entity.RoleVO;
+import com.example.canary.sys.repository.RoleRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
  * 角色
@@ -13,8 +20,12 @@ import org.springframework.stereotype.Service;
  * @author zhaohongliang 2023-08-03 21:13
  * @since 1.0
  */
+@Slf4j
 @Service
-public class RoleServiceImpl implements RoleService{
+public class RoleServiceImpl implements RoleService {
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     /**
      * pages
@@ -36,7 +47,21 @@ public class RoleServiceImpl implements RoleService{
     @Override
     @SuppressWarnings("rawtypes")
     public ResultEntity saveRole(RoleAO roleAo) {
-        return null;
+        RolePO rolePo = roleAo.convertToPo();
+        try {
+            roleRepository.insert(rolePo);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            Throwable cause = e.getCause();
+            if (cause instanceof SQLIntegrityConstraintViolationException) {
+                String errorMessage = cause.getMessage();
+                if (StringUtils.hasText(errorMessage) && errorMessage.contains("udx_role_1")) {
+                    return ResultEntity.fail("user role has exist");
+                }
+            }
+            return ResultEntity.fail();
+        }
+        return ResultEntity.success();
     }
 
     /**
@@ -48,7 +73,21 @@ public class RoleServiceImpl implements RoleService{
     @Override
     @SuppressWarnings("rawtypes")
     public ResultEntity updateRole(RoleAO roleAo) {
-        return null;
+        RolePO rolePo = roleAo.convertToPo();
+        try {
+            roleRepository.update(rolePo);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            Throwable cause = e.getCause();
+            if (cause instanceof SQLIntegrityConstraintViolationException) {
+                String errorMessage = cause.getMessage();
+                if (StringUtils.hasText(errorMessage) && errorMessage.contains("udx_role_1")) {
+                    return ResultEntity.fail("user role has exist");
+                }
+            }
+            return ResultEntity.fail();
+        }
+        return ResultEntity.success();
     }
 
     /**
@@ -60,6 +99,7 @@ public class RoleServiceImpl implements RoleService{
     @Override
     @SuppressWarnings("rawtypes")
     public ResultEntity deleteRole(String roleId) {
-        return null;
+        roleRepository.deleteById(roleId);
+        return ResultEntity.success();
     }
 }
