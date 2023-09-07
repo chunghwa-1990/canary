@@ -1,8 +1,11 @@
 package com.example.canary.sys.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.UserAO;
 import com.example.canary.sys.entity.UserPO;
+import com.example.canary.sys.entity.UserQuery;
+import com.example.canary.sys.entity.UserVO;
 import com.example.canary.sys.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,17 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    /**
+     * query
+     *
+     * @param query
+     * @return
+     */
+    @Override
+    public ResultEntity<Page<UserVO>> pagesUser(UserQuery query) {
+        return null;
+    }
 
     /**
      * save

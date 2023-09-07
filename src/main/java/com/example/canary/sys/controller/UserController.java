@@ -41,7 +41,7 @@ public class UserController {
      */
     @RequestMapping("/pages")
     public ResultEntity<Page<UserVO>> pagesUser(UserQuery query) {
-        return null;
+        return userService.pagesUser(query);
     }
 
     /**

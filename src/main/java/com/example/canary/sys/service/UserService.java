@@ -1,7 +1,10 @@
 package com.example.canary.sys.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.UserAO;
+import com.example.canary.sys.entity.UserQuery;
+import com.example.canary.sys.entity.UserVO;
 
 /**
  * user
@@ -10,6 +13,14 @@ import com.example.canary.sys.entity.UserAO;
  * @author zhaohongliang
  */
 public interface UserService {
+
+    /**
+     * query
+     *
+     * @param query
+     * @return
+     */
+    ResultEntity<Page<UserVO>> pagesUser(UserQuery query);
 
     /**
      * save
