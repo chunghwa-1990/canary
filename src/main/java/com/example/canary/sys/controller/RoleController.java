@@ -71,7 +71,7 @@ public class RoleController {
      * @param roleId
      * @return
      */
-    @RequestMapping("/dtelete")
+    @RequestMapping("/delete")
     @SuppressWarnings("rawtypes")
     public ResultEntity deleteRole(@NotNull String roleId) {
         return roleService.deleteRole(roleId);
