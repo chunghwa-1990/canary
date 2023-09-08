@@ -2,6 +2,7 @@ package com.example.canary.sys.entity;
 
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -13,5 +14,6 @@ import java.io.Serializable;
 @Data
 public class RoleQuery implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 5481461766246420400L;
 }

@@ -1,7 +1,6 @@
 package com.example.canary.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,18 +10,17 @@ import java.io.Serial;
 import java.time.LocalDateTime;
 
 /**
- * 角色
+ * 菜单
  *
- * @author zhaohongliang 2023-08-03 21:17
+ * @author zhaohongliang 2023-09-08 20:38
  * @since 1.0
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("s_sys_role")
-public class RolePO extends RoleBase {
+public class MenuPO extends MenuBase {
 
     @Serial
-    private static final long serialVersionUID = 5390080297645288091L;
+    private static final long serialVersionUID = 6015800942881921773L;
 
     /**
      * 创建时间
