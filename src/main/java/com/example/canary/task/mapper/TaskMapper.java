@@ -15,6 +15,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TaskMapper extends BaseMapper<TaskPO> {
 
-    @Update("UPDATE t_task_base SET is_deleted = #{taskId} WHERE id = #{taskId}")
+    @Update("UPDATE t_task SET is_deleted = #{taskId} WHERE id = #{taskId}")
     int deleteById(@Param("taskId") String taskId);
 }

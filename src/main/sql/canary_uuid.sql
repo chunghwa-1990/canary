@@ -4,10 +4,10 @@ CREATE DATABASE IF NOT EXISTS `canary` DEFAULT CHARACTER SET = `utf8mb4` DEFAULT
 
 USE `canary`;
 
--- drop table s_sys_user
-DROP TABLE IF EXISTS `s_sys_user`;
--- create table s_sys_user
-CREATE TABLE `s_sys_user` (
+-- drop table sys_user
+DROP TABLE IF EXISTS `sys_user`;
+-- create table sys_user
+CREATE TABLE `sys_user` (
     `id` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'ID',
     `account` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '名称（英文）',
     `nick_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
@@ -25,13 +25,13 @@ CREATE TABLE `s_sys_user` (
     UNIQUE KEY `udx_account_1` (`account`,`is_deleted`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户';
 
-INSERT INTO `s_sys_user` (`id`, `account`, `nick_name`, `real_name`, `sex`, `mobile_no`, `password`, `salt`, `is_admin`, `is_disabled`, `create_time`, `update_time`, `is_deleted`) VALUES
+INSERT INTO `sys_user` (`id`, `account`, `nick_name`, `real_name`, `sex`, `mobile_no`, `password`, `salt`, `is_admin`, `is_disabled`, `create_time`, `update_time`, `is_deleted`) VALUES
 ('28270e6bdb569cca27955bff36fcea48', 'admin', 'admin', 'admin', 0, NULL, 'aad73b27954f58c9acf3994ab1250574', 'EtbGTE', 1, 0, '2023-07-07 20:54:40', '2023-07-07 20:56:12', '0');
 
--- drop table t_task_base
-DROP TABLE IF EXISTS `t_task_base`;
--- create table t_task_base
-CREATE TABLE `t_task_base` (
+-- drop table t_task
+DROP TABLE IF EXISTS `t_task`;
+-- create table t_task
+CREATE TABLE `t_task` (
     `id` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'ID',
     `name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '名称',
     `description` varchar(500) DEFAULT NULL COMMENT '描述',
