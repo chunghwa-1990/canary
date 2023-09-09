@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("s_sys_role")
+@TableName("sys_role")
 public class RolePO extends RoleBase {
 
     @Serial

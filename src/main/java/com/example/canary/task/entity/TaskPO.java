@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("t_task_base")
+@TableName("t_task")
 public class TaskPO extends TaskBase {
 
     @Serial

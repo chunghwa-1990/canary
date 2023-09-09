@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("s_sys_menu")
+@TableName("sys_menu")
 public class MenuPO extends MenuBase {
 
     @Serial
