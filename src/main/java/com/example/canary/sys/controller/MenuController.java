@@ -1,16 +1,18 @@
 package com.example.canary.sys.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.canary.common.api.ApiVersion;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.common.exception.ValidGroup;
 import com.example.canary.sys.entity.MenuAO;
 import com.example.canary.sys.entity.MenuQuery;
 import com.example.canary.sys.entity.MenuVO;
+import com.example.canary.sys.service.MenuService;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +31,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/sys/menu")
 public class MenuController {
 
+    @Autowired
+    private MenuService menuService;
+
     /**
      * pages
      *
@@ -36,8 +41,8 @@ public class MenuController {
      * @return
      */
     @GetMapping("/pages")
-    public ResultEntity<MenuVO> pagesMenu(MenuQuery query) {
-        return null;
+    public ResultEntity<Page<MenuVO>> pagesMenu(MenuQuery query) {
+        return menuService.pagesMenu(query);
     }
 
     /**
@@ -49,7 +54,7 @@ public class MenuController {
     @PostMapping("/save")
     @SuppressWarnings("rawtypes")
     public ResultEntity saveMenu(@Validated({ ValidGroup.Add.class }) @RequestBody MenuAO menuAo) {
-        return null;
+        return menuService.saveMenu(menuAo);
     }
 
     /**
@@ -61,7 +66,7 @@ public class MenuController {
     @PutMapping("/update")
     @SuppressWarnings("rawtypes")
     public ResultEntity updateMenu(@Validated({ ValidGroup.Edit.class }) @RequestBody MenuAO menuAo) {
-        return null;
+        return menuService.updateMenu(menuAo);
     }
 
     /**
@@ -73,7 +78,7 @@ public class MenuController {
     @DeleteMapping("/delete")
     @SuppressWarnings("rawtypes")
     public ResultEntity deleteMenu(@NotNull String menuId) {
-        return null;
+        return menuService.deleteMenu(menuId);
     }
 
 

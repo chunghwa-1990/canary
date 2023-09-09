@@ -2,6 +2,7 @@ package com.example.canary.sys.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.beans.BeanUtils;
 
 import java.io.Serial;
 
@@ -18,4 +19,9 @@ public class MenuAO extends MenuBase {
     @Serial
     private static final long serialVersionUID = -1822076114325324597L;
 
+    public MenuPO convertToPo() {
+        MenuPO menuPo = new MenuPO();
+        BeanUtils.copyProperties(this, menuPo);
+        return menuPo;
+    }
 }
