@@ -6,17 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.dao.DataAccessException;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
  * @since 1.0
  * @author zhaohongliang
  */
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @Autowired
@@ -42,7 +43,6 @@ public class GlobalExceptionHandler {
      * @param ex
      * @return
      */
-    @ResponseBody
     @ExceptionHandler(value = BusinessException.class)
     public ResultEntity<Object> businessExceptionHandler(BusinessException ex) {
         Integer code = ex.getCode();
@@ -59,7 +59,6 @@ public class GlobalExceptionHandler {
      * @param ex
      * @return
      */
-    @ResponseBody
     // @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
     public ResultEntity<Object> httpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException ex) {
@@ -79,7 +78,6 @@ public class GlobalExceptionHandler {
      * @param ex
      * @return
      */
-    @ResponseBody
     // @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
     public ResultEntity<Object> missingServletRequestParameterExceptionHandler(MissingServletRequestParameterException ex) {
@@ -99,7 +97,6 @@ public class GlobalExceptionHandler {
      * @param ex
      * @return
      */
-    @ResponseBody
     @ExceptionHandler(value = MissingServletRequestPartException.class)
     public ResultEntity<Object> missingServletRequestPartExceptionHandler(MissingServletRequestPartException ex) {
         List<Object> args = new ArrayList<>();
@@ -117,7 +114,6 @@ public class GlobalExceptionHandler {
      * @param ex
      * @return
      */
-    @ResponseBody
     // @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = ConstraintViolationException.class)
     public ResultEntity<Object> constraintViolationExceptionHandler(ConstraintViolationException ex) {
@@ -145,7 +141,6 @@ public class GlobalExceptionHandler {
      * @param ex
      * @return
      */
-    @ResponseBody
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResultEntity<Object> methodArgumentNotValidHandler(MethodArgumentNotValidException ex) {
 
@@ -176,7 +171,26 @@ public class GlobalExceptionHandler {
 
     }
 
-    // @ResponseBody
+    /**
+     * sqlIntegrityConstraintViolationException Handler
+     *
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(value = DataAccessException.class)
+    public ResultEntity<Object> sqlIntegrityConstraintViolationExceptionHandler(SQLIntegrityConstraintViolationException ex) {
+        String message = ex.getMessage();
+        if (StringUtils.hasText(message) && message.contains("Duplicate entry")) {
+            // 提取参数
+            String value = ex.getMessage().split(" ")[2];
+            List<String> args = new ArrayList<>();
+            args.add(0, value);
+            // 根据 message key 查询 i18n 实现国际化
+            message = messageSource.getMessage("sql.integrity.constraint.violation", args.toArray(), message, LocaleContextHolder.getLocale());
+        }
+        return ResultEntity.fail(ResultCodeEnum.ERROR.getCode(), message);
+    }
+
     // @ResponseStatus(HttpStatus.FORBIDDEN)
     // @ExceptionHandler(value = ForbiddenException.class)
     // public ResultEntity<?> forbiddenExceptionHandler(ForbiddenException ex) {
@@ -190,7 +204,6 @@ public class GlobalExceptionHandler {
      * @param ex
      * @return
      */
-    @ResponseBody
     @ExceptionHandler(value = { RuntimeException.class })
     public ResultEntity<Object> runtimeExceptionHandler(RuntimeException ex) {
         if (StringUtils.hasText(ex.getMessage())) {

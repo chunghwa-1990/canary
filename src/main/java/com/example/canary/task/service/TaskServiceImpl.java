@@ -57,18 +57,7 @@ public class TaskServiceImpl implements TaskService {
     @SuppressWarnings("rawtypes")
     public ResultEntity saveTask(TaskAO taskAo) {
         TaskPO taskPo = taskAo.convertToPo();
-        try {
-            taskRepository.insert(taskPo);
-        } catch (Exception e) {
-            Throwable cause = e.getCause();
-            if (cause instanceof SQLIntegrityConstraintViolationException) {
-                String errorMessage = cause.getMessage();
-                if (StringUtils.hasText(errorMessage) && errorMessage.contains("udx_name_1")) {
-                    return ResultEntity.fail("task name has exist");
-                }
-            }
-            return ResultEntity.fail();
-        }
+        taskRepository.insert(taskPo);
         return ResultEntity.success();
     }
 
@@ -82,18 +71,7 @@ public class TaskServiceImpl implements TaskService {
     @SuppressWarnings("rawtypes")
     public ResultEntity updateTask(TaskAO taskAo) {
         TaskPO taskPo = taskAo.convertToPo();
-        try {
-            taskRepository.update(taskPo);
-        } catch (Exception e) {
-            Throwable cause = e.getCause();
-            if (cause instanceof SQLIntegrityConstraintViolationException) {
-                String errorMessage = cause.getMessage();
-                if (StringUtils.hasText(errorMessage) && errorMessage.contains("udx_name_1")) {
-                    return ResultEntity.fail("task name has exist");
-                }
-            }
-            return ResultEntity.fail();
-        }
+        taskRepository.update(taskPo);
         return ResultEntity.success();
     }
 

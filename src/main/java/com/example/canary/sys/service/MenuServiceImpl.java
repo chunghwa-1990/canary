@@ -48,19 +48,7 @@ public class MenuServiceImpl implements MenuService {
     @SuppressWarnings("rawtypes")
     public ResultEntity saveMenu(MenuAO menuAo) {
         MenuPO menuPo = menuAo.convertToPo();
-        try {
-            menuRepository.insert(menuPo);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            Throwable cause = e.getCause();
-            if (cause instanceof SQLIntegrityConstraintViolationException) {
-                String errorMessage = cause.getMessage();
-                if (StringUtils.hasText(errorMessage) && errorMessage.contains("udx_menu_1")) {
-                    return ResultEntity.fail("menu has exist");
-                }
-            }
-            return ResultEntity.fail();
-        }
+        menuRepository.insert(menuPo);
         return ResultEntity.success();
     }
 
@@ -74,19 +62,7 @@ public class MenuServiceImpl implements MenuService {
     @SuppressWarnings("rawtypes")
     public ResultEntity updateMenu(MenuAO menuAo) {
         MenuPO menuPo = menuAo.convertToPo();
-        try {
-            menuRepository.update(menuPo);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            Throwable cause = e.getCause();
-            if (cause instanceof SQLIntegrityConstraintViolationException) {
-                String errorMessage = cause.getMessage();
-                if (StringUtils.hasText(errorMessage) && errorMessage.contains("udx_menu_1")) {
-                    return ResultEntity.fail("menu has exist");
-                }
-            }
-            return ResultEntity.fail();
-        }
+        menuRepository.update(menuPo);
         return ResultEntity.success();
     }
 

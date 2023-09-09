@@ -48,19 +48,7 @@ public class UserServiceImpl implements UserService {
     @SuppressWarnings("rawtypes")
     public ResultEntity saveUser(UserAO userAo) {
         UserPO userPo = userAo.convertToPo();
-        try {
-            userRepository.insert(userPo);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            Throwable cause = e.getCause();
-            if (cause instanceof SQLIntegrityConstraintViolationException) {
-                String errorMessage = cause.getMessage();
-                if (StringUtils.hasText(errorMessage) && errorMessage.contains("udx_account_1")) {
-                    return ResultEntity.fail("user account has exist");
-                }
-            }
-            return ResultEntity.fail();
-        }
+        userRepository.insert(userPo);
         return ResultEntity.success();
     }
 
@@ -74,19 +62,7 @@ public class UserServiceImpl implements UserService {
     @SuppressWarnings("rawtypes")
     public ResultEntity updateUser(UserAO userAo) {
         UserPO userPo = userAo.convertToPo();
-        try {
-            userRepository.update(userPo);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            Throwable cause = e.getCause();
-            if (cause instanceof SQLIntegrityConstraintViolationException) {
-                String errorMessage = cause.getMessage();
-                if (StringUtils.hasText(errorMessage) && errorMessage.contains("udx_account_1")) {
-                    return ResultEntity.fail("user account has exist");
-                }
-            }
-            return ResultEntity.fail();
-        }
+        userRepository.update(userPo);
         return ResultEntity.success();
     }
 

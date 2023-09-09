@@ -48,19 +48,7 @@ public class RoleServiceImpl implements RoleService {
     @SuppressWarnings("rawtypes")
     public ResultEntity saveRole(RoleAO roleAo) {
         RolePO rolePo = roleAo.convertToPo();
-        try {
-            roleRepository.insert(rolePo);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            Throwable cause = e.getCause();
-            if (cause instanceof SQLIntegrityConstraintViolationException) {
-                String errorMessage = cause.getMessage();
-                if (StringUtils.hasText(errorMessage) && errorMessage.contains("udx_role_1")) {
-                    return ResultEntity.fail("user role has exist");
-                }
-            }
-            return ResultEntity.fail();
-        }
+        roleRepository.insert(rolePo);
         return ResultEntity.success();
     }
 
@@ -74,19 +62,7 @@ public class RoleServiceImpl implements RoleService {
     @SuppressWarnings("rawtypes")
     public ResultEntity updateRole(RoleAO roleAo) {
         RolePO rolePo = roleAo.convertToPo();
-        try {
-            roleRepository.update(rolePo);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            Throwable cause = e.getCause();
-            if (cause instanceof SQLIntegrityConstraintViolationException) {
-                String errorMessage = cause.getMessage();
-                if (StringUtils.hasText(errorMessage) && errorMessage.contains("udx_role_1")) {
-                    return ResultEntity.fail("user role has exist");
-                }
-            }
-            return ResultEntity.fail();
-        }
+        roleRepository.update(rolePo);
         return ResultEntity.success();
     }
 
