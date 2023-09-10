@@ -35,6 +35,7 @@ public class TaskBase implements Serializable {
      * 名称
      */
     @NotBlank(groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
+    @Length(min = 1, max = 20, groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
     private String name;
 
     /**
@@ -47,18 +48,21 @@ public class TaskBase implements Serializable {
      * 表达式
      */
     @NotBlank(groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
+    @Length(max = 20, groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
     private String cronExpression;
 
     /**
      * 类名
      */
     @NotBlank(groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
+    @Length(max = 200, groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
     private String className;
 
     /**
      * 方法名
      */
     @NotBlank(groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
+    @Length(max = 50, groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
     private String methodName;
 
     /**
