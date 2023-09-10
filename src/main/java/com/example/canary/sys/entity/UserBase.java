@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
 import java.io.Serial;
@@ -43,12 +44,14 @@ public class UserBase implements Serializable {
      * 昵称
      */
     @NotBlank(groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
+    @Length(min = 1, max = 20, groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
     private String nickName;
 
     /**
      * 姓名
      */
     @NotBlank(groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
+    @Length(min = 1, max = 20, groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
     private String realName;
 
     /**
@@ -63,8 +66,6 @@ public class UserBase implements Serializable {
      */
     @Pattern(regexp = "^1(3\\d|4[5-9]|5[0-35-9]|6[567]|7[0-8]|8\\d|9[0-35-9])\\d{8}$")
     private String mobileNo;
-
-
 
     /**
      * 是否禁用
