@@ -8,6 +8,7 @@ import com.example.canary.sys.entity.UserAO;
 import com.example.canary.sys.entity.UserQuery;
 import com.example.canary.sys.entity.UserVO;
 import com.example.canary.sys.service.UserService;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -76,7 +77,7 @@ public class UserController {
      */
     @DeleteMapping("/delete")
     @SuppressWarnings("rawtypes")
-    public ResultEntity deleteUser(@NotNull String userId) {
+    public ResultEntity deleteUser(@NotBlank String userId) {
         return userService.deleteUser(userId);
     }
 }

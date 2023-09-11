@@ -8,6 +8,7 @@ import com.example.canary.sys.entity.MenuAO;
 import com.example.canary.sys.entity.MenuQuery;
 import com.example.canary.sys.entity.MenuVO;
 import com.example.canary.sys.service.MenuService;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -77,7 +78,7 @@ public class MenuController {
      */
     @DeleteMapping("/delete")
     @SuppressWarnings("rawtypes")
-    public ResultEntity deleteMenu(@NotNull String menuId) {
+    public ResultEntity deleteMenu(@NotBlank String menuId) {
         return menuService.deleteMenu(menuId);
     }
 

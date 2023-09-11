@@ -8,6 +8,7 @@ import com.example.canary.sys.entity.RoleAO;
 import com.example.canary.sys.entity.RoleQuery;
 import com.example.canary.sys.entity.RoleVO;
 import com.example.canary.sys.service.RoleService;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -73,7 +74,7 @@ public class RoleController {
      */
     @RequestMapping("/delete")
     @SuppressWarnings("rawtypes")
-    public ResultEntity deleteRole(@NotNull String roleId) {
+    public ResultEntity deleteRole(@NotBlank String roleId) {
         return roleService.deleteRole(roleId);
     }
 }
