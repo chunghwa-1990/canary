@@ -26,7 +26,22 @@ CREATE TABLE `sys_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户';
 
 INSERT INTO `sys_user` (`id`, `account`, `nick_name`, `real_name`, `sex`, `mobile_no`, `password`, `salt`, `is_admin`, `is_disabled`, `create_time`, `update_time`, `is_deleted`) VALUES
-    (1, 'admin', 'admin', 'admin', 0, NULL, 'aad73b27954f58c9acf3994ab1250574', 'EtbGTE', 1, 0, '2023-07-07 20:54:40', '2023-07-07 20:56:12', '0');
+(1, 'admin', 'admin', 'admin', 0, NULL, 'aad73b27954f58c9acf3994ab1250574', 'EtbGTE', 1, 0, '2023-07-07 20:54:40', '2023-07-07 20:56:12', '0');
+
+-- drop table sys_role
+DROP TABLE IF EXISTS `sys_role`;
+-- create table sys_role
+CREATE TABLE `sys_role` (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '名称',
+    `description` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '描述',
+    `is_disabled` tinyint DEFAULT '0' COMMENT '是否禁用 0:否 1:是',
+    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    `is_deleted` bigint DEFAULT '0' COMMENT '是否删除 0:否 非0:是',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `udx_name_1` (`name`,`is_deleted`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- drop table t_task
 DROP TABLE IF EXISTS `t_task`;
