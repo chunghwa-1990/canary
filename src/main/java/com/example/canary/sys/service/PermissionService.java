@@ -29,7 +29,7 @@ public interface PermissionService {
      * @return
      */
     @SuppressWarnings("rawtypes")
-    ResultEntity savePermissions(PermissionAO permissionAo);
+    ResultEntity savePermission(PermissionAO permissionAo);
 
     /**
      * update
@@ -38,7 +38,7 @@ public interface PermissionService {
      * @return
      */
     @SuppressWarnings("rawtypes")
-    ResultEntity updatePermissions(PermissionAO permissionAo);
+    ResultEntity updatePermission(PermissionAO permissionAo);
 
     /**
      * delete

@@ -42,7 +42,7 @@ public class PermissionServiceImpl implements PermissionService {
      */
     @Override
     @SuppressWarnings("rawtypes")  
-    public ResultEntity savePermissions(PermissionAO permissionAo) {
+    public ResultEntity savePermission(PermissionAO permissionAo) {
         PermissionPO permissionPo = permissionAo.convertToPo();
         permissionRepository.insert(permissionPo);
         return ResultEntity.success();
@@ -56,7 +56,7 @@ public class PermissionServiceImpl implements PermissionService {
      */
     @Override
     @SuppressWarnings("rawtypes")
-    public ResultEntity updatePermissions(PermissionAO permissionAo) {
+    public ResultEntity updatePermission(PermissionAO permissionAo) {
         PermissionPO permissionPo = permissionAo.convertToPo();
         permissionRepository.update(permissionPo);
         return ResultEntity.success();
