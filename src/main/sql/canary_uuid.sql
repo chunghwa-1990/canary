@@ -43,6 +43,9 @@ CREATE TABLE `sys_role` (
     UNIQUE KEY `udx_name_1` (`name`,`is_deleted`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+INSERT INTO `sys_role` (`id`, `name`, `description`, `is_disabled`, `create_time`, `update_time`, `is_deleted`) VALUES
+('08fdc5462fdbe394733d3261b2c34416', '超级管理员', '超级管理员', 1, '2023-09-14 01:22:02', '2023-09-14 01:27:33', '0');
+
 -- drop table t_task
 DROP TABLE IF EXISTS `t_task`;
 -- create table t_task
