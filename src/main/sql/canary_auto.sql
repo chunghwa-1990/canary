@@ -41,7 +41,7 @@ CREATE TABLE `sys_role` (
     `is_deleted` bigint DEFAULT '0' COMMENT '是否删除 0:否 非0:是',
     PRIMARY KEY (`id`),
     UNIQUE KEY `udx_name_1` (`name`,`is_deleted`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色';
 
 INSERT INTO `sys_role` (`id`, `name`, `description`, `is_disabled`, `create_time`, `update_time`, `is_deleted`) VALUES
 (1, '超级管理员', '超级管理员', 1, '2023-09-14 01:22:02', '2023-09-14 01:27:33', '0');
@@ -63,7 +63,25 @@ CREATE TABLE `sys_menu` (
     PRIMARY KEY (`id`),
     UNIQUE KEY `udx_route_1` (`route`,`is_deleted`) USING BTREE,
     UNIQUE KEY `udx_name_route_2` (`name`,`route`,`is_deleted`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='菜单';
+
+-- drop table sys_menu
+DROP TABLE IF EXISTS `sys_permission`;
+-- create table sys_permission
+CREATE TABLE `sys_permission` (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `menu_id` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+    `name` varchar(200) NOT NULL COMMENT '名称',
+    `icon` varchar(20) DEFAULT NULL COMMENT '图标',
+    `route` varchar(100) NOT NULL COMMENT '路由',
+    `is_disabled` tinyint DEFAULT '0' COMMENT '是否禁用 0:否 1:是',
+    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    `is_deleted` char(32) DEFAULT '0' COMMENT '是否删除 0:否 非0:是',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `udx_route_1` (`route`,`is_deleted`) USING BTREE,
+    UNIQUE KEY `udx_name_route_2` (`name`,`route`,`is_deleted`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='权限';
 
 -- drop table t_task
 DROP TABLE IF EXISTS `t_task`;
