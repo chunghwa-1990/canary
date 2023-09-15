@@ -9,7 +9,6 @@ import com.example.canary.sys.entity.MenuQuery;
 import com.example.canary.sys.entity.MenuVO;
 import com.example.canary.sys.service.MenuService;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,7 +46,7 @@ public class MenuController {
     }
 
     /**
-     * update
+     * save
      *
      * @param menuAo
      * @return
