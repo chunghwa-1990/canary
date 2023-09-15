@@ -65,6 +65,24 @@ CREATE TABLE `sys_menu` (
     UNIQUE KEY `udx_name_route_2` (`name`,`route`,`is_deleted`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+-- drop table sys_menu
+DROP TABLE IF EXISTS `sys_permission`;
+-- create table sys_permission
+CREATE TABLE `sys_permission` (
+    `id` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'ID',
+    `menu_id` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+    `name` varchar(200) NOT NULL COMMENT '名称',
+    `icon` varchar(20) DEFAULT NULL COMMENT '图标',
+    `route` varchar(100) NOT NULL COMMENT '路由',
+    `is_disabled` tinyint DEFAULT '0' COMMENT '是否禁用 0:否 1:是',
+    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    `is_deleted` char(32) DEFAULT '0' COMMENT '是否删除 0:否 非0:是',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `udx_route_1` (`route`,`is_deleted`) USING BTREE,
+    UNIQUE KEY `udx_name_route_2` (`name`,`route`,`is_deleted`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 -- drop table t_task
 DROP TABLE IF EXISTS `t_task`;
 -- create table t_task
