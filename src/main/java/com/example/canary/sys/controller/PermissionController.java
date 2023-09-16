@@ -45,14 +45,14 @@ public class PermissionController {
     }
 
     /**
-     * save
+     * add
      *
      * @return
      */
-    @PostMapping("/save")
+    @PostMapping("/add")
     @SuppressWarnings("rawtypes")
-    public ResultEntity savePermission(@Validated({ ValidGroup.Add.class }) @RequestBody PermissionAO permissionAo) {
-        return permissionService.savePermission(permissionAo);
+    public ResultEntity addPermission(@Validated({ ValidGroup.Add.class }) @RequestBody PermissionAO permissionAo) {
+        return permissionService.addPermission(permissionAo);
     }
 
     /**
@@ -60,10 +60,10 @@ public class PermissionController {
      *
      * @return
      */
-    @PutMapping("/update")
+    @PutMapping("/edit")
     @SuppressWarnings("rawtypes")
-    public ResultEntity updatePermission(@Validated({ ValidGroup.Edit.class }) @RequestBody PermissionAO permissionAo) {
-        return permissionService.updatePermission(permissionAo);
+    public ResultEntity editPermission(@Validated({ ValidGroup.Edit.class }) @RequestBody PermissionAO permissionAo) {
+        return permissionService.editPermission(permissionAo);
     }
 
     /**

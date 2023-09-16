@@ -43,27 +43,27 @@ public class RoleController {
     }
 
     /**
-     * save
+     * add
      *
      * @param roleAo
      * @return
      */
-    @RequestMapping("/save")
+    @RequestMapping("/add")
     @SuppressWarnings("rawtypes")
     public ResultEntity saveRole(@Validated({ ValidGroup.Add.class }) @RequestBody RoleAO roleAo) {
         return roleService.saveRole(roleAo);
     }
 
     /**
-     * update
+     * edit
      *
      * @param roleAo
      * @return
      */
-    @RequestMapping("/update")
+    @RequestMapping("/edit")
     @SuppressWarnings("rawtypes")
-    public ResultEntity updateRole(@Validated({ ValidGroup.Add.class }) @RequestBody RoleAO roleAo) {
-        return roleService.updateRole(roleAo);
+    public ResultEntity editRole(@Validated({ ValidGroup.Add.class }) @RequestBody RoleAO roleAo) {
+        return roleService.editRole(roleAo);
     }
 
     /**

@@ -39,14 +39,14 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * save
+     * add
      *
      * @param userAo
      * @return
      */
     @Override
     @SuppressWarnings("rawtypes")
-    public ResultEntity saveUser(UserAO userAo) {
+    public ResultEntity addUser(UserAO userAo) {
         UserPO userPo = userAo.convertToPo();
         userRepository.insert(userPo);
         return ResultEntity.success();
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @SuppressWarnings("rawtypes")
-    public ResultEntity updateUser(UserAO userAo) {
+    public ResultEntity editUser(UserAO userAo) {
         UserPO userPo = userAo.convertToPo();
         userRepository.update(userPo);
         return ResultEntity.success();

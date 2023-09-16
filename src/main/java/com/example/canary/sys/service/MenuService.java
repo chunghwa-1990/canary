@@ -23,13 +23,13 @@ public interface MenuService {
     ResultEntity<Page<MenuVO>> pagesMenu(MenuQuery query);
 
     /**
-     * save
+     * add
      *
      * @param menuAo
      * @return
      */
     @SuppressWarnings("rawtypes")
-    ResultEntity saveMenu(MenuAO menuAo);
+    ResultEntity addMenu(MenuAO menuAo);
 
     /**
      * update
@@ -38,7 +38,7 @@ public interface MenuService {
      * @return
      */
     @SuppressWarnings("rawtypes")
-    ResultEntity updateMenu(MenuAO menuAo);
+    ResultEntity editMenu(MenuAO menuAo);
 
     /**
      * delete

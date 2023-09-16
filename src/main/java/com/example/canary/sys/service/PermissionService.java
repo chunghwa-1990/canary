@@ -23,13 +23,13 @@ public interface PermissionService {
     ResultEntity<Page<PermissionVO>> pagesPermission(PermissionQuery query);
 
     /**
-     * save
+     * add
      *
      * @param permissionAo
      * @return
      */
     @SuppressWarnings("rawtypes")
-    ResultEntity savePermission(PermissionAO permissionAo);
+    ResultEntity addPermission(PermissionAO permissionAo);
 
     /**
      * update
@@ -38,7 +38,7 @@ public interface PermissionService {
      * @return
      */
     @SuppressWarnings("rawtypes")
-    ResultEntity updatePermission(PermissionAO permissionAo);
+    ResultEntity editPermission(PermissionAO permissionAo);
 
     /**
      * delete

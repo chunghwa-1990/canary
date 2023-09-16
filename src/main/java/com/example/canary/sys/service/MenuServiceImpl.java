@@ -39,14 +39,14 @@ public class MenuServiceImpl implements MenuService {
     }
 
     /**
-     * save
+     * add
      *
      * @param menuAo
      * @return
      */
     @Override
     @SuppressWarnings("rawtypes")
-    public ResultEntity saveMenu(MenuAO menuAo) {
+    public ResultEntity addMenu(MenuAO menuAo) {
         MenuPO menuPo = menuAo.convertToPo();
         menuRepository.insert(menuPo);
         return ResultEntity.success();
@@ -60,7 +60,7 @@ public class MenuServiceImpl implements MenuService {
      */
     @Override
     @SuppressWarnings("rawtypes")
-    public ResultEntity updateMenu(MenuAO menuAo) {
+    public ResultEntity editMenu(MenuAO menuAo) {
         MenuPO menuPo = menuAo.convertToPo();
         menuRepository.update(menuPo);
         return ResultEntity.success();

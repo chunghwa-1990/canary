@@ -39,7 +39,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     /**
-     * save
+     * add
      *
      * @param roleAo
      * @return
@@ -60,7 +60,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     @SuppressWarnings("rawtypes")
-    public ResultEntity updateRole(RoleAO roleAo) {
+    public ResultEntity editRole(RoleAO roleAo) {
         RolePO rolePo = roleAo.convertToPo();
         roleRepository.update(rolePo);
         return ResultEntity.success();

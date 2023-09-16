@@ -46,27 +46,27 @@ public class MenuController {
     }
 
     /**
-     * save
+     * add
      *
      * @param menuAo
      * @return
      */
-    @PostMapping("/save")
+    @PostMapping("/add")
     @SuppressWarnings("rawtypes")
-    public ResultEntity saveMenu(@Validated({ ValidGroup.Add.class }) @RequestBody MenuAO menuAo) {
-        return menuService.saveMenu(menuAo);
+    public ResultEntity addMenu(@Validated({ ValidGroup.Add.class }) @RequestBody MenuAO menuAo) {
+        return menuService.addMenu(menuAo);
     }
 
     /**
-     * update
+     * edit
      *
      * @param menuAo
      * @return
      */
-    @PutMapping("/update")
+    @PutMapping("/edit")
     @SuppressWarnings("rawtypes")
-    public ResultEntity updateMenu(@Validated({ ValidGroup.Edit.class }) @RequestBody MenuAO menuAo) {
-        return menuService.updateMenu(menuAo);
+    public ResultEntity editMenu(@Validated({ ValidGroup.Edit.class }) @RequestBody MenuAO menuAo) {
+        return menuService.editMenu(menuAo);
     }
 
     /**

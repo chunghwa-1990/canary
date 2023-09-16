@@ -9,7 +9,6 @@ import com.example.canary.sys.entity.UserQuery;
 import com.example.canary.sys.entity.UserVO;
 import com.example.canary.sys.service.UserService;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,31 +45,31 @@ public class UserController {
     }
 
     /**
-     * save
+     * add
      *
      * @param userAo
      * @return
      */
-    @PostMapping("/save")
+    @PostMapping("/add")
     @SuppressWarnings("rawtypes")
-    public ResultEntity saveUser(@Validated({ ValidGroup.Add.class }) @RequestBody UserAO userAo) {
-        return userService.saveUser(userAo);
+    public ResultEntity addUser(@Validated({ ValidGroup.Add.class }) @RequestBody UserAO userAo) {
+        return userService.addUser(userAo);
     }
 
     /**
-     * save
+     * edit
      *
      * @param userAo
      * @return
      */
-    @PutMapping("/update")
+    @PutMapping("/edit")
     @SuppressWarnings("rawtypes")
-    public ResultEntity updateUser(@Validated({ ValidGroup.Edit.class }) @RequestBody UserAO userAo) {
-        return userService.updateUser(userAo);
+    public ResultEntity editUser(@Validated({ ValidGroup.Edit.class }) @RequestBody UserAO userAo) {
+        return userService.editUser(userAo);
     }
 
     /**
-     * save
+     * delete
      *
      * @param userId
      * @return

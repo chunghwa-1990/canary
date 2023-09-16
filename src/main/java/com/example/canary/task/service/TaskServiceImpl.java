@@ -48,14 +48,14 @@ public class TaskServiceImpl implements TaskService {
     }
 
     /**
-     * save
+     * add
      *
      * @param taskAo request object
      * @return response result
      */
     @Override
     @SuppressWarnings("rawtypes")
-    public ResultEntity saveTask(TaskAO taskAo) {
+    public ResultEntity addTask(TaskAO taskAo) {
         TaskPO taskPo = taskAo.convertToPo();
         taskRepository.insert(taskPo);
         return ResultEntity.success();
@@ -69,7 +69,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @SuppressWarnings("rawtypes")
-    public ResultEntity updateTask(TaskAO taskAo) {
+    public ResultEntity editTask(TaskAO taskAo) {
         TaskPO taskPo = taskAo.convertToPo();
         taskRepository.update(taskPo);
         return ResultEntity.success();

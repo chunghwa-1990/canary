@@ -23,13 +23,13 @@ public interface UserService {
     ResultEntity<Page<UserVO>> pagesUser(UserQuery query);
 
     /**
-     * save
+     * add
      *
      * @param userAo
      * @return
      */
     @SuppressWarnings("rawtypes")
-    ResultEntity saveUser(UserAO userAo);
+    ResultEntity addUser(UserAO userAo);
 
     /**
      * update
@@ -38,7 +38,7 @@ public interface UserService {
      * @return
      */
     @SuppressWarnings("rawtypes")
-    ResultEntity updateUser(UserAO userAo);
+    ResultEntity editUser(UserAO userAo);
 
     /**
      * delete

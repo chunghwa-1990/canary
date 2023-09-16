@@ -23,7 +23,7 @@ public interface RoleService {
     ResultEntity<Page<RoleVO>> pagesRole(RoleQuery query);
 
     /**
-     * save
+     * add
      *
      * @param roleAo
      * @return
@@ -38,7 +38,7 @@ public interface RoleService {
      * @return
      */
     @SuppressWarnings("rawtypes")
-    ResultEntity updateRole(RoleAO roleAo);
+    ResultEntity editRole(RoleAO roleAo);
 
     /**
      * delete

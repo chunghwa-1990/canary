@@ -46,27 +46,27 @@ public class TaskController {
     }
 
     /**
-     * save
+     * add
      *
      * @param taskAo request object
      * @return response result
      */
-    @PostMapping("/save")
+    @PostMapping("/add")
     @SuppressWarnings("rawtypes")
-    public ResultEntity saveTask(@Validated({ ValidGroup.Add.class }) @RequestBody TaskAO taskAo) {
-        return taskService.saveTask(taskAo);
+    public ResultEntity addTask(@Validated({ ValidGroup.Add.class }) @RequestBody TaskAO taskAo) {
+        return taskService.addTask(taskAo);
     }
 
     /**
-     * update
+     * edit
      *
      * @param taskAo request object
      * @return response result
      */
-    @PutMapping("/update")
+    @PutMapping("/edit")
     @SuppressWarnings("rawtypes")
-    public ResultEntity updateTask(@Validated({ ValidGroup.Edit.class }) @RequestBody TaskAO taskAo) {
-        return taskService.updateTask(taskAo);
+    public ResultEntity editTask(@Validated({ ValidGroup.Edit.class }) @RequestBody TaskAO taskAo) {
+        return taskService.editTask(taskAo);
     }
 
     /**

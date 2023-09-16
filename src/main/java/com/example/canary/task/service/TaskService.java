@@ -23,13 +23,13 @@ public interface TaskService {
     ResultEntity<Page<TaskVO>> pagesTask(TaskQuery query);
 
     /**
-     * save
+     * add
      *
      * @param taskAo request object
      * @return response result
      */
     @SuppressWarnings("rawtypes")
-    ResultEntity saveTask(TaskAO taskAo);
+    ResultEntity addTask(TaskAO taskAo);
 
     /**
      * update
@@ -38,7 +38,7 @@ public interface TaskService {
      * @return response result
      */
     @SuppressWarnings("rawtypes")
-    ResultEntity updateTask(TaskAO taskAo);
+    ResultEntity editTask(TaskAO taskAo);
 
     /**
      * delete
