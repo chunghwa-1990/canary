@@ -2,6 +2,7 @@ package com.example.canary.sys.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.beans.BeanUtils;
 
 import java.io.Serial;
 
@@ -17,4 +18,11 @@ public class UserVO extends UserBase {
 
     @Serial
     private static final long serialVersionUID = -3473337968969252412L;
+
+    public UserVO() {
+    }
+
+    public UserVO(UserPO userPo) {
+        BeanUtils.copyProperties(userPo, this);
+    }
 }

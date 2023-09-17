@@ -1,6 +1,6 @@
 package com.example.canary.sys.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.canary.common.api.ApiVersion;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.common.exception.ValidGroup;
@@ -40,7 +40,7 @@ public class UserController {
      * @return
      */
     @RequestMapping("/pages")
-    public ResultEntity<Page<UserVO>> pagesUser(UserQuery query) {
+    public ResultEntity<IPage<UserVO>> pagesUser(UserQuery query) {
         return userService.pagesUser(query);
     }
 
