@@ -2,12 +2,9 @@ package com.example.canary.sys.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.canary.common.enums.StatusEnum;
 import com.example.canary.sys.entity.UserPO;
 import com.example.canary.sys.entity.UserQuery;
-import com.example.canary.sys.entity.UserVO;
 import com.example.canary.sys.mapper.UserMapper;
 import com.example.canary.util.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +35,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public IPage<UserPO> selectPage(UserQuery query) {
         LambdaQueryWrapper<UserPO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StringUtils.hasText(query.getKeywords()), UserPO::getNickName, query.getKeywords());
         return userMapper.selectPage(query.getPage(), queryWrapper);
     }
 

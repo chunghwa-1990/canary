@@ -1,9 +1,13 @@
 package com.example.canary.sys.repository;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.canary.sys.entity.RolePO;
+import com.example.canary.sys.entity.RoleQuery;
 import com.example.canary.sys.mapper.RoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * 角色
@@ -17,6 +21,18 @@ public class RoleRepositoryImpl implements RoleRepository {
     @Autowired
     private RoleMapper roleMapper;
 
+    /**
+     * page
+     *
+     * @param query
+     * @return
+     */
+    @Override
+    public IPage<RolePO> selectPage(RoleQuery query) {
+        LambdaQueryWrapper<RolePO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StringUtils.hasText(query.getKeywords()), RolePO::getName, query.getKeywords());
+        return roleMapper.selectPage(query.getPage(), queryWrapper);
+    }
 
     /**
      * insert

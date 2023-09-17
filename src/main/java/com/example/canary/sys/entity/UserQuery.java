@@ -23,5 +23,5 @@ public class UserQuery extends BasePage<UserPO> implements Serializable {
     /**
      * 关键词
      */
-    private String keyword;
+    private String keywords;
 }

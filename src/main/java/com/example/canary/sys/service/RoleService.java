@@ -1,6 +1,6 @@
 package com.example.canary.sys.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.RoleAO;
 import com.example.canary.sys.entity.RoleQuery;
@@ -20,7 +20,7 @@ public interface RoleService {
      * @param query
      * @return
      */
-    ResultEntity<Page<RoleVO>> pagesRole(RoleQuery query);
+    ResultEntity<IPage<RoleVO>> pagesRole(RoleQuery query);
 
     /**
      * add
@@ -29,7 +29,7 @@ public interface RoleService {
      * @return
      */
     @SuppressWarnings("rawtypes")
-    ResultEntity saveRole(RoleAO roleAo);
+    ResultEntity addRole(RoleAO roleAo);
 
     /**
      * update

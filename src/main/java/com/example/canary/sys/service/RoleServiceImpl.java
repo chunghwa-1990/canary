@@ -1,6 +1,6 @@
 package com.example.canary.sys.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.RoleAO;
 import com.example.canary.sys.entity.RolePO;
@@ -10,9 +10,6 @@ import com.example.canary.sys.repository.RoleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
-import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
  * 角色
@@ -34,7 +31,8 @@ public class RoleServiceImpl implements RoleService {
      * @return
      */
     @Override
-    public ResultEntity<Page<RoleVO>> pagesRole(RoleQuery query) {
+    public ResultEntity<IPage<RoleVO>> pagesRole(RoleQuery query) {
+        IPage<RolePO> pagePo = roleRepository.selectPage(query);
         return null;
     }
 
@@ -46,7 +44,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     @SuppressWarnings("rawtypes")
-    public ResultEntity saveRole(RoleAO roleAo) {
+    public ResultEntity addRole(RoleAO roleAo) {
         RolePO rolePo = roleAo.convertToPo();
         roleRepository.insert(rolePo);
         return ResultEntity.success();

@@ -18,6 +18,6 @@ public class RoleVO extends RoleBase {
     /**
      * 关键词
      */
-    private String keyword;
+    private String keywords;
 
 }

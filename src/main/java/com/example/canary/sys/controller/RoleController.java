@@ -1,6 +1,6 @@
 package com.example.canary.sys.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.canary.common.api.ApiVersion;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.common.exception.ValidGroup;
@@ -9,7 +9,6 @@ import com.example.canary.sys.entity.RoleQuery;
 import com.example.canary.sys.entity.RoleVO;
 import com.example.canary.sys.service.RoleService;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,7 +40,7 @@ public class RoleController {
      * @return
      */
     @RequestMapping("/pages")
-    public ResultEntity<Page<RoleVO>> pagesRole(RoleQuery query) {
+    public ResultEntity<IPage<RoleVO>> pagesRole(RoleQuery query) {
         return roleService.pagesRole(query);
     }
 
@@ -53,8 +52,8 @@ public class RoleController {
      */
     @PostMapping("/add")
     @SuppressWarnings("rawtypes")
-    public ResultEntity saveRole(@Validated({ ValidGroup.Add.class }) @RequestBody RoleAO roleAo) {
-        return roleService.saveRole(roleAo);
+    public ResultEntity addRole(@Validated({ ValidGroup.Add.class }) @RequestBody RoleAO roleAo) {
+        return roleService.addRole(roleAo);
     }
 
     /**
