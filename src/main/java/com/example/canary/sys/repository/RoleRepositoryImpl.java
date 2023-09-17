@@ -30,7 +30,8 @@ public class RoleRepositoryImpl implements RoleRepository {
     @Override
     public IPage<RolePO> selectPage(RoleQuery query) {
         LambdaQueryWrapper<RolePO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(StringUtils.hasText(query.getKeywords()), RolePO::getName, query.getKeywords());
+        queryWrapper.and(StringUtils.hasText(query.getKeywords()), wrapper -> wrapper.like(RolePO::getName, query.getKeywords())
+                .or().like(RolePO::getDescription, query.getKeywords()));
         return roleMapper.selectPage(query.getPage(), queryWrapper);
     }
 

@@ -35,7 +35,9 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public IPage<UserPO> selectPage(UserQuery query) {
         LambdaQueryWrapper<UserPO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(StringUtils.hasText(query.getKeywords()), UserPO::getNickName, query.getKeywords());
+        queryWrapper.and(StringUtils.hasText(query.getKeywords()), wrapper -> wrapper.like(UserPO::getAccount, query.getKeywords())
+                .or().like(UserPO::getNickName, query.getKeywords())
+                .or().like(UserPO::getRealName, query.getKeywords()));
         return userMapper.selectPage(query.getPage(), queryWrapper);
     }
 
