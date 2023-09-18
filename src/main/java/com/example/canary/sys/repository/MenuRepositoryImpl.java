@@ -1,6 +1,9 @@
 package com.example.canary.sys.repository;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.canary.sys.entity.MenuPO;
+import com.example.canary.sys.entity.MenuQuery;
 import com.example.canary.sys.mapper.MenuMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,18 @@ public class MenuRepositoryImpl implements MenuRepository {
 
     @Autowired
     private MenuMapper menuMapper;
+
+    /**
+     * pages
+     *
+     * @param query
+     * @return
+     */
+    @Override
+    public IPage<MenuPO> selectPage(MenuQuery query) {
+        // return menuMapper.selectPage(query.getPage());
+        return null;
+    }
 
     /**
      * insert

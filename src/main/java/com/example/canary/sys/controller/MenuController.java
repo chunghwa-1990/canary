@@ -1,5 +1,6 @@
 package com.example.canary.sys.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.canary.common.api.ApiVersion;
 import com.example.canary.common.exception.ResultEntity;
@@ -41,7 +42,7 @@ public class MenuController {
      * @return
      */
     @GetMapping("/pages")
-    public ResultEntity<Page<MenuVO>> pagesMenu(MenuQuery query) {
+    public ResultEntity<IPage<MenuVO>> pagesMenu(MenuQuery query) {
         return menuService.pagesMenu(query);
     }
 

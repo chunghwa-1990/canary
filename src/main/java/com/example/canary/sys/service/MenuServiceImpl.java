@@ -1,5 +1,6 @@
 package com.example.canary.sys.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.MenuAO;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 菜单
@@ -34,7 +37,9 @@ public class MenuServiceImpl implements MenuService {
      * @return
      */
     @Override
-    public ResultEntity<Page<MenuVO>> pagesMenu(MenuQuery query) {
+    public ResultEntity<IPage<MenuVO>> pagesMenu(MenuQuery query) {
+        IPage<MenuPO> pagePo = menuRepository.selectPage(query);
+        List<MenuVO> records = pagePo.getRecords().stream().map(MenuVO::new).collect(Collectors.toList());
         return null;
     }
 

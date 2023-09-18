@@ -1,5 +1,6 @@
 package com.example.canary.sys.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.MenuAO;
@@ -20,7 +21,7 @@ public interface MenuService {
      * @param query
      * @return
      */
-    ResultEntity<Page<MenuVO>> pagesMenu(MenuQuery query);
+    ResultEntity<IPage<MenuVO>> pagesMenu(MenuQuery query);
 
     /**
      * add

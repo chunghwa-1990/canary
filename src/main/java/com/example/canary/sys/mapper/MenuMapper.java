@@ -1,7 +1,9 @@
 package com.example.canary.sys.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.canary.sys.entity.MenuPO;
+import com.example.canary.sys.entity.MenuQuery;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -12,4 +14,12 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface MenuMapper extends BaseMapper<MenuPO> {
+
+    /**
+     * pages
+     *
+     * @param query
+     * @return
+     */
+    IPage<MenuPO> selectPage(MenuQuery query);
 }
