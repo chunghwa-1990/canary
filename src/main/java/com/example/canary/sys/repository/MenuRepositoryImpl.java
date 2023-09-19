@@ -2,8 +2,10 @@ package com.example.canary.sys.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.canary.sys.entity.MenuPO;
 import com.example.canary.sys.entity.MenuQuery;
+import com.example.canary.sys.entity.MenuVO;
 import com.example.canary.sys.mapper.MenuMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,9 +29,8 @@ public class MenuRepositoryImpl implements MenuRepository {
      * @return
      */
     @Override
-    public IPage<MenuPO> selectPage(MenuQuery query) {
-        // return menuMapper.selectPage(query.getPage());
-        return null;
+    public IPage<MenuVO> selectPageVo(MenuQuery query) {
+        return menuMapper.selectPageVo(query, query.getPage(), query.getOrderMap(MenuVO.class));
     }
 
     /**

@@ -3,5 +3,22 @@
 <mapper namespace="com.example.canary.sys.mapper.MenuMapper">
 
 
+    <select id="selectPageVo" resultType="com.example.canary.sys.entity.MenuVO">
+        select
+            m.*
+        from
+            sys_menu m
+        where
+            m.is_deleted = 0
+        <if test="query.keywords != null and query.keywords != ''">
+            and m.`name` like concat('%', #{query.keywords}, '%')
+        </if>
+        <if test="orderMap != null and orderMap.size > 0">
+            order by
+            <foreach collection="orderMap.entrySet()" item="value" index="key" open="" separator="," close="">
+                ${key} ${value}
+            </foreach>
+        </if>
+    </select>
 </mapper>
 

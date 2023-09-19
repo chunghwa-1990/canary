@@ -3,6 +3,7 @@ package com.example.canary.sys.repository;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.canary.sys.entity.MenuPO;
 import com.example.canary.sys.entity.MenuQuery;
+import com.example.canary.sys.entity.MenuVO;
 
 /**
  * 菜单
@@ -18,7 +19,7 @@ public interface MenuRepository {
      * @param query
      * @return
      */
-    IPage<MenuPO> selectPage(MenuQuery query);
+    IPage<MenuVO> selectPageVo(MenuQuery query);
 
     /**
      * insert

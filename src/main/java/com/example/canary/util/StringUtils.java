@@ -24,7 +24,7 @@ public class StringUtils {
     }
 
     /**
-     * 小驼峰命名
+     * 小写驼峰命名
      *
      * @return
      */
@@ -34,7 +34,25 @@ public class StringUtils {
         return String.valueOf(chars);
     }
 
+    /**
+     * 大写驼峰命名
+     *
+     * @param str
+     * @return
+     */
     public static String toUpperCamelCase(String str) {
         return null;
     }
+
+    /**
+     * 驼峰命名转下划线
+     *
+     * @param str
+     * @return
+     */
+    public static String toUnderlineCase(String str) {
+        String lowerCaseStr = str.replaceAll("([a-z])([A-Z])", "$1_$2");
+        return lowerCaseStr.toLowerCase();
+    }
+
 }

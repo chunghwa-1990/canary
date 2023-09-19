@@ -38,9 +38,8 @@ public class MenuServiceImpl implements MenuService {
      */
     @Override
     public ResultEntity<IPage<MenuVO>> pagesMenu(MenuQuery query) {
-        IPage<MenuPO> pagePo = menuRepository.selectPage(query);
-        List<MenuVO> records = pagePo.getRecords().stream().map(MenuVO::new).collect(Collectors.toList());
-        return null;
+        IPage<MenuVO> pageVo = menuRepository.selectPageVo(query);
+        return ResultEntity.success(pageVo);
     }
 
     /**
