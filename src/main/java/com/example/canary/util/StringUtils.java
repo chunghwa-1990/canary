@@ -55,4 +55,8 @@ public class StringUtils {
         return lowerCaseStr.toLowerCase();
     }
 
+    public static void main(String[] args) {
+        System.out.print(StringUtils.toLowerCamelCase("wanQuatoPrice"));
+    }
+
 }

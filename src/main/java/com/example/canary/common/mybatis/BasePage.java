@@ -68,27 +68,20 @@ public class BasePage<T extends Serializable> {
         return current * size;
     }
 
-    /**
-     * 获取 page
-     *
-     * @return
-     */
-    public Page<T> getPage() {
-        return getPage(true);
-    }
 
     /**
      * 获取 page
      *
      * @return
      */
-    public Page<T> getPage(boolean isCamel) {
+    public Page<T> getPage() {
         Page<T> page = new Page<>();
         BeanUtils.copyProperties(this, page);
-        if (isCamel && (!CollectionUtils.isEmpty(orders))) {
-                orders.forEach(orderItem -> orderItem.setColumn(
-                        com.example.canary.util.StringUtils.toUnderlineCase(orderItem.getColumn())
-                ));
+        if (!CollectionUtils.isEmpty(orders)) {
+            orders.forEach(item -> {
+                String column = com.example.canary.util.StringUtils.toUnderlineCase(item.getColumn());
+                item.setColumn(column);
+            });
         }
         return page;
     }
@@ -106,7 +99,7 @@ public class BasePage<T extends Serializable> {
             orders.forEach(item -> {
                 try {
                     clazz.getDeclaredField(item.getColumn());
-                    orderItemMap.put(com.example.canary.util.StringUtils.toLowerCamelCase(item.getColumn()), item.isAsc() ? "asc" : "desc");
+                    orderItemMap.put(com.example.canary.util.StringUtils.toUnderlineCase(item.getColumn()), item.isAsc() ? "asc" : "desc");
                 } catch (NoSuchFieldException e) {
                     throw new IllegalArgumentException(item.getColumn() + "不符合列名的要求");
                 }
@@ -153,10 +146,10 @@ public class BasePage<T extends Serializable> {
                             TableField tableField = field.getAnnotation(TableField.class);
                             cloumn = tableField.value();
                             if (!StringUtils.hasText(cloumn)) {
-                                cloumn = com.example.canary.util.StringUtils.toLowerCamelCase(cloumn);
+                                cloumn = com.example.canary.util.StringUtils.toUnderlineCase(cloumn);
                             }
                         } else {
-                            cloumn = com.example.canary.util.StringUtils.toLowerCamelCase(fieldName);
+                            cloumn = com.example.canary.util.StringUtils.toUnderlineCase(fieldName);
                         }
                         orderItemMap.put(cloumn, item.isAsc() ? "asc" : "desc");
                     }

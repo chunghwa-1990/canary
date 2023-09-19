@@ -13,12 +13,12 @@
         <if test="query.keywords != null and query.keywords != ''">
             and m.`name` like concat('%', #{query.keywords}, '%')
         </if>
-        <if test="orderMap != null and orderMap.size > 0">
-            order by
-            <foreach collection="orderMap.entrySet()" item="value" index="key" open="" separator="," close="">
-                ${key} ${value}
-            </foreach>
-        </if>
+        <!-- <if test="orderMap != null and orderMap.size > 0"> -->
+        <!--     order by -->
+        <!--     <foreach collection="orderMap.entrySet()" item="value" index="key" open="" separator="," close=""> -->
+        <!--         ${key} ${value} -->
+        <!--     </foreach> -->
+        <!-- </if> -->
     </select>
 </mapper>
 
