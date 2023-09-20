@@ -32,12 +32,6 @@ public class PermissionBase implements Serializable {
     private String id;
 
     /**
-     * 菜单id
-     */
-    @NotBlank(groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
-    private String menuId;
-
-    /**
      * name
      */
     @NotBlank(groups = { ValidGroup.Add.class, ValidGroup.Edit.class })

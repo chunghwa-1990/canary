@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serial;
+import java.util.List;
 
 /**
  * 菜单
@@ -18,6 +19,11 @@ public class MenuVO extends MenuBase {
 
     @Serial
     private static final long serialVersionUID = -8349806436315205064L;
+
+    /**
+     * 权限
+     */
+    private List<PermissionVO> permissions;
 
     public MenuVO() {
     }

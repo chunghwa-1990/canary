@@ -7,9 +7,13 @@ import com.example.canary.sys.entity.RolePO;
 import com.example.canary.sys.entity.RoleQuery;
 import com.example.canary.sys.entity.RoleVO;
 import com.example.canary.sys.repository.RoleRepository;
+import com.example.canary.util.PageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 角色
@@ -32,8 +36,10 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public ResultEntity<IPage<RoleVO>> pagesRole(RoleQuery query) {
-        IPage<RolePO> pagePo = roleRepository.selectPage(query);
-        return null;
+        IPage<RolePO> pagePo = roleRepository.selectPagePo(query);
+        List<RoleVO> records = pagePo.getRecords().stream().map(RoleVO::new).collect(Collectors.toList());
+        IPage<RoleVO> pageVo = PageUtils.convertToVo(pagePo, records);
+        return ResultEntity.success(pageVo);
     }
 
     /**

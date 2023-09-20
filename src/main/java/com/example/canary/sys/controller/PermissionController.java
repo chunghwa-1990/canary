@@ -1,6 +1,5 @@
 package com.example.canary.sys.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.canary.common.api.ApiVersion;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.common.exception.ValidGroup;
@@ -19,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * 权限
  *
@@ -35,13 +36,13 @@ public class PermissionController {
     private PermissionService permissionService;
 
     /**
-     * pages
+     * list
      *
      * @return
      */
-    @GetMapping("/pages")
-    public ResultEntity<Page<PermissionVO>> pagesPermission(PermissionQuery query) {
-        return permissionService.pagesPermission(query);
+    @GetMapping("/list")
+    public ResultEntity<List<PermissionVO>> listPermission() {
+        return permissionService.listPermission();
     }
 
     /**

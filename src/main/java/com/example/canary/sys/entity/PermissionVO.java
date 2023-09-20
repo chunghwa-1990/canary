@@ -13,7 +13,7 @@ import java.io.Serial;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class PermissionVO extends PermissionBase{
+public class PermissionVO extends PermissionBase {
 
     @Serial
     private static final long serialVersionUID = 8553002464871711739L;

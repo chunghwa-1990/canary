@@ -10,6 +10,8 @@ import com.example.canary.sys.mapper.MenuMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 菜单
  *
@@ -64,5 +66,18 @@ public class MenuRepositoryImpl implements MenuRepository {
     @Override
     public int deleteById(String menuId) {
         return menuMapper.deleteById(menuId);
+    }
+
+    /**
+     * 根据 level 查询
+     *
+     * @param level
+     * @return
+     */
+    @Override
+    public List<MenuPO> selectByLevel(int level) {
+        LambdaQueryWrapper<MenuPO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(MenuPO::getLevel, level);
+        return menuMapper.selectList(queryWrapper);
     }
 }

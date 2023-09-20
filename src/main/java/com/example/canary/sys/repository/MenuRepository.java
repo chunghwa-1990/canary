@@ -5,6 +5,8 @@ import com.example.canary.sys.entity.MenuPO;
 import com.example.canary.sys.entity.MenuQuery;
 import com.example.canary.sys.entity.MenuVO;
 
+import java.util.List;
+
 /**
  * 菜单
  *
@@ -44,4 +46,12 @@ public interface MenuRepository {
      * @return
      */
     int deleteById(String menuId);
+
+    /**
+     * 根据 level 查询
+     *
+     * @param level
+     * @return
+     */
+    List<MenuPO> selectByLevel(int level);
 }

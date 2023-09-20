@@ -1,10 +1,11 @@
 package com.example.canary.sys.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.PermissionAO;
 import com.example.canary.sys.entity.PermissionQuery;
 import com.example.canary.sys.entity.PermissionVO;
+
+import java.util.List;
 
 /**
  * 权限
@@ -15,12 +16,11 @@ import com.example.canary.sys.entity.PermissionVO;
 public interface PermissionService {
 
     /**
-     * pages
+     * list
      *
-     * @param query
      * @return
      */
-    ResultEntity<Page<PermissionVO>> pagesPermission(PermissionQuery query);
+    ResultEntity<List<PermissionVO>> listPermission();
 
     /**
      * add

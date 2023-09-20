@@ -1,5 +1,7 @@
 package com.example.canary.sys.entity;
 
+import com.example.canary.common.exception.ValidGroup;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.BeanUtils;
@@ -18,6 +20,12 @@ public class PermissionAO extends PermissionBase {
 
     @Serial
     private static final long serialVersionUID = 5895257941977389229L;
+
+    /**
+     * 菜单id
+     */
+    @NotBlank(groups = { ValidGroup.Add.class, ValidGroup.Edit.class })
+    private String menuId;
 
 
     public PermissionPO convertToPo() {

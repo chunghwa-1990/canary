@@ -18,7 +18,7 @@ public interface RoleRepository {
      * @param query
      * @return
      */
-    IPage<RolePO> selectPage(RoleQuery query);
+    IPage<RolePO> selectPagePo(RoleQuery query);
 
     /**
      * insert
