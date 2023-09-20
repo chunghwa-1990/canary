@@ -2,6 +2,7 @@ package com.example.canary.sys.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.beans.BeanUtils;
 
 /**
  * 角色
@@ -15,9 +16,10 @@ public class RoleVO extends RoleBase {
 
     private static final long serialVersionUID = 3164952697835641373L;
 
-    /**
-     * 关键词
-     */
-    private String keywords;
+    public RoleVO() {
+    }
 
+    public RoleVO(RolePO rolePo) {
+        BeanUtils.copyProperties(rolePo, this);
+    }
 }
