@@ -23,11 +23,9 @@ public interface MenuMapper extends BaseMapper<MenuPO> {
     /**
      * pages
      *
-     * @param query
      * @param page
-     * @param orderMap
+     * @param query
      * @return
      */
-    IPage<MenuVO> selectPageVo(@Param("query") MenuQuery query, @Param("page") Page<MenuPO> page,
-                             @Param("orderMap") Map<String, String> orderMap);
+    IPage<MenuVO> selectPageVo(@Param("page") Page<MenuPO> page, @Param("query") MenuQuery query);
 }
