@@ -55,4 +55,17 @@ public class UserRoleRepositoryImpl implements UserRoleRepository{
         queryWrapper.eq(UserRoleBase::getUserId, userId);
         return userRoleMapper.delete(queryWrapper);
     }
+
+    /**
+     * select by roleId
+     *
+     * @param roleId
+     * @return
+     */
+    @Override
+    public List<UserRolePO> selectByRoleId(String roleId) {
+        LambdaQueryWrapper<UserRolePO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(UserRolePO::getRoleId, roleId);
+        return userRoleMapper.selectList(queryWrapper);
+    }
 }

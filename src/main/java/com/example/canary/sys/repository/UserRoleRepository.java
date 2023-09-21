@@ -35,4 +35,12 @@ public interface UserRoleRepository {
      * @return
      */
     int deleteByUserId(String userId);
+
+    /**
+     * select by roleId
+     *
+     * @param roleId
+     * @return
+     */
+    List<UserRolePO> selectByRoleId(String roleId);
 }
