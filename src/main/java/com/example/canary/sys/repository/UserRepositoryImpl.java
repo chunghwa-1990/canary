@@ -95,4 +95,15 @@ public class UserRepositoryImpl implements UserRepository {
     public int deleteById(String userId) {
         return userMapper.deleteById(userId);
     }
+
+    /**
+     * select by id
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public UserPO selectById(String userId) {
+        return userMapper.selectById(userId);
+    }
 }

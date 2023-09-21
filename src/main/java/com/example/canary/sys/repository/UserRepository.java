@@ -54,4 +54,12 @@ public interface UserRepository {
      * @return
      */
     int deleteById(String userId);
+
+    /**
+     * select by id
+     *
+     * @param userId
+     * @return
+     */
+    UserPO selectById(String userId);
 }

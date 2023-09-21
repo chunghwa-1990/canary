@@ -2,6 +2,7 @@ package com.example.canary.sys.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.canary.common.context.CanaryContext;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.UserAO;
 import com.example.canary.sys.entity.UserPO;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -104,6 +106,19 @@ public class UserServiceImpl implements UserService {
     @Override
     @SuppressWarnings("rawtypes")
     public ResultEntity deleteUser(String userId) {
+        // 当前用户
+        String currentUserId = CanaryContext.getCurrentUser().getUserId();
+        if (userId.equals(currentUserId)) {
+            return ResultEntity.fail("无法删除当前用户");
+        }
+        // 查询当前删除的用户
+        UserPO userPo = userRepository.selectById(userId);
+        if (userPo == null) {
+            return ResultEntity.fail("目标用户不存在或ID错误");
+        }
+        if (userPo.getIsAdmin() == 1) {
+            return ResultEntity.fail("无法删除超级管理员");
+        }
         // delete user
         userRepository.deleteById(userId);
         // delete relation
