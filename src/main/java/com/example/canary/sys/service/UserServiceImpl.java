@@ -6,12 +6,16 @@ import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.UserAO;
 import com.example.canary.sys.entity.UserPO;
 import com.example.canary.sys.entity.UserQuery;
+import com.example.canary.sys.entity.UserRolePO;
 import com.example.canary.sys.entity.UserVO;
 import com.example.canary.sys.repository.UserRepository;
+import com.example.canary.sys.repository.UserRoleRepository;
 import com.example.canary.util.PageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +32,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserRoleRepository userRoleRepository;
 
     /**
      * query
@@ -53,14 +60,21 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @SuppressWarnings("rawtypes")
+    @Transactional(rollbackFor = Exception.class)
     public ResultEntity addUser(UserAO userAo) {
+        // insert user
         UserPO userPo = userAo.convertToPo();
         userRepository.insert(userPo);
+        // batch insert relation
+        List<UserRolePO> userRoles = userAo.getUserRoles(userPo.getId());
+        if (!CollectionUtils.isEmpty(userRoles)) {
+            userRoleRepository.batchInsert(userRoles);
+        }
         return ResultEntity.success();
     }
 
     /**
-     * update
+     * edit
      *
      * @param userAo
      * @return
@@ -68,8 +82,16 @@ public class UserServiceImpl implements UserService {
     @Override
     @SuppressWarnings("rawtypes")
     public ResultEntity editUser(UserAO userAo) {
+        // update user
         UserPO userPo = userAo.convertToPo();
         userRepository.update(userPo);
+        // delete relation
+        userRoleRepository.deleteByUserId(userPo.getId());
+        // batch insert
+        List<UserRolePO> userRoles = userAo.getUserRoles(userPo.getId());
+        if (!CollectionUtils.isEmpty(userRoles)) {
+            userRoleRepository.batchInsert(userRoles);
+        }
         return ResultEntity.success();
     }
 
@@ -82,7 +104,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @SuppressWarnings("rawtypes")
     public ResultEntity deleteUser(String userId) {
+        // delete user
         userRepository.deleteById(userId);
+        // delete relation
+        userRoleRepository.deleteByUserId(userId);
         return ResultEntity.success();
     }
 }

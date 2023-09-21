@@ -32,7 +32,7 @@ public interface UserService {
     ResultEntity addUser(UserAO userAo);
 
     /**
-     * update
+     * edit
      *
      * @param userAo
      * @return

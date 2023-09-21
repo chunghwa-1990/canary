@@ -63,15 +63,15 @@ public class RoleServiceImpl implements RoleService {
         RolePO rolePo = roleAo.convertToPo();
         roleRepository.insert(rolePo);
         // batch insert relation
-        List<RolePermissionPO> rolePermissionPoList = roleAo.getRolePermissionList(rolePo.getId());
-        if (!CollectionUtils.isEmpty(rolePermissionPoList)) {
-            rolePermissionRepository.batchInsert(rolePermissionPoList);
+        List<RolePermissionPO> rolePermissions = roleAo.getRolePermissions(rolePo.getId());
+        if (!CollectionUtils.isEmpty(rolePermissions)) {
+            rolePermissionRepository.batchInsert(rolePermissions);
         }
         return ResultEntity.success();
     }
 
     /**
-     * update
+     * edit
      *
      * @param roleAo
      * @return
@@ -86,9 +86,9 @@ public class RoleServiceImpl implements RoleService {
         // delete relation
         rolePermissionRepository.deleteByRoleId(roleAo.getId());
         // batch insert relation
-        List<RolePermissionPO> rolePermissionPoList = roleAo.getRolePermissionList(rolePo.getId());
-        if (!CollectionUtils.isEmpty(rolePermissionPoList)) {
-            rolePermissionRepository.batchInsert(rolePermissionPoList);
+        List<RolePermissionPO> rolePermissions = roleAo.getRolePermissions(rolePo.getId());
+        if (!CollectionUtils.isEmpty(rolePermissions)) {
+            rolePermissionRepository.batchInsert(rolePermissions);
         }
         return ResultEntity.success();
     }

@@ -7,6 +7,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.Serial;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -34,12 +35,12 @@ public class RoleAO extends RoleBase {
         return rolePo;
     }
 
-    public List<RolePermissionPO> getRolePermissionList(String roleId) {
+    public List<RolePermissionPO> getRolePermissions(String roleId) {
         if (CollectionUtils.isEmpty(permissionIds)) {
-            return null;
+            return Collections.emptyList();
         }
-        List<RolePermissionPO> rolePermissionPoList = new ArrayList<>();
-        permissionIds.forEach(s -> rolePermissionPoList.add(new RolePermissionPO(roleId, s)));
-        return rolePermissionPoList;
+        List<RolePermissionPO> rolePermissions = new ArrayList<>();
+        permissionIds.forEach(s -> rolePermissions.add(new RolePermissionPO(roleId, s)));
+        return rolePermissions;
     }
 }

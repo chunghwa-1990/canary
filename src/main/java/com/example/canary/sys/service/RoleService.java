@@ -32,7 +32,7 @@ public interface RoleService {
     ResultEntity addRole(RoleAO roleAo);
 
     /**
-     * update
+     * edit
      *
      * @param roleAo
      * @return
