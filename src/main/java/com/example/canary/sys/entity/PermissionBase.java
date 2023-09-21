@@ -27,7 +27,6 @@ public class PermissionBase implements Serializable {
     /**
      * id
      */
-    @TableId(type = IdType.ASSIGN_UUID)
     @NotBlank(groups = ValidGroup.Edit.class)
     private String id;
 

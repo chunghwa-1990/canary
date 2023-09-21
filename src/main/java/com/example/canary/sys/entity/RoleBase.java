@@ -28,7 +28,6 @@ public class RoleBase implements Serializable {
      * id
      */
     @NotBlank(groups = { ValidGroup.Edit.class })
-    @TableId(type = IdType.ASSIGN_UUID)
     private String id;
 
     /**

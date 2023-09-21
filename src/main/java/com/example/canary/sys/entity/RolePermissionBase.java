@@ -6,18 +6,19 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.lang.reflect.Type;
 
 /**
- * 菜单权限关联关系
+ * 角色权限关联关系
  *
- * @author zhaohongliang 2023-09-20 21:40
+ * @author zhaohongliang 2023-09-21 00:11
  * @since 1.0
  */
 @Data
-public class MenuPermissionBase implements Serializable {
+public class RolePermissionBase implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = -7322244199416314691L;
+    private static final long serialVersionUID = -793979626944722704L;
 
     /**
      * ID
@@ -25,20 +26,20 @@ public class MenuPermissionBase implements Serializable {
     private String id;
 
     /**
-     * 菜单ID
+     * 角色ID
      */
-    private String menuId;
+    private String roleId;
 
     /**
      * 权限ID
      */
     private String permissionId;
 
-    public MenuPermissionBase() {
+    public RolePermissionBase() {
     }
 
-    public MenuPermissionBase(String menuId, String permissionId) {
-        this.menuId = menuId;
+    public RolePermissionBase(String roleId, String permissionId) {
+        this.roleId = roleId;
         this.permissionId = permissionId;
     }
 }
