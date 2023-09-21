@@ -54,4 +54,20 @@ public interface MenuRepository {
      * @return
      */
     List<MenuPO> selectByLevel(int level);
+
+    /**
+     * 根据 id 查询
+     *
+     * @param menuId
+     * @return
+     */
+    MenuPO selectById(String menuId);
+
+    /**
+     * 根据 parentId 查询
+     *
+     * @param menuId
+     * @return
+     */
+    List<MenuPO> selectByParentId(String menuId);
 }

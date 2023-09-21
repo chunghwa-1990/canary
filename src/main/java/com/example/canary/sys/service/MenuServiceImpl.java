@@ -1,21 +1,21 @@
 package com.example.canary.sys.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.MenuAO;
 import com.example.canary.sys.entity.MenuPO;
+import com.example.canary.sys.entity.MenuPermissionPO;
 import com.example.canary.sys.entity.MenuQuery;
 import com.example.canary.sys.entity.MenuVO;
+import com.example.canary.sys.repository.MenuPermissionRepository;
 import com.example.canary.sys.repository.MenuRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 菜单
@@ -29,6 +29,9 @@ public class MenuServiceImpl implements MenuService {
 
     @Autowired
     private MenuRepository menuRepository;
+
+    @Autowired
+    private MenuPermissionRepository menuPermissionRepository;
 
     /**
      * pages
@@ -78,7 +81,24 @@ public class MenuServiceImpl implements MenuService {
      */
     @Override
     @SuppressWarnings("rawtypes")
+    @Transactional(rollbackFor = Exception.class)
     public ResultEntity deleteMenu(String menuId) {
+        MenuPO menuPo = menuRepository.selectById(menuId);
+        if (menuPo == null) {
+            return ResultEntity.fail("菜单不存在或ID错误");
+        }
+        if (menuPo.getLevel() == 1) {
+            List<MenuPO> menuChildren = menuRepository.selectByParentId(menuId);
+            if (!CollectionUtils.isEmpty(menuChildren)) {
+                return ResultEntity.fail("无法删除已有下级的菜单");
+            }
+        } else {
+            List<MenuPermissionPO> menuPermissions = menuPermissionRepository.selectByMenuId(menuId);
+            if (!CollectionUtils.isEmpty(menuPermissions)) {
+                return ResultEntity.fail("无法删除已有权限的菜单");
+            }
+        }
+        // delete
         menuRepository.deleteById(menuId);
         return ResultEntity.success();
     }

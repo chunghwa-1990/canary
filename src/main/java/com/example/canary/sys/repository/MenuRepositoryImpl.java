@@ -2,7 +2,6 @@ package com.example.canary.sys.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.canary.sys.entity.MenuPO;
 import com.example.canary.sys.entity.MenuQuery;
 import com.example.canary.sys.entity.MenuVO;
@@ -78,6 +77,30 @@ public class MenuRepositoryImpl implements MenuRepository {
     public List<MenuPO> selectByLevel(int level) {
         LambdaQueryWrapper<MenuPO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(MenuPO::getLevel, level);
+        return menuMapper.selectList(queryWrapper);
+    }
+
+    /**
+     * 根据 id 查询
+     *
+     * @param menuId
+     * @return
+     */
+    @Override
+    public MenuPO selectById(String menuId) {
+        return menuMapper.selectById(menuId);
+    }
+
+    /**
+     * 根据 parentId 查询
+     *
+     * @param parentId
+     * @return
+     */
+    @Override
+    public List<MenuPO> selectByParentId(String parentId) {
+        LambdaQueryWrapper<MenuPO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(MenuPO::getParentId, parentId);
         return menuMapper.selectList(queryWrapper);
     }
 }

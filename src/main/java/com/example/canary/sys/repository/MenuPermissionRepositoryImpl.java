@@ -6,6 +6,8 @@ import com.example.canary.sys.mapper.MenuPermissionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 菜单权限关联关系
  *
@@ -40,5 +42,18 @@ public class MenuPermissionRepositoryImpl implements MenuPermissionRepository {
         LambdaQueryWrapper<MenuPermissionPO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(MenuPermissionPO::getPermissionId, permissionId);
         return menuPermissionMapper.delete(queryWrapper);
+    }
+
+    /**
+     * 根据 menuId 查询
+     *
+     * @param menuId
+     * @return
+     */
+    @Override
+    public List<MenuPermissionPO> selectByMenuId(String menuId) {
+        LambdaQueryWrapper<MenuPermissionPO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(MenuPermissionPO::getMenuId, menuId);
+        return menuPermissionMapper.selectList(queryWrapper);
     }
 }

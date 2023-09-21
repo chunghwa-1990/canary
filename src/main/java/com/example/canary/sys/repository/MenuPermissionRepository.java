@@ -2,6 +2,8 @@ package com.example.canary.sys.repository;
 
 import com.example.canary.sys.entity.MenuPermissionPO;
 
+import java.util.List;
+
 /**
  * 菜单权限关联关系
  *
@@ -25,4 +27,12 @@ public interface MenuPermissionRepository {
      * @return
      */
     int deleteByPermissionId(String permissionId);
+
+    /**
+     * 根据 menuId 查询
+     *
+     * @param menuId
+     * @return
+     */
+    List<MenuPermissionPO> selectByMenuId(String menuId);
 }
