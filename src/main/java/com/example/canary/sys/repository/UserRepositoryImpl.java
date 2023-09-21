@@ -88,22 +88,22 @@ public class UserRepositoryImpl implements UserRepository {
     /**
      * delete
      *
-     * @param userId
+     * @param id
      * @return
      */
     @Override
-    public int deleteById(String userId) {
-        return userMapper.deleteById(userId);
+    public int deleteById(String id) {
+        return userMapper.deleteById(id);
     }
 
     /**
      * select by id
      *
-     * @param userId
+     * @param id
      * @return
      */
     @Override
-    public UserPO selectById(String userId) {
-        return userMapper.selectById(userId);
+    public UserPO selectById(String id) {
+        return userMapper.selectById(id);
     }
 }

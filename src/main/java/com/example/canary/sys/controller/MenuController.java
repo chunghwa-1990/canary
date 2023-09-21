@@ -73,13 +73,13 @@ public class MenuController {
     /**
      * delete
      *
-     * @param menuId
+     * @param id
      * @return
      */
     @DeleteMapping("/delete")
     @SuppressWarnings("rawtypes")
-    public ResultEntity deleteMenu(@NotBlank String menuId) {
-        return menuService.deleteMenu(menuId);
+    public ResultEntity deleteMenu(@NotBlank String id) {
+        return menuService.deleteMenu(id);
     }
 
 

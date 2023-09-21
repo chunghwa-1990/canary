@@ -63,8 +63,8 @@ public class MenuRepositoryImpl implements MenuRepository {
      * @return
      */
     @Override
-    public int deleteById(String menuId) {
-        return menuMapper.deleteById(menuId);
+    public int deleteById(String id) {
+        return menuMapper.deleteById(id);
     }
 
     /**
@@ -83,12 +83,12 @@ public class MenuRepositoryImpl implements MenuRepository {
     /**
      * 根据 id 查询
      *
-     * @param menuId
+     * @param id
      * @return
      */
     @Override
-    public MenuPO selectById(String menuId) {
-        return menuMapper.selectById(menuId);
+    public MenuPO selectById(String id) {
+        return menuMapper.selectById(id);
     }
 
     /**

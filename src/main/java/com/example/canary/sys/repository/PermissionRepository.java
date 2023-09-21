@@ -30,8 +30,8 @@ public interface PermissionRepository {
     /**
      * delete
      *
-     * @param permissionId
+     * @param id
      * @return
      */
-    int deleteById(String permissionId);
+    int deleteById(String id);
 }

@@ -100,22 +100,22 @@ public class RoleServiceImpl implements RoleService {
     /**
      * delete
      *
-     * @param roleId
+     * @param id
      * @return
      */
     @Override
     @SuppressWarnings("rawtypes")
     @Transactional(rollbackFor = Exception.class)
-    public ResultEntity deleteRole(String roleId) {
+    public ResultEntity deleteRole(String id) {
         // 查询角色使用情况
-        List<UserRolePO> userRoles = userRoleRepository.selectByRoleId(roleId);
+        List<UserRolePO> userRoles = userRoleRepository.selectByRoleId(id);
         if (!CollectionUtils.isEmpty(userRoles)) {
             return ResultEntity.fail("正在使用的角色无法删除");
         }
         // delete role
-        roleRepository.deleteById(roleId);
+        roleRepository.deleteById(id);
         // delete relation
-        rolePermissionRepository.deleteByRoleId(roleId);
+        rolePermissionRepository.deleteByRoleId(id);
         return ResultEntity.success();
     }
 }

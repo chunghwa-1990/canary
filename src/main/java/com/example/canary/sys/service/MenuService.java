@@ -44,9 +44,9 @@ public interface MenuService {
     /**
      * delete
      *
-     * @param menuId
+     * @param id
      * @return
      */
     @SuppressWarnings("rawtypes")
-    ResultEntity deleteMenu(String menuId);
+    ResultEntity deleteMenu(String id);
 }

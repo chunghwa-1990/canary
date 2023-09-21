@@ -100,19 +100,19 @@ public class UserServiceImpl implements UserService {
     /**
      * deleted
      *
-     * @param userId
+     * @param id
      * @return
      */
     @Override
     @SuppressWarnings("rawtypes")
-    public ResultEntity deleteUser(String userId) {
+    public ResultEntity deleteUser(String id) {
         // 当前用户
         String currentUserId = CanaryContext.getCurrentUser().getUserId();
-        if (userId.equals(currentUserId)) {
+        if (id.equals(currentUserId)) {
             return ResultEntity.fail("无法删除当前用户");
         }
         // 查询当前删除的用户
-        UserPO userPo = userRepository.selectById(userId);
+        UserPO userPo = userRepository.selectById(id);
         if (userPo == null) {
             return ResultEntity.fail("目标用户不存在或ID错误");
         }
@@ -120,9 +120,9 @@ public class UserServiceImpl implements UserService {
             return ResultEntity.fail("无法删除超级管理员");
         }
         // delete user
-        userRepository.deleteById(userId);
+        userRepository.deleteById(id);
         // delete relation
-        userRoleRepository.deleteByUserId(userId);
+        userRoleRepository.deleteByUserId(id);
         return ResultEntity.success();
     }
 }

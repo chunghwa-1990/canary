@@ -82,24 +82,24 @@ public class MenuServiceImpl implements MenuService {
     @Override
     @SuppressWarnings("rawtypes")
     @Transactional(rollbackFor = Exception.class)
-    public ResultEntity deleteMenu(String menuId) {
-        MenuPO menuPo = menuRepository.selectById(menuId);
+    public ResultEntity deleteMenu(String id) {
+        MenuPO menuPo = menuRepository.selectById(id);
         if (menuPo == null) {
             return ResultEntity.fail("菜单不存在或ID错误");
         }
         if (menuPo.getLevel() == 1) {
-            List<MenuPO> menuChildren = menuRepository.selectByParentId(menuId);
+            List<MenuPO> menuChildren = menuRepository.selectByParentId(id);
             if (!CollectionUtils.isEmpty(menuChildren)) {
                 return ResultEntity.fail("无法删除已有下级的菜单");
             }
         } else {
-            List<MenuPermissionPO> menuPermissions = menuPermissionRepository.selectByMenuId(menuId);
+            List<MenuPermissionPO> menuPermissions = menuPermissionRepository.selectByMenuId(id);
             if (!CollectionUtils.isEmpty(menuPermissions)) {
                 return ResultEntity.fail("无法删除已有权限的菜单");
             }
         }
         // delete
-        menuRepository.deleteById(menuId);
+        menuRepository.deleteById(id);
         return ResultEntity.success();
     }
 }

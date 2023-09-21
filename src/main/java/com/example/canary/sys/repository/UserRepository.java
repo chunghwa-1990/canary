@@ -53,7 +53,7 @@ public interface UserRepository {
      * @param userId
      * @return
      */
-    int deleteById(String userId);
+    int deleteById(String id);
 
     /**
      * select by id
@@ -61,5 +61,5 @@ public interface UserRepository {
      * @param userId
      * @return
      */
-    UserPO selectById(String userId);
+    UserPO selectById(String id);
 }

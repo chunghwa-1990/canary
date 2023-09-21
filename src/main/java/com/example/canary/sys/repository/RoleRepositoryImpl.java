@@ -64,7 +64,7 @@ public class RoleRepositoryImpl implements RoleRepository {
      * @return
      */
     @Override
-    public int deleteById(String roleId) {
-        return roleMapper.deleteById(roleId);
+    public int deleteById(String id) {
+        return roleMapper.deleteById(id);
     }
 }

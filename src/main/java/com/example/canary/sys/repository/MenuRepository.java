@@ -42,10 +42,10 @@ public interface MenuRepository {
     /**
      * delete
      *
-     * @param menuId
+     * @param id
      * @return
      */
-    int deleteById(String menuId);
+    int deleteById(String id);
 
     /**
      * 根据 level 查询
@@ -58,10 +58,10 @@ public interface MenuRepository {
     /**
      * 根据 id 查询
      *
-     * @param menuId
+     * @param id
      * @return
      */
-    MenuPO selectById(String menuId);
+    MenuPO selectById(String id);
 
     /**
      * 根据 parentId 查询

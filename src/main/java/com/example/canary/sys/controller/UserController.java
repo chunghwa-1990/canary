@@ -71,12 +71,12 @@ public class UserController {
     /**
      * delete
      *
-     * @param userId
+     * @param id
      * @return
      */
     @DeleteMapping("/delete")
     @SuppressWarnings("rawtypes")
-    public ResultEntity deleteUser(@NotBlank String userId) {
-        return userService.deleteUser(userId);
+    public ResultEntity deleteUser(@NotBlank String id) {
+        return userService.deleteUser(id);
     }
 }

@@ -43,9 +43,9 @@ public interface UserService {
     /**
      * delete
      *
-     * @param userId
+     * @param id
      * @return
      */
     @SuppressWarnings("rawtypes")
-    ResultEntity deleteUser(String userId);
+    ResultEntity deleteUser(String id);
 }

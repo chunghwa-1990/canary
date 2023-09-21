@@ -39,8 +39,8 @@ public interface RoleRepository {
     /**
      * delete
      *
-     * @param roleId
+     * @param id
      * @return
      */
-    int deleteById(String roleId);
+    int deleteById(String id);
 }

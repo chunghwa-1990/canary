@@ -43,9 +43,9 @@ public interface RoleService {
     /**
      * delete
      *
-     * @param roleId
+     * @param id
      * @return
      */
     @SuppressWarnings("rawtypes")
-    ResultEntity deleteRole(String roleId);
+    ResultEntity deleteRole(String id);
 }

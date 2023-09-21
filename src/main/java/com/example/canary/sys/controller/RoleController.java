@@ -71,12 +71,12 @@ public class RoleController {
     /**
      * delete
      *
-     * @param roleId
+     * @param id
      * @return
      */
     @DeleteMapping("/delete")
     @SuppressWarnings("rawtypes")
-    public ResultEntity deleteRole(@NotBlank String roleId) {
-        return roleService.deleteRole(roleId);
+    public ResultEntity deleteRole(@NotBlank String id) {
+        return roleService.deleteRole(id);
     }
 }

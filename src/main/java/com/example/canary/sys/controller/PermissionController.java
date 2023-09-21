@@ -70,13 +70,13 @@ public class PermissionController {
     /**
      * delete
      *
-     * @param permissionId
+     * @param id
      * @return
      */
     @DeleteMapping("/delete")
     @SuppressWarnings("rawtypes")
-    public ResultEntity deletePermission(@NotBlank String permissionId) {
-        return permissionService.deletePermission(permissionId);
+    public ResultEntity deletePermission(@NotBlank String id) {
+        return permissionService.deletePermission(id);
     }
 
 }

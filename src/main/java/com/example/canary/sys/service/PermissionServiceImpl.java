@@ -1,13 +1,11 @@
 package com.example.canary.sys.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.MenuPO;
 import com.example.canary.sys.entity.MenuPermissionPO;
 import com.example.canary.sys.entity.MenuVO;
 import com.example.canary.sys.entity.PermissionAO;
 import com.example.canary.sys.entity.PermissionPO;
-import com.example.canary.sys.entity.PermissionQuery;
 import com.example.canary.sys.entity.PermissionVO;
 import com.example.canary.sys.repository.MenuPermissionRepository;
 import com.example.canary.sys.repository.MenuRepository;
@@ -18,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 权限
@@ -104,17 +101,17 @@ public class PermissionServiceImpl implements PermissionService {
     /**
      * delete
      * 
-     * @param permissionId
+     * @param id
      * @return
      */
     @Override
     @SuppressWarnings("rawtypes")
     @Transactional(rollbackFor = Exception.class)
-    public ResultEntity deletePermission(String permissionId) {
+    public ResultEntity deletePermission(String id) {
         // delete permission
-        permissionRepository.deleteById(permissionId);
+        permissionRepository.deleteById(id);
         // delete relation
-        menuPermissionRepository.deleteByPermissionId(permissionId);
+        menuPermissionRepository.deleteByPermissionId(id);
         return ResultEntity.success();
     }
 }

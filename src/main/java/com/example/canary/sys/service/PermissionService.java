@@ -43,9 +43,9 @@ public interface PermissionService {
     /**
      * delete
      *
-     * @param permissionId
+     * @param id
      * @return
      */
     @SuppressWarnings("rawtypes")
-    ResultEntity deletePermission(String permissionId);
+    ResultEntity deletePermission(String id);
 }

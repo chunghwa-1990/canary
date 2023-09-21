@@ -43,11 +43,11 @@ public class PermissionRepositoryImpl implements PermissionRepository {
     /**
      * delete
      *
-     * @param permissionId
+     * @param id
      * @return
      */
     @Override
-    public int deleteById(String permissionId) {
-        return permissionMapper.deleteById(permissionId);
+    public int deleteById(String id) {
+        return permissionMapper.deleteById(id);
     }
 }
