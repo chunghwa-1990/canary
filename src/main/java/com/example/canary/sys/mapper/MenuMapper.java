@@ -7,6 +7,7 @@ import com.example.canary.sys.entity.MenuPO;
 import com.example.canary.sys.entity.MenuQuery;
 import com.example.canary.sys.entity.MenuVO;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.Map;
@@ -28,4 +29,13 @@ public interface MenuMapper extends BaseMapper<MenuPO> {
      * @return
      */
     IPage<MenuVO> selectPageVo(@Param("page") Page<MenuPO> page, @Param("query") MenuQuery query);
+
+    /**
+     * delete
+     *
+     * @param id
+     * @return
+     */
+    @Update("UPDATE sys_menu SET is_deleted = #{id} WHERE id = #{id}")
+    int deleteById(@Param("id") String id);
 }

@@ -7,6 +7,7 @@ import com.example.canary.sys.entity.RoleQuery;
 import com.example.canary.sys.mapper.RoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -66,5 +67,16 @@ public class RoleRepositoryImpl implements RoleRepository {
     @Override
     public int deleteById(String id) {
         return roleMapper.deleteById(id);
+    }
+
+    /**
+     * 角色是否正在被使用
+     *
+     * @param roleId
+     * @return
+     */
+    @Override
+    public boolean isBeingUsed(String roleId) {
+        return !CollectionUtils.isEmpty(roleMapper.selectUserByRoleId(roleId));
     }
 }

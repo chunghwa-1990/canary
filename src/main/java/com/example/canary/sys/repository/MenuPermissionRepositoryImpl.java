@@ -5,6 +5,7 @@ import com.example.canary.sys.entity.MenuPermissionPO;
 import com.example.canary.sys.mapper.MenuPermissionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -39,9 +40,7 @@ public class MenuPermissionRepositoryImpl implements MenuPermissionRepository {
      */
     @Override
     public int deleteByPermissionId(String permissionId) {
-        LambdaQueryWrapper<MenuPermissionPO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(MenuPermissionPO::getPermissionId, permissionId);
-        return menuPermissionMapper.delete(queryWrapper);
+        return menuPermissionMapper.deleteByPermissionId(permissionId);
     }
 
     /**

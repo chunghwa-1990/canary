@@ -36,4 +36,12 @@ public interface RolePermissionRepository {
      * @return
      */
     int deleteByRoleId(String roleId);
+
+    /**
+     * delete by permissionId
+     *
+     * @param permissionId
+     * @return
+     */
+    int deleteByPermissionId(String permissionId);
 }

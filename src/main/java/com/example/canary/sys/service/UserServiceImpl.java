@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService {
         // 查询当前删除的用户
         UserPO userPo = userRepository.selectById(id);
         if (userPo == null) {
-            return ResultEntity.fail("目标用户不存在或ID错误");
+            return ResultEntity.fail("此用户不存在或ID错误");
         }
         if (userPo.getIsAdmin() == 1) {
             return ResultEntity.fail("无法删除超级管理员");

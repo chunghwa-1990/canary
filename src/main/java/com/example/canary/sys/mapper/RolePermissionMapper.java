@@ -3,10 +3,10 @@ package com.example.canary.sys.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.canary.sys.entity.RolePermissionPO;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * 角色权限关联关系
@@ -25,4 +25,22 @@ public interface RolePermissionMapper extends BaseMapper<RolePermissionPO> {
      * @return
      */
     int batchInsert(@Param("list") List<RolePermissionPO> list);
+
+    /**
+     * delete by roleId
+     *
+     * @param roleId
+     * @return
+     */
+    @Update("UPDATE sys_role_permission SET is_deleted = id WHERE role_id = #{roleId}")
+    int deleteByRoleId(@Param("roleId") String roleId);
+
+    /**
+     * delete by permissionId
+     *
+     * @param permissionId
+     * @return
+     */
+    @Update("UPDATE sys_role_permission SET is_deleted = id WHERE permission_id = #{permissionId}")
+    int deleteByPermissionId(@Param("permissionId") String permissionId);
 }

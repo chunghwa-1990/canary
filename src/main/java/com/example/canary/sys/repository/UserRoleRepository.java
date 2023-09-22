@@ -37,10 +37,10 @@ public interface UserRoleRepository {
     int deleteByUserId(String userId);
 
     /**
-     * select by roleId
+     * delete by roleId
      *
-     * @param roleId
+     * @param id
      * @return
      */
-    List<UserRolePO> selectByRoleId(String roleId);
+    int deleteByRoleId(String roleId);
 }

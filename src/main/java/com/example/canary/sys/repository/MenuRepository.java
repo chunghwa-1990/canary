@@ -66,8 +66,8 @@ public interface MenuRepository {
     /**
      * 根据 parentId 查询
      *
-     * @param menuId
+     * @param parentId
      * @return
      */
-    List<MenuPO> selectByParentId(String menuId);
+    List<MenuPO> selectByParentId(String parentId);
 }

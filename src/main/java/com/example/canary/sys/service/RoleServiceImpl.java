@@ -107,14 +107,15 @@ public class RoleServiceImpl implements RoleService {
     @SuppressWarnings("rawtypes")
     @Transactional(rollbackFor = Exception.class)
     public ResultEntity deleteRole(String id) {
-        // 查询角色使用情况
-        List<UserRolePO> userRoles = userRoleRepository.selectByRoleId(id);
-        if (!CollectionUtils.isEmpty(userRoles)) {
-            return ResultEntity.fail("正在使用的角色无法删除");
+        // 查询角色是否正在被用户使用
+        boolean beingUsed = roleRepository.isBeingUsed(id);
+        if (beingUsed) {
+            return ResultEntity.fail("此角色正在被用户使用，请先结束绑定后再删除");
         }
         // delete role
         roleRepository.deleteById(id);
         // delete relation
+        userRoleRepository.deleteByRoleId(id);
         rolePermissionRepository.deleteByRoleId(id);
         return ResultEntity.success();
     }

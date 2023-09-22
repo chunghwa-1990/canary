@@ -6,6 +6,7 @@ import com.example.canary.sys.entity.UserRolePO;
 import com.example.canary.sys.mapper.UserRoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -57,15 +58,13 @@ public class UserRoleRepositoryImpl implements UserRoleRepository{
     }
 
     /**
-     * select by roleId
+     * delete by roleId
      *
      * @param roleId
      * @return
      */
     @Override
-    public List<UserRolePO> selectByRoleId(String roleId) {
-        LambdaQueryWrapper<UserRolePO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(UserRolePO::getRoleId, roleId);
-        return userRoleMapper.selectList(queryWrapper);
+    public int deleteByRoleId(String roleId) {
+        return userRoleMapper.deleteByRoleId(roleId);
     }
 }

@@ -59,7 +59,7 @@ public class MenuRepositoryImpl implements MenuRepository {
     /**
      * delete
      *
-     * @param menuId
+     * @param id
      * @return
      */
     @Override

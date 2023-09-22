@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * 角色权限关联关系
@@ -51,8 +50,17 @@ public class RolePermissionRepositoryImpl implements RolePermissionRepository {
      */
     @Override
     public int deleteByRoleId(String roleId) {
-        LambdaQueryWrapper<RolePermissionPO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(RolePermissionPO::getRoleId, roleId);
-        return rolePermissionMapper.delete(queryWrapper);
+        return rolePermissionMapper.deleteByRoleId(roleId);
+    }
+
+    /**
+     * delete by permissionId
+     *
+     * @param permissionId
+     * @return
+     */
+    @Override
+    public int deleteByPermissionId(String permissionId) {
+        return rolePermissionMapper.deleteByPermissionId(permissionId);
     }
 }

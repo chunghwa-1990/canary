@@ -4,12 +4,11 @@
 
 
     <insert id="batchInsert" parameterType="java.util.List">
-        insert into sys_user_role (id, user_id, role_id)
-        values
+        INSERT INTO sys_user_role (id, user_id, role_id)
+        VALUES
         <foreach collection="list" item="item" separator=",">
             (REPLACE(UUID(), '-', ''), #{item.userId}, #{item.roleId})
         </foreach>
-
     </insert>
 
 

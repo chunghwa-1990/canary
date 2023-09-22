@@ -2,6 +2,9 @@ package com.example.canary.sys.repository;
 
 import com.example.canary.sys.entity.PermissionAO;
 import com.example.canary.sys.entity.PermissionPO;
+import com.example.canary.sys.entity.RolePermissionPO;
+
+import java.util.List;
 
 /**
  * 权限
@@ -34,4 +37,20 @@ public interface PermissionRepository {
      * @return
      */
     int deleteById(String id);
+
+    /**
+     * 根据 id 查询
+     *
+     * @param id
+     * @return
+     */
+    PermissionPO selectById(String id);
+
+    /**
+     * 权限是否正在被用户使用
+     *
+     * @param permissionId
+     * @return
+     */
+    boolean isBeingUsed(String permissionId);
 }

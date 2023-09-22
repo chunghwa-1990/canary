@@ -15,6 +15,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserMapper extends BaseMapper<UserPO> {
 
-    @Update("UPDATE sys_user SET is_deleted = #{userId} WHERE id = #{userId}")
-    int deleteById(@Param("userId") String userId);
+    /**
+     * delete
+     *
+     * @param id
+     * @return
+     */
+    @Update("UPDATE sys_user SET is_deleted = #{id} WHERE id = #{id}")
+    int deleteById(@Param("id") String id);
 }

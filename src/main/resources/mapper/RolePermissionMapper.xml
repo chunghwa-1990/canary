@@ -4,8 +4,8 @@
 
 
     <insert id="batchInsert" parameterType="java.util.List">
-        insert into sys_role_permission (id, role_id, permission_id)
-        values
+        INSERT INTO sys_role_permission (id, role_id, permission_id)
+        VALUES
         <foreach collection="list" item="item" separator=",">
             (REPLACE(UUID(), '-', ''), #{item.roleId}, #{item.permissionId})
         </foreach>

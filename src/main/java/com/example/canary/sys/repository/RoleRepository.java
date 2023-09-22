@@ -43,4 +43,12 @@ public interface RoleRepository {
      * @return
      */
     int deleteById(String id);
+
+    /**
+     * 角色是否正在被使用
+     *
+     * @param roleId
+     * @return
+     */
+    boolean isBeingUsed(String roleId);
 }

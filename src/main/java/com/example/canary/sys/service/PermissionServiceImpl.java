@@ -7,9 +7,11 @@ import com.example.canary.sys.entity.MenuVO;
 import com.example.canary.sys.entity.PermissionAO;
 import com.example.canary.sys.entity.PermissionPO;
 import com.example.canary.sys.entity.PermissionVO;
+import com.example.canary.sys.entity.RolePermissionPO;
 import com.example.canary.sys.repository.MenuPermissionRepository;
 import com.example.canary.sys.repository.MenuRepository;
 import com.example.canary.sys.repository.PermissionRepository;
+import com.example.canary.sys.repository.RolePermissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,9 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Autowired
     private MenuPermissionRepository menuPermissionRepository;
+
+    @Autowired
+    private RolePermissionRepository rolePermissionRepository;
 
 
     /**
@@ -108,10 +113,16 @@ public class PermissionServiceImpl implements PermissionService {
     @SuppressWarnings("rawtypes")
     @Transactional(rollbackFor = Exception.class)
     public ResultEntity deletePermission(String id) {
+        // 查询当前权限是否正在被用户使用
+        boolean beingUsed = permissionRepository.isBeingUsed(id);
+        if (beingUsed) {
+            return ResultEntity.fail("此权限正在被用户使用，请先结束绑定后再删除");
+        }
         // delete permission
         permissionRepository.deleteById(id);
         // delete relation
         menuPermissionRepository.deleteByPermissionId(id);
+        rolePermissionRepository.deleteByPermissionId(id);
         return ResultEntity.success();
     }
 }
