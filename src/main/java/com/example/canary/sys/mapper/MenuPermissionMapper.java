@@ -2,6 +2,7 @@ package com.example.canary.sys.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.canary.sys.entity.MenuPermissionPO;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
@@ -21,5 +22,5 @@ public interface MenuPermissionMapper extends BaseMapper<MenuPermissionPO> {
      * @return
      */
     @Update("UPDATE sys_menu_permission SET is_deleted = id WHERE permission_id = #{permissionId}")
-    int deleteByPermissionId(String permissionId);
+    int deleteByPermissionId(@Param("permissionId") String permissionId);
 }

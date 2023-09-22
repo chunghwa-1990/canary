@@ -21,6 +21,6 @@ public interface UserMapper extends BaseMapper<UserPO> {
      * @param id
      * @return
      */
-    @Update("UPDATE sys_user SET is_deleted = #{id} WHERE id = #{id}")
+    @Update("UPDATE sys_user SET is_deleted = id WHERE id = #{id}")
     int deleteById(@Param("id") String id);
 }

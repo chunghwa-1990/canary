@@ -33,7 +33,7 @@ public interface RoleMapper extends BaseMapper<RolePO> {
      * @param id
      * @return
      */
-    @Update("UPDATE sys_role SET is_deleted = #{id} WHERE id = #{id}")
+    @Update("UPDATE sys_role SET is_deleted = id WHERE id = #{id}")
     int deleteById(@Param("id") String id);
 
 }

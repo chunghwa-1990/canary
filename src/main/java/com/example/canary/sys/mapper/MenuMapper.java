@@ -36,6 +36,6 @@ public interface MenuMapper extends BaseMapper<MenuPO> {
      * @param id
      * @return
      */
-    @Update("UPDATE sys_menu SET is_deleted = #{id} WHERE id = #{id}")
+    @Update("UPDATE sys_menu SET is_deleted = id WHERE id = #{id}")
     int deleteById(@Param("id") String id);
 }
