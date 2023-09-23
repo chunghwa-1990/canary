@@ -2,6 +2,7 @@ package com.example.canary.file.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.beans.BeanUtils;
 
 import java.io.Serial;
 
@@ -18,4 +19,10 @@ public class FileVO extends FileBase {
     @Serial
     private static final long serialVersionUID = -129723743991801184L;
 
+    public FileVO() {
+    }
+
+    public FileVO(FilePO filePo) {
+        BeanUtils.copyProperties(filePo, this);
+    }
 }

@@ -3,8 +3,10 @@ package com.example.canary.file.controller;
 import com.example.canary.common.api.ApiVersion;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.file.entity.FileVO;
+import com.example.canary.file.service.FileService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +30,8 @@ import java.io.IOException;
 @RequestMapping("/file")
 public class FileController {
 
+    @Autowired
+    private FileService fileService;
 
     /**
      * 文件上传
@@ -38,7 +42,7 @@ public class FileController {
      */
     @PostMapping("/upload")
     public ResultEntity<FileVO> uploadFile(@RequestPart("file") MultipartFile file, String description) {
-        return null;
+        return fileService.uploadFile(file, description);
     }
 
     @GetMapping("/view")

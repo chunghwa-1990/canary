@@ -58,3 +58,7 @@ task:
 token:
   secret: canary
   timeout: 7200s
+
+file:
+  path: /Users/zhaohongliang/Desktop
+  max-size: 10485760
