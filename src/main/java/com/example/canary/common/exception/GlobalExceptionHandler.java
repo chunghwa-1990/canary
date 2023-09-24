@@ -200,7 +200,12 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = MaxUploadSizeExceededException.class)
     public ResultEntity<Object> maxUploadSizeExceededExceptionHandler(MaxUploadSizeExceededException ex) {
-        return ResultEntity.fail("文件不能超过" + ex.getMaxUploadSize());
+        if (ex.getMaxUploadSize() != -1) {
+            return ResultEntity.fail("文件不能超过" + ex.getMaxUploadSize());
+        } else {
+            String maxSize = ex.getCause().getCause().getMessage().split("maximum permitted size of ")[1];
+            return ResultEntity.fail("文件不能超过" + maxSize);
+        }
     }
 
     // @ResponseStatus(HttpStatus.FORBIDDEN)
