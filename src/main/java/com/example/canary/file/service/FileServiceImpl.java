@@ -1,13 +1,13 @@
 package com.example.canary.file.service;
 
 import com.example.canary.common.exception.ResultEntity;
-import com.example.canary.file.core.FileProperties;
 import com.example.canary.file.entity.FilePO;
 import com.example.canary.file.entity.FileVO;
 import com.example.canary.file.repository.FileRepository;
 import com.example.canary.util.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -27,7 +27,7 @@ import java.io.IOException;
 public class FileServiceImpl implements FileService {
 
     @Autowired
-    private FileProperties fileProperties;
+    private MultipartProperties multipartProperties;
 
     @Autowired
     private FileRepository fileRepository;
@@ -51,14 +51,14 @@ public class FileServiceImpl implements FileService {
         if (!StringUtils.hasText(originalFilename)) {
             return ResultEntity.fail("文件名字不可以为空");
         }
-        // 文件名
-        String fileName = FileUtils.getFileName(originalFilename);
         // 文件后缀
         String fileSuffix = FileUtils.getFileSuffix(originalFilename);
+        // 文件名
+        String fileName = com.example.canary.util.StringUtils.randomUUID()  + fileSuffix;
         // 文件下载时用的 key
         String keyName = FileUtils.getKeyName(fileName);
         // 文件磁盘的存储路径
-        String filePath = fileProperties.getPath() + keyName;
+        String filePath = multipartProperties.getLocation() + keyName;
         // 原文件类型
         String contentType = file.getContentType();
 
@@ -70,12 +70,8 @@ public class FileServiceImpl implements FileService {
         }
         // 原文件大小
         long fileSize = file.getSize();
-        if (fileSize > fileProperties.getMaxSize()) {
-            return ResultEntity.fail("文件不能超过" + fileProperties.getMaxSize() / (1024 * 1024) + "M");
-        }
 
         File newFile = new File(filePath);
-
         // 是否存在此文件保存路径
         if (!newFile.getParentFile().exists()) {
             newFile.getParentFile().mkdirs();
@@ -109,7 +105,7 @@ public class FileServiceImpl implements FileService {
         filePo.setFileSize(fileSize);
         filePo.setFilePath(filePath);
         filePo.setFileSuffix(fileSuffix);
-        // filePo.setHumanFileSize(FileUtil.formatFileSize(fileSize));
+        filePo.setHumanFileSize(FileUtils.formatHumanFileSize(fileSize));
         filePo.setMd5Hex(md5Hex);
         filePo.setSha256Hex(sha256Hex);
         filePo.setContentType(contentType);

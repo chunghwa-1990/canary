@@ -38,6 +38,9 @@ spring:
           max-idle: 10
           # 连接池中的最小空闲连接
           min-idle: 5
+  servlet:
+    multipart:
+      location: /Users/zhaohongliang/Desktop
 
 logging:
   config: classpath:logback-spring.xml
@@ -58,7 +61,3 @@ task:
 token:
   secret: canary
   timeout: 7200s
-
-file:
-  path: /Users/zhaohongliang/Desktop
-  max-size: 10485760

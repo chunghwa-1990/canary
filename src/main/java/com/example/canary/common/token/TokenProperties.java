@@ -15,7 +15,7 @@ import java.util.Date;
  */
 @Setter
 @Getter
-@ConfigurationProperties(prefix = TokenProperties.PREFIX )
+@ConfigurationProperties(prefix = TokenProperties.PREFIX, ignoreUnknownFields = false)
 public class TokenProperties {
 
     private TokenProperties() {}

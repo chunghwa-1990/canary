@@ -15,6 +15,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -189,6 +190,17 @@ public class GlobalExceptionHandler {
             message = messageSource.getMessage("sql.integrity.constraint.violation", args.toArray(), message, LocaleContextHolder.getLocale());
         }
         return ResultEntity.fail(ResultCodeEnum.ERROR.getCode(), message);
+    }
+
+    /**
+     * maxUploadSizeExceededException Handler
+     *
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(value = MaxUploadSizeExceededException.class)
+    public ResultEntity<Object> maxUploadSizeExceededExceptionHandler(MaxUploadSizeExceededException ex) {
+        return ResultEntity.fail("文件不能超过" + ex.getMaxUploadSize());
     }
 
     // @ResponseStatus(HttpStatus.FORBIDDEN)

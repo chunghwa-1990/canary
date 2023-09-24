@@ -1,5 +1,8 @@
 package com.example.canary.util;
 
+import org.springframework.util.unit.DataSize;
+import org.springframework.util.unit.DataUnit;
+
 import java.time.LocalDate;
 import java.util.StringJoiner;
 
@@ -61,7 +64,26 @@ public class FileUtils {
         joiner.add(LocalDate.now().getMonthValue() + "");
         joiner.add(LocalDate.now().getDayOfMonth() + "");
         joiner.add(fileName);
-        return joiner.toString();
+        return "/" + joiner.toString();
+    }
+
+    /**
+     * 格式化文件大小（人类可以看懂的文件大小）
+     *
+     * @param fileSize
+     * @return
+     */
+    public static String formatHumanFileSize(long fileSize) {
+        DataSize dateSize = DataSize.ofBytes(fileSize);
+        if (fileSize >= GB) {
+            return dateSize.toGigabytes() + "GB";
+        } else if (fileSize >= MB) {
+            return dateSize.toMegabytes() + "MB";
+        } else if (fileSize >= KB) {
+            return dateSize.toKilobytes() + "KB";
+        } else {
+            return dateSize.toBytes() + "B";
+        }
     }
 
 }
