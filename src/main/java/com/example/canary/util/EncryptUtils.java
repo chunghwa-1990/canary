@@ -23,6 +23,7 @@ public class EncryptUtils {
     public static String toHex(byte[] bytes) {
         StringBuilder builder = new StringBuilder(bytes.length * 2);
         for (byte b : bytes) {
+            // 用小写字母表示十六进制，如果改用大写则替换为 %02X
             builder.append(String.format("%02x", b));
         }
         return builder.toString();

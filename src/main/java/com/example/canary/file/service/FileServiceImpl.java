@@ -86,17 +86,8 @@ public class FileServiceImpl implements FileService {
             }
         }
 
-        String md5Hex = "";
-        String sha256Hex = "";
-        // try {
-        //     // md5 摘要计算
-        //     md5Hex = DigestUtils.md5DigestAsHex(new FileInputStream(file));
-        //     // sha256 摘要计算
-        //     sha256Hex = FileUtil.sha256(file);
-        // } catch (IOException | NoSuchAlgorithmException e) {
-        //     log.error("上传文件发生异常，异常信息：{}", e.getMessage());
-        //     return ResultEntity.fail("上传文件发生异常");
-        // }
+        String md5Hex = ""; // DigestUtils.md5DigestAsHex(new FileInputStream(file));
+        String sha256Hex = FileUtils.sha256(newFile);
 
         FilePO filePo = new FilePO();
         filePo.setKeyName(keyName);
