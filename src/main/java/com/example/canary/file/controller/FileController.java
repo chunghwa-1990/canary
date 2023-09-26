@@ -2,6 +2,7 @@ package com.example.canary.file.controller;
 
 import com.example.canary.common.api.ApiVersion;
 import com.example.canary.common.exception.ResultEntity;
+import com.example.canary.file.entity.FileAO;
 import com.example.canary.file.entity.FileVO;
 import com.example.canary.file.service.FileService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -37,12 +38,12 @@ public class FileController {
      * 文件上传
      *
      * @param file
-     * @param description
+     * @param fileAo
      * @return
      */
     @PostMapping("/upload")
-    public ResultEntity<FileVO> uploadFile(@RequestPart("file") MultipartFile file, String description) {
-        return fileService.uploadFile(file, description);
+    public ResultEntity<FileVO> uploadFile(@RequestPart("file") MultipartFile file, FileAO fileAo) {
+        return fileService.uploadFile(file, fileAo);
     }
 
     @GetMapping("/view")

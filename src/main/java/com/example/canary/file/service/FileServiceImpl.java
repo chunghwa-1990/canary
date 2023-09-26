@@ -1,6 +1,7 @@
 package com.example.canary.file.service;
 
 import com.example.canary.common.exception.ResultEntity;
+import com.example.canary.file.entity.FileAO;
 import com.example.canary.file.entity.FilePO;
 import com.example.canary.file.entity.FileVO;
 import com.example.canary.file.repository.FileRepository;
@@ -11,12 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
@@ -41,11 +40,11 @@ public class FileServiceImpl implements FileService {
      * 文件上传
      *
      * @param file
-     * @param description
+     * @param fileAo
      * @return
      */
     @Override
-    public ResultEntity<FileVO> uploadFile(MultipartFile file, String description) {
+    public ResultEntity<FileVO> uploadFile(MultipartFile file, FileAO fileAo) {
         // 判断文件内容是否为空
         if (file.isEmpty()) {
             return ResultEntity.fail("文件内容不可以为空");
@@ -93,9 +92,13 @@ public class FileServiceImpl implements FileService {
         String md5Hex = null;
         String sha256Hex = null;
         try {
-            // md5Hex = DigestUtils.md5DigestAsHex(new FileInputStream(newFile))
-            md5Hex = DigesUtils.md5DigestAsHex(newFile);
-            sha256Hex = DigesUtils.sha256DigestAsHex(newFile);
+            if (fileAo.getMd5Hex()) {
+                md5Hex = DigesUtils.md5DigestAsHex(newFile);
+                // md5Hex = DigestUtils.md5DigestAsHex(new FileInputStream(newFile))
+            }
+            if (fileAo.getSha256Hex()) {
+                sha256Hex = DigesUtils.sha256DigestAsHex(newFile);
+            }
         } catch (IOException | NoSuchAlgorithmException e) {
             log.error("计算文件的SHA256/MD5摘要发生异常:" + e.getMessage());
             return ResultEntity.fail("计算文件的SHA256/MD5摘要发生异常，请稍后再试");
@@ -112,7 +115,7 @@ public class FileServiceImpl implements FileService {
         filePo.setMd5Hex(md5Hex);
         filePo.setSha256Hex(sha256Hex);
         filePo.setContentType(contentType);
-        filePo.setDescription(description);
+        filePo.setDescription(fileAo.getDescription());
         fileRepository.insert(filePo);
 
         return ResultEntity.success(new FileVO(filePo));

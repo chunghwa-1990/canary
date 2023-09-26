@@ -1,6 +1,7 @@
 package com.example.canary.file.service;
 
 import com.example.canary.common.exception.ResultEntity;
+import com.example.canary.file.entity.FileAO;
 import com.example.canary.file.entity.FileVO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,8 +17,8 @@ public interface FileService {
      * 文件上传
      *
      * @param file
-     * @param description
+     * @param fileAo
      * @return
      */
-    ResultEntity<FileVO> uploadFile(MultipartFile file, String description);
+    ResultEntity<FileVO> uploadFile(MultipartFile file, FileAO fileAo);
 }
