@@ -1,16 +1,7 @@
 package com.example.canary.util;
 
-import com.example.canary.common.exception.BusinessException;
 import org.springframework.util.unit.DataSize;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.StringJoiner;
 
@@ -39,77 +30,6 @@ public class FileUtils {
      * 千兆字节 1GB=1024MB
      */
     private static final long GB = 1024 * MB;
-
-
-    /**
-     * 计算文件的SHA-256摘要
-     *
-     * @param filePath
-     * @return
-     */
-    public static String sha256(String filePath) {
-        try {
-            File file = new File(filePath);
-            BufferedInputStream bis = new BufferedInputStream(Files.newInputStream(file.toPath()));
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            int bufferSize = 8192;
-            byte[] buffer = new byte[bufferSize];
-            int sizeRead;
-            while ((sizeRead = bis.read(buffer)) != -1) {
-                digest.update(buffer, 0, sizeRead);
-            }
-            bis.close();
-            return EncryptUtils.toHex(digest.digest());
-        } catch (IOException | NoSuchAlgorithmException e) {
-            throw new BusinessException("计算文件的SHA-256摘要发生异常，请稍后重试");
-        }
-    }
-
-
-    /**
-     * 计算文件的SHA-256摘要
-     *
-     * @param file
-     * @return
-     */
-    public static String sha256(File file) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            InputStream is = Files.newInputStream(file.toPath());
-            DigestInputStream dis = new DigestInputStream(is, digest);
-            int bufferSize = 8192;
-            byte[] buffer = new byte[bufferSize];
-            while (dis.read(buffer) != -1) {
-                // do nothing
-            }
-            dis.close();
-            return EncryptUtils.toHex(digest.digest());
-        } catch (IOException | NoSuchAlgorithmException e) {
-            throw new BusinessException("计算文件的SHA-256摘要发生异常，请稍后重试");
-        }
-    }
-
-    /**
-     * 计算文件的SHA-256摘要
-     *
-     * @param is
-     * @return
-     */
-    public static String sha256(InputStream is) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            DigestInputStream dis = new DigestInputStream(is, digest);
-            int bufferSize = 8192;
-            byte[] buffer = new byte[bufferSize];
-            while (dis.read(buffer) != -1) {
-                // do nothing
-            }
-            dis.close();
-            return EncryptUtils.toHex(digest.digest());
-        } catch (IOException | NoSuchAlgorithmException e) {
-            throw new BusinessException("计算文件的SHA-256摘要发生异常，请稍后重试");
-        }
-    }
 
     /**
      * 获取文件名称

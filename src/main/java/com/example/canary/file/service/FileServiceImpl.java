@@ -4,17 +4,21 @@ import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.file.entity.FilePO;
 import com.example.canary.file.entity.FileVO;
 import com.example.canary.file.repository.FileRepository;
+import com.example.canary.util.DigesUtils;
 import com.example.canary.util.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * 文件
@@ -86,8 +90,16 @@ public class FileServiceImpl implements FileService {
             }
         }
 
-        String md5Hex = ""; // DigestUtils.md5DigestAsHex(new FileInputStream(file));
-        String sha256Hex = FileUtils.sha256(newFile);
+        String md5Hex = null;
+        String sha256Hex = null;
+        try {
+            // md5Hex = DigestUtils.md5DigestAsHex(new FileInputStream(newFile))
+            md5Hex = DigesUtils.md5DigestAsHex(newFile);
+            sha256Hex = DigesUtils.sha256DigestAsHex(newFile);
+        } catch (IOException | NoSuchAlgorithmException e) {
+            log.error("计算文件的SHA256/MD5摘要发生异常:" + e.getMessage());
+            return ResultEntity.fail("计算文件的SHA256/MD5摘要发生异常，请稍后再试");
+        }
 
         FilePO filePo = new FilePO();
         filePo.setKeyName(keyName);
