@@ -7,6 +7,7 @@ import com.example.canary.file.entity.FileVO;
 import com.example.canary.file.repository.FileRepository;
 import com.example.canary.util.DigesUtils;
 import com.example.canary.util.FileUtils;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
@@ -119,5 +120,16 @@ public class FileServiceImpl implements FileService {
         fileRepository.insert(filePo);
 
         return ResultEntity.success(new FileVO(filePo));
+    }
+
+    /**
+     * 文件预览
+     *
+     * @param response
+     * @param keyName
+     */
+    @Override
+    public void viewFile(HttpServletResponse response, String keyName) {
+        // TODO document why this method is empty
     }
 }

@@ -46,9 +46,16 @@ public class FileController {
         return fileService.uploadFile(file, fileAo);
     }
 
+    /**
+     * 文件预览
+     *
+     * @param response
+     * @param keyName
+     * @throws IOException
+     */
     @GetMapping("/view")
     public void viewFile(HttpServletResponse response, @NotBlank @RequestParam String keyName) throws IOException {
-        // fileService.viewFile(response, keyName);
+        fileService.viewFile(response, keyName);
     }
 
 }
