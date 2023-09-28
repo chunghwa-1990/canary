@@ -17,4 +17,12 @@ public interface FileRepository {
      * @return
      */
     int insert(FilePO filePo);
+
+    /**
+     * 根据文件 keyName 查询
+     *
+     * @param keyName
+     * @return
+     */
+    FilePO selectByKeyName(String keyName);
 }

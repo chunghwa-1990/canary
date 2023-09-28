@@ -1,5 +1,6 @@
 package com.example.canary.file.repository;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.canary.file.entity.FilePO;
 import com.example.canary.file.mapper.FileMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +27,18 @@ public class FileRepositoryImpl implements FileRepository {
     @Override
     public int insert(FilePO filePo) {
         return fileMapper.insert(filePo);
+    }
+
+    /**
+     * 根据文件 keyName 查询
+     *
+     * @param keyName
+     * @return
+     */
+    @Override
+    public FilePO selectByKeyName(String keyName) {
+        LambdaQueryWrapper<FilePO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(FilePO::getKeyName, keyName);
+        return fileMapper.selectOne(queryWrapper);
     }
 }

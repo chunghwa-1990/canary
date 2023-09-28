@@ -1,5 +1,6 @@
 package com.example.canary.file.service;
 
+import com.example.canary.common.exception.BusinessException;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.file.entity.FileAO;
 import com.example.canary.file.entity.FilePO;
@@ -9,6 +10,7 @@ import com.example.canary.util.DigesUtils;
 import com.example.canary.util.FileUtils;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.http.MediaType;
@@ -17,8 +19,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 /**
  * 文件
@@ -93,11 +98,11 @@ public class FileServiceImpl implements FileService {
         String md5Hex = null;
         String sha256Hex = null;
         try {
-            if (fileAo.getMd5Hex()) {
+            if (Boolean.TRUE.equals(fileAo.getMd5Hex())) {
                 md5Hex = DigesUtils.md5DigestAsHex(newFile);
                 // md5Hex = DigestUtils.md5DigestAsHex(new FileInputStream(newFile))
             }
-            if (fileAo.getSha256Hex()) {
+            if (Boolean.TRUE.equals(fileAo.getSha256Hex())) {
                 sha256Hex = DigesUtils.sha256DigestAsHex(newFile);
             }
         } catch (IOException | NoSuchAlgorithmException e) {
@@ -129,7 +134,17 @@ public class FileServiceImpl implements FileService {
      * @param keyName
      */
     @Override
-    public void viewFile(HttpServletResponse response, String keyName) {
-        // TODO document why this method is empty
+    public void viewFile(HttpServletResponse response, String keyName) throws IOException {
+        FilePO filePo = fileRepository.selectByKeyName(keyName);
+        if (filePo == null) {
+            throw new BusinessException("文件不存在");
+        }
+        response.setHeader("Content-Type", filePo.getContentType());
+        response.setHeader("Cache-Control", "no-cache");
+
+        File file = new File(filePo.getFilePath());
+        try (FileInputStream fis = new FileInputStream(file); OutputStream os = response.getOutputStream()) {
+            IOUtils.copy(fis, os);
+        }
     }
 }

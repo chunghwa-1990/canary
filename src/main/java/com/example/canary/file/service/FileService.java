@@ -6,6 +6,9 @@ import com.example.canary.file.entity.FileVO;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 /**
  * 文件
  *
@@ -29,5 +32,5 @@ public interface FileService {
      * @param response
      * @param keyName
      */
-    void viewFile(HttpServletResponse response, String keyName);
+    void viewFile(HttpServletResponse response, String keyName) throws IOException;
 }
