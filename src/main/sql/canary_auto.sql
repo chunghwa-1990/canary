@@ -83,6 +83,49 @@ CREATE TABLE `sys_permission` (
     UNIQUE KEY `udx_name_route_2` (`name`,`route`,`is_deleted`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='权限';
 
+
+-- drop table sys_menu_permission
+DROP TABLE IF EXISTS `sys_menu_permission`;
+-- create table sys_menu_permission
+CREATE TABLE `sys_menu_permission` (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `menu_id` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '菜单ID',
+    `permission_id` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '权限ID',
+    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    `is_deleted` char(32) DEFAULT '0' COMMENT '是否删除 0:否 非0:是',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `udx_menu_permission_1` (`menu_id`,`permission_id`,`is_deleted`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- drop table sys_role_permission
+DROP TABLE IF EXISTS `sys_role_permission`;
+-- create table sys_role_permission
+CREATE TABLE `sys_role_permission` (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `role_id` char(32) NOT NULL COMMENT '角色ID',
+    `permission_id` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '权限ID',
+    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    `is_deleted` char(32) DEFAULT '0' COMMENT '是否删除 0:否 非0:是',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `udx_role_permission_1` (`role_id`,`permission_id`,`is_deleted`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- drop table sys_user_role
+DROP TABLE IF EXISTS `sys_user_role`;
+-- create table sys_user_role
+CREATE TABLE `sys_user_role` (
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `user_id` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户ID',
+    `role_id` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '角色ID',
+    `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    `is_deleted` char(32) DEFAULT '0' COMMENT '是否删除 0:否 非0:是',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `udx_user_role_1` (`user_id`,`role_id`,`is_deleted`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 -- drop table t_task
 DROP TABLE IF EXISTS `t_task`;
 -- create table t_task
