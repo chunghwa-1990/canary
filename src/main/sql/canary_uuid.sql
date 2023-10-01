@@ -123,7 +123,7 @@ CREATE TABLE `sys_user_role` (
     `is_deleted` char(32) DEFAULT '0' COMMENT '是否删除 0:否 非0:是',
     PRIMARY KEY (`id`),
     UNIQUE KEY `udx_user_role_1` (`user_id`,`role_id`,`is_deleted`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT '用户角色关联关系';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户角色关联关系';
 
 -- drop table t_task
 DROP TABLE IF EXISTS `t_task`;
