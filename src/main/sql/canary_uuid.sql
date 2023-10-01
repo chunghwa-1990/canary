@@ -95,7 +95,7 @@ CREATE TABLE `sys_menu_permission` (
     `is_deleted` char(32) DEFAULT '0' COMMENT '是否删除 0:否 非0:是',
     PRIMARY KEY (`id`),
 UNIQUE KEY `udx_menu_permission_1` (`menu_id`,`permission_id`,`is_deleted`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='菜单权限关联关系';
 
 -- drop table sys_role_permission
 DROP TABLE IF EXISTS `sys_role_permission`;
@@ -109,7 +109,7 @@ CREATE TABLE `sys_role_permission` (
     `is_deleted` char(32) DEFAULT '0' COMMENT '是否删除 0:否 非0:是',
     PRIMARY KEY (`id`),
     UNIQUE KEY `udx_role_permission_1` (`role_id`,`permission_id`,`is_deleted`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色权限关联关系';
 
 -- drop table sys_user_role
 DROP TABLE IF EXISTS `sys_user_role`;
@@ -123,7 +123,7 @@ CREATE TABLE `sys_user_role` (
     `is_deleted` char(32) DEFAULT '0' COMMENT '是否删除 0:否 非0:是',
     PRIMARY KEY (`id`),
     UNIQUE KEY `udx_user_role_1` (`user_id`,`role_id`,`is_deleted`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT '用户角色关联关系';
 
 -- drop table t_task
 DROP TABLE IF EXISTS `t_task`;
