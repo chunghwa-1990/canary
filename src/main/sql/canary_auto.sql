@@ -149,7 +149,7 @@ CREATE TABLE `t_task` (
 DROP TABLE IF EXISTS `f_file`;
 -- create table f_file
 CREATE TABLE `f_file` (
-    `id` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT 'ID',
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
     `key_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '下载时用的Key',
     `original_filename` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '原始文件名',
     `file_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '磁盘存储的文件名',
