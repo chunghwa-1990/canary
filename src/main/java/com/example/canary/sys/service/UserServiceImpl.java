@@ -13,12 +13,12 @@ import com.example.canary.sys.repository.UserRoleRepository;
 import com.example.canary.util.PageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * user
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
         // 分页
         IPage<UserPO> pagePo = userRepository.selectPage(query);
         // 转化
-        List<UserVO> records = pagePo.getRecords().stream().map(UserVO::new).collect(Collectors.toList());
+        List<UserVO> records = pagePo.getRecords().stream().map(UserVO::new).toList();
         IPage<UserVO> pageVo = PageUtils.convertToVo(pagePo, records);
         return ResultEntity.success(pageVo);
     }
