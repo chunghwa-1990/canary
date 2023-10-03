@@ -26,13 +26,25 @@ spring:
       time-to-live: 3600000
       # 每一个缓存的前缀，方便和普通使用的redis存的内容区分
       # 建议默认使用分区名作为前缀即可,这样数据在redis中以友好的:冒号在可视化软件中方便查看
-      #key-prefix: CACHE_
+      key-prefix: com.example.canary.
       # 是否使用缓存名前缀，建议打开
       use-key-prefix: true
       # 是否缓存空值,可以有效防止缓存穿透
       cache-null-values: true
       # 是否开启缓存统计,默认就是false
       enable-statistics: false
+  task:
+    scheduling:
+      # 线程池名称前缀
+      thread-name-prefix: TaskExecutor-
+      pool:
+        # 线程池大小,默认为 1
+        size: 20
+      shutdown:
+        # 应用关闭时，是否等待任务执行完成，默认为 false
+        await-termination: true
+        # 等待任务完成的最大时长，默认为 0, 单位为秒
+        await-termination-period: 60s
 server:
   port: 8080
   servlet:

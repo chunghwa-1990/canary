@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
-@ConditionalOnProperty(value = "spring.task.auto-execute")
+@ConditionalOnProperty(value = "task.auto-execute")
 public class ScheduledTaskRunner implements ApplicationRunner {
 
     @Autowired

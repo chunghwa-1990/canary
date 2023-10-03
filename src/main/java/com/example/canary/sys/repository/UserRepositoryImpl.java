@@ -34,7 +34,7 @@ public class UserRepositoryImpl implements UserRepository {
      * @return
      */
     @Override
-    @Cacheable(cacheNames = "userCache", key = "#user.pages")
+    @Cacheable(cacheNames = "user", key = "#root.method.name")
     public IPage<UserPO> selectPage(UserQuery query) {
         LambdaQueryWrapper<UserPO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.and(StringUtils.hasText(query.getKeywords()), wrapper -> wrapper.like(UserPO::getAccount, query.getKeywords())
@@ -50,6 +50,7 @@ public class UserRepositoryImpl implements UserRepository {
      * @return
      */
     @Override
+    @Cacheable(cacheNames = "user", key = "#root.method.name")
     public UserPO selectByAccount(String account) {
         LambdaQueryWrapper<UserPO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserPO::getAccount, account);
