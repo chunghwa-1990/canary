@@ -1,14 +1,10 @@
 package com.example.canary.sys.repository;
 
-import com.example.canary.sys.entity.PermissionAO;
 import com.example.canary.sys.entity.PermissionPO;
-import com.example.canary.sys.entity.UserPO;
 import com.example.canary.sys.mapper.PermissionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
-import java.util.List;
 
 /**
  * 权限

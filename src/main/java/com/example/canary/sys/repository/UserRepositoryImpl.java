@@ -8,6 +8,7 @@ import com.example.canary.sys.entity.UserQuery;
 import com.example.canary.sys.mapper.UserMapper;
 import com.example.canary.util.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
@@ -33,6 +34,7 @@ public class UserRepositoryImpl implements UserRepository {
      * @return
      */
     @Override
+    @Cacheable(cacheNames = "userCache", key = "#user.pages")
     public IPage<UserPO> selectPage(UserQuery query) {
         LambdaQueryWrapper<UserPO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.and(StringUtils.hasText(query.getKeywords()), wrapper -> wrapper.like(UserPO::getAccount, query.getKeywords())

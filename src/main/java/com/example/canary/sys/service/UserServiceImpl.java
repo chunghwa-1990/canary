@@ -1,7 +1,6 @@
 package com.example.canary.sys.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.canary.common.context.CanaryContext;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.UserAO;
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**

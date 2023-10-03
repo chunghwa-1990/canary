@@ -19,7 +19,20 @@ spring:
       max-file-size: 10MB
       max-request-size: 50MB
       file-size-threshold: 0
-
+  cache:
+    type: redis
+    redis:
+      # 指定redis中的过期时间为1h
+      time-to-live: 3600000
+      # 每一个缓存的前缀，方便和普通使用的redis存的内容区分
+      # 建议默认使用分区名作为前缀即可,这样数据在redis中以友好的:冒号在可视化软件中方便查看
+      #key-prefix: CACHE_
+      # 是否使用缓存名前缀，建议打开
+      use-key-prefix: true
+      # 是否缓存空值,可以有效防止缓存穿透
+      cache-null-values: true
+      # 是否开启缓存统计,默认就是false
+      enable-statistics: false
 server:
   port: 8080
   servlet:
