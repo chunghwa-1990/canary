@@ -6,7 +6,6 @@ import com.example.canary.sys.entity.UserRolePO;
 import com.example.canary.sys.mapper.UserRoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
