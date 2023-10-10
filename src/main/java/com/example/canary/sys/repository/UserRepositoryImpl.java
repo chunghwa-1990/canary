@@ -54,7 +54,6 @@ public class UserRepositoryImpl implements UserRepository {
         LambdaQueryWrapper<UserPO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserPO::getAccount, account);
         queryWrapper.eq(UserPO::getDisabled, StatusEnum.Disabled.FALSE.getCode());
-        queryWrapper.eq(UserPO::getDeleted, StatusEnum.Deleted.FALSE.getCode());
         return userMapper.selectOne(queryWrapper);
     }
 

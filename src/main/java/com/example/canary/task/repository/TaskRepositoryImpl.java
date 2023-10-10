@@ -30,7 +30,6 @@ public class TaskRepositoryImpl implements TaskRepository {
     public List<TaskPO> listEnableTask() {
         LambdaQueryWrapper<TaskPO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(TaskPO::getDisabled, StatusEnum.Disabled.FALSE.getCode());
-        queryWrapper.eq(TaskPO::getDeleted, StatusEnum.Deleted.FALSE.getCode());
         return taskMapper.selectList(queryWrapper);
     }
 

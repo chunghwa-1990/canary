@@ -1,13 +1,15 @@
 package com.example.canary.sys.service;
 
 import com.example.canary.common.exception.ResultEntity;
+import com.example.canary.sys.entity.Menu1stBO;
+import com.example.canary.sys.entity.Menu2ndBO;
 import com.example.canary.sys.entity.MenuPO;
 import com.example.canary.sys.entity.MenuPermissionPO;
-import com.example.canary.sys.entity.MenuVO;
+import com.example.canary.sys.entity.MenuPermissionVO;
 import com.example.canary.sys.entity.PermissionAO;
+import com.example.canary.sys.entity.PermissionBO;
 import com.example.canary.sys.entity.PermissionPO;
 import com.example.canary.sys.entity.PermissionVO;
-import com.example.canary.sys.entity.RolePermissionPO;
 import com.example.canary.sys.repository.MenuPermissionRepository;
 import com.example.canary.sys.repository.MenuRepository;
 import com.example.canary.sys.repository.PermissionRepository;
@@ -15,7 +17,6 @@ import com.example.canary.sys.repository.RolePermissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -47,20 +48,38 @@ public class PermissionServiceImpl implements PermissionService {
      * @return
      */
     @Override
-    public ResultEntity<List<PermissionVO>> listPermission() {
+    public ResultEntity<List<MenuPermissionVO>> listPermission() {
 
         // 一级菜单
-        List<MenuPO> firstMenuPoList = menuRepository.selectByLevel(1);
-        // 二级菜单
-        List<MenuPO> secondMenuPoList = menuRepository.selectByLevel(2);
+        List<MenuPO> menu1stPoList = menuRepository.selectByLevel(1);
+        List<Menu1stBO> menu1stBos = menu1stPoList.stream().map(Menu1stBO::new).toList();
 
-        if (!CollectionUtils.isEmpty(firstMenuPoList)) {
-            List<MenuVO> firstMenuVoList = firstMenuPoList.stream().map(MenuVO::new).toList();
-            for (MenuVO firstMenu : firstMenuVoList) {
+        // 二级菜单
+        List<MenuPO> menu2ndPoList = menuRepository.selectByLevel(2);
+        List<Menu2ndBO> menu2ndBos = menu2ndPoList.stream().map(Menu2ndBO::new).toList();
+
+        // 权限
+        List<PermissionVO> permissionVoList = permissionRepository.selectList();
+        List<PermissionBO> permissionBos = permissionVoList.stream().map(PermissionBO::new).toList();
+
+        for (Menu2ndBO menu2ndBo : menu2ndBos) {
+            for (PermissionBO permissionBo : permissionBos) {
+                if (menu2ndBo.getId().equals(permissionBo.getMenuId())) {
+                    menu2ndBo.getChildren().add(permissionBo);
+                }
             }
         }
 
-        return null;
+        for(Menu1stBO menu1stBo : menu1stBos) {
+            for(Menu2ndBO menu2ndBo : menu2ndBos) {
+                if (menu1stBo.getId().equals(menu2ndBo.getParentId())) {
+                    menu1stBo.getChildren().add(menu2ndBo);
+                }
+            }
+        }
+
+        List<MenuPermissionVO> menuPermissionVoList = menu1stBos.stream().map(MenuPermissionVO::new).toList();
+        return ResultEntity.success(menuPermissionVoList);
     }
 
     /**

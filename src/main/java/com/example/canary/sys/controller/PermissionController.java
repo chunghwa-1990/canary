@@ -3,6 +3,7 @@ package com.example.canary.sys.controller;
 import com.example.canary.common.api.ApiVersion;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.common.exception.ValidGroup;
+import com.example.canary.sys.entity.MenuPermissionVO;
 import com.example.canary.sys.entity.PermissionAO;
 import com.example.canary.sys.entity.PermissionQuery;
 import com.example.canary.sys.entity.PermissionVO;
@@ -41,7 +42,7 @@ public class PermissionController {
      * @return
      */
     @GetMapping("/list")
-    public ResultEntity<List<PermissionVO>> listPermission() {
+    public ResultEntity<List<MenuPermissionVO>> listPermission() {
         return permissionService.listPermission();
     }
 

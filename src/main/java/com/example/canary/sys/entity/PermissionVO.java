@@ -18,5 +18,10 @@ public class PermissionVO extends PermissionBase {
     @Serial
     private static final long serialVersionUID = 8553002464871711739L;
 
+    /**
+     * 菜单ID
+     */
+    private String menuId;
+
 
 }

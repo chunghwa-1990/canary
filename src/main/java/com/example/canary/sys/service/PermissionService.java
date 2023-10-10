@@ -1,9 +1,8 @@
 package com.example.canary.sys.service;
 
 import com.example.canary.common.exception.ResultEntity;
+import com.example.canary.sys.entity.MenuPermissionVO;
 import com.example.canary.sys.entity.PermissionAO;
-import com.example.canary.sys.entity.PermissionQuery;
-import com.example.canary.sys.entity.PermissionVO;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ public interface PermissionService {
      *
      * @return
      */
-    ResultEntity<List<PermissionVO>> listPermission();
+    ResultEntity<List<MenuPermissionVO>> listPermission();
 
     /**
      * add

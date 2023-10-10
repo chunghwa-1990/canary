@@ -2,12 +2,12 @@ package com.example.canary.sys.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.canary.sys.entity.PermissionPO;
+import com.example.canary.sys.entity.PermissionVO;
 import com.example.canary.sys.entity.UserPO;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -36,4 +36,11 @@ public interface PermissionMapper extends BaseMapper<PermissionPO> {
      */
     @Update("UPDATE sys_permission SET is_deleted = id WHERE id = #{id}")
     int deleteById(@Param("id") String id);
+
+    /**
+     * list
+     *
+     * @return
+     */
+    List<PermissionVO> selectList();
 }

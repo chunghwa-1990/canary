@@ -18,5 +18,20 @@
             AND
             rp.permission_id = #{permissionId}
     </select>
+
+    <select id="selectList" resultType="com.example.canary.sys.entity.PermissionVO">
+        SELECT
+            p.id,
+            p.name,
+            p.icon,
+            p.route,
+            p.is_disabled as disabled,
+            mp.menu_id
+        FROM
+            sys_permission p
+                INNER JOIN sys_menu_permission mp ON p.id = mp.permission_id AND mp.is_deleted = '0'
+        WHERE
+            p.is_deleted = '0'
+    </select>
 </mapper>
 

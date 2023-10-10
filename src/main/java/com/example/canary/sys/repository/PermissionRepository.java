@@ -1,8 +1,7 @@
 package com.example.canary.sys.repository;
 
-import com.example.canary.sys.entity.PermissionAO;
 import com.example.canary.sys.entity.PermissionPO;
-import com.example.canary.sys.entity.RolePermissionPO;
+import com.example.canary.sys.entity.PermissionVO;
 
 import java.util.List;
 
@@ -53,4 +52,11 @@ public interface PermissionRepository {
      * @return
      */
     boolean isBeingUsed(String permissionId);
+
+    /**
+     * list
+     *
+     * @return
+     */
+    List<PermissionVO> selectList();
 }
