@@ -22,8 +22,8 @@ spring:
   cache:
     type: redis
     redis:
-      # 指定redis中的过期时间为1h
-      time-to-live: 3600000
+      # 指定redis中的过期时间为2h
+      time-to-live: 7200000
       # 每一个缓存的前缀，方便和普通使用的redis存的内容区分
       # 建议默认使用分区名作为前缀即可,这样数据在redis中以友好的:冒号在可视化软件中方便查看
       key-prefix: com.example.canary.
