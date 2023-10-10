@@ -14,5 +14,23 @@
         </if>
     </select>
 
+    <select id="selectByIds" resultType="com.example.canary.sys.entity.MenuPO">
+        SELECT
+            m.id,
+            m.name,
+            m.icon,
+            m.level,
+            m.route
+        FROM
+            sys_menu m
+        WHERE
+            m.is_deleted = '0'
+          AND m.is_disabled = 0
+          AND m.id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")" >
+            #{id}
+        </foreach>
+    </select>
+
 </mapper>
 

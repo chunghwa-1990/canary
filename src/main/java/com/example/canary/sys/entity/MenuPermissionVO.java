@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serial;
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -24,12 +23,12 @@ public class MenuPermissionVO extends MenuBase {
     /**
      * 下级菜单
      */
-    private List<Menu2ndBO> children;
+    private List<Menu2ndDTO> children;
 
     public MenuPermissionVO() {
     }
 
-    public MenuPermissionVO(Menu1stBO menu1stBo) {
-        BeanUtils.copyProperties(menu1stBo, this);
+    public MenuPermissionVO(Menu1stDTO menu1StDTO) {
+        BeanUtils.copyProperties(menu1StDTO, this);
     }
 }

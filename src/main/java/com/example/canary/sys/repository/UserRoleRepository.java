@@ -1,5 +1,6 @@
 package com.example.canary.sys.repository;
 
+import com.example.canary.sys.entity.RolePO;
 import com.example.canary.sys.entity.UserRolePO;
 
 import java.util.List;
@@ -43,4 +44,12 @@ public interface UserRoleRepository {
      * @return
      */
     int deleteByRoleId(String roleId);
+
+    /**
+     * 根据用户ID查询角色
+     *
+     * @param userId
+     * @return
+     */
+    List<RolePO> selectRoleByUserId(String userId);
 }

@@ -1,6 +1,7 @@
 package com.example.canary.sys.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.example.canary.sys.entity.RolePO;
 import com.example.canary.sys.entity.UserRoleBase;
 import com.example.canary.sys.entity.UserRolePO;
 import com.example.canary.sys.mapper.UserRoleMapper;
@@ -65,5 +66,17 @@ public class UserRoleRepositoryImpl implements UserRoleRepository{
     @Override
     public int deleteByRoleId(String roleId) {
         return userRoleMapper.deleteByRoleId(roleId);
+    }
+
+
+    /**
+     * 根据用户ID查询角色
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<RolePO> selectRoleByUserId(String userId) {
+        return userRoleMapper.selectRoleByUserId(userId);
     }
 }

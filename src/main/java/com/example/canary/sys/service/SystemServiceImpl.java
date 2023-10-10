@@ -7,8 +7,12 @@ import com.example.canary.common.redis.RedisService;
 import com.example.canary.common.token.TokenService;
 import com.example.canary.sys.entity.LoginAO;
 import com.example.canary.sys.entity.LoginVO;
+import com.example.canary.sys.entity.MenuPermissionVO;
+import com.example.canary.sys.entity.RolePO;
 import com.example.canary.sys.entity.UserPO;
+import com.example.canary.sys.repository.MenuPermissionRepository;
 import com.example.canary.sys.repository.UserRepository;
+import com.example.canary.sys.repository.UserRoleRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * system
@@ -29,6 +34,12 @@ public class SystemServiceImpl implements SystemService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserRoleRepository userRoleRepository;
+
+    @Autowired
+    private MenuPermissionRepository menuPermissionRepository;
 
     @Autowired
     private TokenService tokenService;
@@ -82,5 +93,18 @@ public class SystemServiceImpl implements SystemService {
         String key = CanaryContext.getCurrentUser().getUserId();
         redisService.delete(key);
         return ResultEntity.success();
+    }
+
+    /**
+     * 菜单和权限
+     *
+     * @return
+     */
+    @Override
+    public ResultEntity<List<MenuPermissionVO>> listPermissions() {
+        String userId = CanaryContext.getCurrentUser().getUserId();
+        List<RolePO> roles = userRoleRepository.selectRoleByUserId(userId);
+        List<MenuPermissionVO> menuPermissionVOList = menuPermissionRepository.selectByUserId(userId);
+        return ResultEntity.success(menuPermissionVOList);
     }
 }

@@ -1,13 +1,13 @@
 package com.example.canary.sys.service;
 
 import com.example.canary.common.exception.ResultEntity;
-import com.example.canary.sys.entity.Menu1stBO;
-import com.example.canary.sys.entity.Menu2ndBO;
+import com.example.canary.sys.entity.Menu1stDTO;
+import com.example.canary.sys.entity.Menu2ndDTO;
 import com.example.canary.sys.entity.MenuPO;
 import com.example.canary.sys.entity.MenuPermissionPO;
 import com.example.canary.sys.entity.MenuPermissionVO;
 import com.example.canary.sys.entity.PermissionAO;
-import com.example.canary.sys.entity.PermissionBO;
+import com.example.canary.sys.entity.PermissionDTO;
 import com.example.canary.sys.entity.PermissionPO;
 import com.example.canary.sys.entity.PermissionVO;
 import com.example.canary.sys.repository.MenuPermissionRepository;
@@ -52,33 +52,33 @@ public class PermissionServiceImpl implements PermissionService {
 
         // 一级菜单
         List<MenuPO> menu1stPoList = menuRepository.selectByLevel(1);
-        List<Menu1stBO> menu1stBos = menu1stPoList.stream().map(Menu1stBO::new).toList();
+        List<Menu1stDTO> menu1stDtos = menu1stPoList.stream().map(Menu1stDTO::new).toList();
 
         // 二级菜单
         List<MenuPO> menu2ndPoList = menuRepository.selectByLevel(2);
-        List<Menu2ndBO> menu2ndBos = menu2ndPoList.stream().map(Menu2ndBO::new).toList();
+        List<Menu2ndDTO> menu2ndDtos = menu2ndPoList.stream().map(Menu2ndDTO::new).toList();
 
         // 权限
         List<PermissionVO> permissionVoList = permissionRepository.selectList();
-        List<PermissionBO> permissionBos = permissionVoList.stream().map(PermissionBO::new).toList();
+        List<PermissionDTO> permissionBos = permissionVoList.stream().map(PermissionDTO::new).toList();
 
-        for (Menu2ndBO menu2ndBo : menu2ndBos) {
-            for (PermissionBO permissionBo : permissionBos) {
-                if (menu2ndBo.getId().equals(permissionBo.getMenuId())) {
-                    menu2ndBo.getChildren().add(permissionBo);
+        for (Menu2ndDTO menu2ndDto : menu2ndDtos) {
+            for (PermissionDTO permissionDto : permissionBos) {
+                if (menu2ndDto.getId().equals(permissionDto.getMenuId())) {
+                    menu2ndDto.getChildren().add(permissionDto);
                 }
             }
         }
 
-        for(Menu1stBO menu1stBo : menu1stBos) {
-            for(Menu2ndBO menu2ndBo : menu2ndBos) {
-                if (menu1stBo.getId().equals(menu2ndBo.getParentId())) {
-                    menu1stBo.getChildren().add(menu2ndBo);
+        for (Menu1stDTO menu1stDto : menu1stDtos) {
+            for(Menu2ndDTO menu2ndDto : menu2ndDtos) {
+                if (menu1stDto.getId().equals(menu2ndDto.getParentId())) {
+                    menu1stDto.getChildren().add(menu2ndDto);
                 }
             }
         }
 
-        List<MenuPermissionVO> menuPermissionVoList = menu1stBos.stream().map(MenuPermissionVO::new).toList();
+        List<MenuPermissionVO> menuPermissionVoList = menu1stDtos.stream().map(MenuPermissionVO::new).toList();
         return ResultEntity.success(menuPermissionVoList);
     }
 

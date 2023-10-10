@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,4 +39,12 @@ public interface MenuMapper extends BaseMapper<MenuPO> {
      */
     @Update("UPDATE sys_menu SET is_deleted = id WHERE id = #{id}")
     int deleteById(@Param("id") String id);
+
+    /**
+     * 根据id 查询菜单
+     *
+     * @param ids
+     * @return
+     */
+    List<MenuPO> selectByIds(@Param("ids") List<String> ids);
 }

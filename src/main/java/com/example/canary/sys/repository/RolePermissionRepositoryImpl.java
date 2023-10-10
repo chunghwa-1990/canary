@@ -1,12 +1,14 @@
 package com.example.canary.sys.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.example.canary.sys.entity.PermissionPO;
 import com.example.canary.sys.entity.RolePermissionPO;
 import com.example.canary.sys.mapper.RolePermissionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 角色权限关联关系
@@ -62,5 +64,16 @@ public class RolePermissionRepositoryImpl implements RolePermissionRepository {
     @Override
     public int deleteByPermissionId(String permissionId) {
         return rolePermissionMapper.deleteByPermissionId(permissionId);
+    }
+
+    /**
+     * 根据角色id 查询权限
+     *
+     * @param roleIds
+     * @return
+     */
+    @Override
+    public List<PermissionPO> selectPermissionsByRoleIds(List<String> roleIds) {
+        return rolePermissionMapper.selectPermissionsByRoleIds(roleIds);
     }
 }

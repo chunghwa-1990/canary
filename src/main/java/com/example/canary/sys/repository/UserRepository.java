@@ -1,11 +1,8 @@
 package com.example.canary.sys.repository;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.UserPO;
 import com.example.canary.sys.entity.UserQuery;
-import com.example.canary.sys.entity.UserVO;
 
 /**
  * user
@@ -50,7 +47,7 @@ public interface UserRepository {
     /**
      * delete
      *
-     * @param userId
+     * @param id
      * @return
      */
     int deleteById(String id);

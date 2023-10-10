@@ -1,6 +1,7 @@
 package com.example.canary.sys.repository;
 
 import com.example.canary.sys.entity.MenuPermissionPO;
+import com.example.canary.sys.entity.MenuPermissionVO;
 
 import java.util.List;
 
@@ -35,4 +36,12 @@ public interface MenuPermissionRepository {
      * @return
      */
     List<MenuPermissionPO> selectByMenuId(String menuId);
+
+    /**
+     * 根据用户id 查询菜单权限
+     *
+     * @param userId
+     * @return
+     */
+    List<MenuPermissionVO> selectByUserId(String userId);
 }

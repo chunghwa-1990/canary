@@ -1,7 +1,5 @@
 package com.example.canary.sys.repository;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.example.canary.sys.entity.PermissionBO;
 import com.example.canary.sys.entity.PermissionPO;
 import com.example.canary.sys.entity.PermissionVO;
 import com.example.canary.sys.mapper.PermissionMapper;

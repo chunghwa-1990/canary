@@ -61,7 +61,7 @@ public class RoleRepositoryImpl implements RoleRepository {
     /**
      * delete
      *
-     * @param roleId
+     * @param id
      * @return
      */
     @Override
