@@ -19,4 +19,12 @@ public interface SystemService {
      * @return
      */
     ResultEntity<LoginVO> login(LoginAO loginAo);
+
+    /**
+     * logout
+     *
+     * @return
+     */
+    @SuppressWarnings("rawtypes")
+    ResultEntity logout();
 }

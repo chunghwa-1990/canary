@@ -1,5 +1,6 @@
 package com.example.canary.sys.service;
 
+import com.example.canary.common.context.CanaryContext;
 import com.example.canary.common.exception.BusinessException;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.common.redis.RedisService;
@@ -68,5 +69,18 @@ public class SystemServiceImpl implements SystemService {
         redisService.set(userPo.getId(), token, tokenService.getTimeout());
         LoginVO loginVo = new LoginVO(token);
         return ResultEntity.success(loginVo);
+    }
+
+    /**
+     * logout
+     *
+     * @return
+     */
+    @Override
+    @SuppressWarnings("rawtypes")
+    public ResultEntity logout() {
+        String key = CanaryContext.getCurrentUser().getUserId();
+        redisService.delete(key);
+        return ResultEntity.success();
     }
 }

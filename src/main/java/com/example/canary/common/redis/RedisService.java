@@ -113,4 +113,14 @@ public class RedisService {
     public Boolean expireAt(String key, Instant expireAt) {
         return redisTemplate.expireAt(key, expireAt);
     }
+
+    /**
+     * 删除
+     *
+     * @param key
+     * @return
+     */
+    public Boolean delete(String key) {
+        return redisTemplate.delete(key);
+    }
 }

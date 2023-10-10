@@ -46,6 +46,6 @@ public class SystemController {
     @PostMapping("/logout")
     @SuppressWarnings("rawtypes")
     public ResultEntity logout() {
-        return null;
+        return systemService.logout();
     }
 }
