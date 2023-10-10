@@ -48,7 +48,7 @@ public class PermissionServiceImpl implements PermissionService {
      * @return
      */
     @Override
-    public ResultEntity<List<MenuPermissionVO>> listPermission() {
+    public ResultEntity<List<MenuPermissionVO>> listPermissions() {
 
         // 一级菜单
         List<MenuPO> menu1stPoList = menuRepository.selectByLevel(1);

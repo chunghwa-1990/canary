@@ -42,8 +42,8 @@ public class PermissionController {
      * @return
      */
     @GetMapping("/list")
-    public ResultEntity<List<MenuPermissionVO>> listPermission() {
-        return permissionService.listPermission();
+    public ResultEntity<List<MenuPermissionVO>> listPermissions() {
+        return permissionService.listPermissions();
     }
 
     /**

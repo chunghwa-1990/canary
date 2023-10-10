@@ -19,7 +19,7 @@ public interface PermissionService {
      *
      * @return
      */
-    ResultEntity<List<MenuPermissionVO>> listPermission();
+    ResultEntity<List<MenuPermissionVO>> listPermissions();
 
     /**
      * add
