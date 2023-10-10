@@ -19,7 +19,7 @@ import lombok.Setter;
 public class CurrentUser<T> {
 
     /**
-     * id
+     * 用户ID
      */
     private String userId;
 
