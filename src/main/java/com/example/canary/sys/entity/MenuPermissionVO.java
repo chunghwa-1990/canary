@@ -1,10 +1,10 @@
 package com.example.canary.sys.entity;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,12 +13,36 @@ import java.util.List;
  * @author zhaohongliang 2023-09-20 21:12
  * @since 1.0
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class MenuPermissionVO extends MenuBase {
+public class MenuPermissionVO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -1712281910265515145L;
+
+    /**
+     * id
+     */
+    private String id;
+
+    /**
+     * 名称
+     */
+    private String name;
+
+    /**
+     * 图标
+     */
+    private String icon;
+
+    /**
+     * 路由
+     */
+    private String route;
+
+    /**
+     * 菜单级别 [0,1]
+     */
+    private Integer level;
 
     /**
      * 下级菜单
