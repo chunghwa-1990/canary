@@ -47,4 +47,12 @@ public interface MenuMapper extends BaseMapper<MenuPO> {
      * @return
      */
     List<MenuPO> selectByIds(@Param("ids") List<String> ids);
+
+    /**
+     * 根绝权限id 查询菜单
+     *
+     * @param permissionIds
+     * @return
+     */
+    List<MenuPO> selectByPermissionIds(@Param("permissionIds") List<String> permissionIds);
 }

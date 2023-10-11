@@ -113,7 +113,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
         List<String> permissionIds = permissionDtos.stream().map(PermissionDTO::getId).toList();
 
         // 二级菜单
-        List<MenuPO> menu2ndPoList = menuPermissionMapper.selectMenusByPermissionIds(permissionIds);
+        List<MenuPO> menu2ndPoList = menuMapper.selectByPermissionIds(permissionIds);
         List<Menu2ndDTO> menu2ndDtos = menu2ndPoList.stream().map(Menu2ndDTO::new).toList();
         List<String> menu1stIds = menu2ndPoList.stream().map(MenuPO::getParentId).toList();
 

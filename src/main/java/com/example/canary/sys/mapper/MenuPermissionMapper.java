@@ -1,13 +1,10 @@
 package com.example.canary.sys.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.canary.sys.entity.MenuPO;
 import com.example.canary.sys.entity.MenuPermissionPO;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * 角色菜单关联关系
@@ -27,11 +24,4 @@ public interface MenuPermissionMapper extends BaseMapper<MenuPermissionPO> {
     @Update("UPDATE sys_menu_permission SET is_deleted = id WHERE permission_id = #{permissionId}")
     int deleteByPermissionId(@Param("permissionId") String permissionId);
 
-    /**
-     * 根绝权限id 查询菜单
-     *
-     * @param permissionIds
-     * @return
-     */
-    List<MenuPO> selectMenusByPermissionIds(@Param("permissionIds") List<String> permissionIds);
 }
