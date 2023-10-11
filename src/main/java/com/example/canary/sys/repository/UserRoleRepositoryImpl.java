@@ -70,13 +70,15 @@ public class UserRoleRepositoryImpl implements UserRoleRepository{
 
 
     /**
-     * 根据用户ID查询角色
+     * 根据用户ID查询关联关系
      *
      * @param userId
      * @return
      */
     @Override
-    public List<RolePO> selectRoleByUserId(String userId) {
-        return userRoleMapper.selectRoleByUserId(userId);
+    public List<UserRolePO> selectByUserId(String userId) {
+        LambdaQueryWrapper<UserRolePO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(UserRolePO::getUserId, userId);
+        return userRoleMapper.selectList(queryWrapper);
     }
 }

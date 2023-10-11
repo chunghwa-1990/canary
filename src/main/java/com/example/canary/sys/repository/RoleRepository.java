@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.canary.sys.entity.RolePO;
 import com.example.canary.sys.entity.RoleQuery;
 
+import java.util.List;
+
 /**
  * 角色
  *
@@ -51,4 +53,12 @@ public interface RoleRepository {
      * @return
      */
     boolean isBeingUsed(String roleId);
+
+    /**
+     * 根据用户ID查询角色
+     *
+     * @param userId
+     * @return
+     */
+    List<RolePO> selectByUserId(String userId);
 }

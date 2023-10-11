@@ -7,8 +7,6 @@ import com.example.canary.common.redis.RedisService;
 import com.example.canary.common.token.TokenService;
 import com.example.canary.sys.entity.LoginAO;
 import com.example.canary.sys.entity.LoginVO;
-import com.example.canary.sys.entity.MenuPermissionVO;
-import com.example.canary.sys.entity.RolePO;
 import com.example.canary.sys.entity.UserPO;
 import com.example.canary.sys.repository.MenuPermissionRepository;
 import com.example.canary.sys.repository.UserRepository;
@@ -20,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 /**
  * system
@@ -95,15 +92,4 @@ public class SystemServiceImpl implements SystemService {
         return ResultEntity.success();
     }
 
-    /**
-     * 菜单和权限
-     *
-     * @return
-     */
-    @Override
-    public ResultEntity<List<MenuPermissionVO>> listPermissions() {
-        String userId = CanaryContext.getCurrentUser().getUserId();
-        List<RolePO> roles = userRoleRepository.selectRoleByUserId(userId);
-        return ResultEntity.success(null);
-    }
 }

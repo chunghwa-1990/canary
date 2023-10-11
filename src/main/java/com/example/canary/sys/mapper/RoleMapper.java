@@ -36,4 +36,12 @@ public interface RoleMapper extends BaseMapper<RolePO> {
     @Update("UPDATE sys_role SET is_deleted = id WHERE id = #{id}")
     int deleteById(@Param("id") String id);
 
+    /**
+     * 根据用户ID查询角色
+     *
+     * @param userId
+     * @return
+     */
+    List<RolePO> selectByUserId(String userId);
+
 }

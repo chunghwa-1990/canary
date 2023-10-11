@@ -46,10 +46,10 @@ public interface UserRoleRepository {
     int deleteByRoleId(String roleId);
 
     /**
-     * 根据用户ID查询角色
+     * 根据用户ID查询关联关系
      *
      * @param userId
      * @return
      */
-    List<RolePO> selectRoleByUserId(String userId);
+    List<UserRolePO> selectByUserId(String userId);
 }

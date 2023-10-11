@@ -11,19 +11,5 @@
         </foreach>
     </insert>
 
-    <select id="selectRoleByUserId" resultType="com.example.canary.sys.entity.RolePO">
-        SELECT DISTINCT
-            r.*
-        FROM
-            sys_role r
-                INNER JOIN sys_user_role ur ON r.id = ur.role_id
-                AND ur.is_deleted = '0'
-        WHERE
-            r.is_deleted = '0'
-          AND r.is_disabled = 0
-          AND ur.user_id = #{userId}
-    </select>
-
-
 </mapper>
 

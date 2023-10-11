@@ -1,7 +1,6 @@
 package com.example.canary.sys.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.canary.sys.entity.RolePO;
 import com.example.canary.sys.entity.UserRolePO;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
@@ -35,11 +34,4 @@ public interface UserRoleMapper extends BaseMapper<UserRolePO> {
     @Update("UPDATE sys_user_role SET is_deleted = id WHERE role_id = #{roleId}")
     int deleteByRoleId(@Param("roleId") String roleId);
 
-    /**
-     * 根据用户ID查询角色
-     *
-     * @param userId
-     * @return
-     */
-    List<RolePO> selectRoleByUserId(String userId);
 }

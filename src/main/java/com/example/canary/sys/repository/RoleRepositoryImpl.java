@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
+
 /**
  * 角色
  *
@@ -78,5 +80,16 @@ public class RoleRepositoryImpl implements RoleRepository {
     @Override
     public boolean isBeingUsed(String roleId) {
         return !CollectionUtils.isEmpty(roleMapper.selectUserByRoleId(roleId));
+    }
+
+    /**
+     * 根据用户ID查询关联关系
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<RolePO> selectByUserId(String userId) {
+        return roleMapper.selectByUserId(userId);
     }
 }
