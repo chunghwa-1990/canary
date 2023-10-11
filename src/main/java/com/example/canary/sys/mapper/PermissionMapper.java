@@ -42,5 +42,5 @@ public interface PermissionMapper extends BaseMapper<PermissionPO> {
      *
      * @return
      */
-    List<PermissionVO> selectList();
+    List<PermissionVO> list();
 }

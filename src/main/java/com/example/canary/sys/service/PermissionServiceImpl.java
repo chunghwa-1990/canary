@@ -30,9 +30,6 @@ import java.util.List;
 public class PermissionServiceImpl implements PermissionService {
 
     @Autowired
-    private MenuRepository menuRepository;
-
-    @Autowired
     private PermissionRepository permissionRepository;
 
     @Autowired
@@ -43,43 +40,24 @@ public class PermissionServiceImpl implements PermissionService {
 
 
     /**
+     * 根据用户id 查询菜单和权限
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public ResultEntity<List<MenuPermissionVO>> queryPermissions(String userId) {
+        return ResultEntity.success(permissionRepository.selectByUserId(userId));
+    }
+
+    /**
      * list
      *
      * @return
      */
     @Override
     public ResultEntity<List<MenuPermissionVO>> listPermissions() {
-
-        // 一级菜单
-        List<MenuPO> menu1stPoList = menuRepository.selectByLevel(1);
-        List<Menu1stDTO> menu1stDtos = menu1stPoList.stream().map(Menu1stDTO::new).toList();
-
-        // 二级菜单
-        List<MenuPO> menu2ndPoList = menuRepository.selectByLevel(2);
-        List<Menu2ndDTO> menu2ndDtos = menu2ndPoList.stream().map(Menu2ndDTO::new).toList();
-
-        // 权限
-        List<PermissionVO> permissionVoList = permissionRepository.selectList();
-        List<PermissionDTO> permissionBos = permissionVoList.stream().map(PermissionDTO::new).toList();
-
-        for (Menu2ndDTO menu2ndDto : menu2ndDtos) {
-            for (PermissionDTO permissionDto : permissionBos) {
-                if (menu2ndDto.getId().equals(permissionDto.getMenuId())) {
-                    menu2ndDto.getChildren().add(permissionDto);
-                }
-            }
-        }
-
-        for (Menu1stDTO menu1stDto : menu1stDtos) {
-            for(Menu2ndDTO menu2ndDto : menu2ndDtos) {
-                if (menu1stDto.getId().equals(menu2ndDto.getParentId())) {
-                    menu1stDto.getChildren().add(menu2ndDto);
-                }
-            }
-        }
-
-        List<MenuPermissionVO> menuPermissionVoList = menu1stDtos.stream().map(MenuPermissionVO::new).toList();
-        return ResultEntity.success(menuPermissionVoList);
+        return ResultEntity.success(permissionRepository.list());
     }
 
     /**

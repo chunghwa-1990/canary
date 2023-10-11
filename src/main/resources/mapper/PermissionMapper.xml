@@ -19,7 +19,7 @@
             rp.permission_id = #{permissionId}
     </select>
 
-    <select id="selectList" resultType="com.example.canary.sys.entity.PermissionVO">
+    <select id="list" resultType="com.example.canary.sys.entity.PermissionVO">
         SELECT
             p.id,
             p.name,

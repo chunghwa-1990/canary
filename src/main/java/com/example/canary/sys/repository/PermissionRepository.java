@@ -1,5 +1,6 @@
 package com.example.canary.sys.repository;
 
+import com.example.canary.sys.entity.MenuPermissionVO;
 import com.example.canary.sys.entity.PermissionPO;
 import com.example.canary.sys.entity.PermissionVO;
 
@@ -54,9 +55,17 @@ public interface PermissionRepository {
     boolean isBeingUsed(String permissionId);
 
     /**
+     * 根据用户id 查询菜单权限
+     *
+     * @param userId
+     * @return
+     */
+    List<MenuPermissionVO> selectByUserId(String userId);
+
+    /**
      * list
      *
      * @return
      */
-    List<PermissionVO> selectList();
+    List<MenuPermissionVO> list();
 }

@@ -37,6 +37,16 @@ public class PermissionController {
     private PermissionService permissionService;
 
     /**
+     * 根据用户id 查询菜单和权限
+     *
+     * @return
+     */
+    @GetMapping
+    public ResultEntity<List<MenuPermissionVO>> queryPermissions(String userId) {
+        return permissionService.queryPermissions(userId);
+    }
+
+    /**
      * list
      *
      * @return

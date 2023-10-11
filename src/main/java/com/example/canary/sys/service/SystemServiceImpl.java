@@ -104,7 +104,6 @@ public class SystemServiceImpl implements SystemService {
     public ResultEntity<List<MenuPermissionVO>> listPermissions() {
         String userId = CanaryContext.getCurrentUser().getUserId();
         List<RolePO> roles = userRoleRepository.selectRoleByUserId(userId);
-        List<MenuPermissionVO> menuPermissionVOList = menuPermissionRepository.selectByUserId(userId);
-        return ResultEntity.success(menuPermissionVOList);
+        return ResultEntity.success(null);
     }
 }

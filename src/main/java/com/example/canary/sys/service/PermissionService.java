@@ -15,6 +15,14 @@ import java.util.List;
 public interface PermissionService {
 
     /**
+     * 根据用户id 查询菜单和权限
+     *
+     * @param userId
+     * @return
+     */
+    ResultEntity<List<MenuPermissionVO>> queryPermissions(String userId);
+
+    /**
      * list
      *
      * @return
