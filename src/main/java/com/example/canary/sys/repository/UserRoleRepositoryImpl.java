@@ -1,7 +1,6 @@
 package com.example.canary.sys.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.example.canary.sys.entity.RolePO;
 import com.example.canary.sys.entity.UserRoleBase;
 import com.example.canary.sys.entity.UserRolePO;
 import com.example.canary.sys.mapper.UserRoleMapper;
