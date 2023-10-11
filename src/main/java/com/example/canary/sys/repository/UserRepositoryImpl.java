@@ -8,7 +8,6 @@ import com.example.canary.sys.entity.UserQuery;
 import com.example.canary.sys.mapper.UserMapper;
 import com.example.canary.util.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
@@ -49,7 +48,6 @@ public class UserRepositoryImpl implements UserRepository {
      * @return
      */
     @Override
-    @Cacheable(cacheNames = "user", key = "#root.method.name")
     public UserPO selectByAccount(String account) {
         LambdaQueryWrapper<UserPO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserPO::getAccount, account);

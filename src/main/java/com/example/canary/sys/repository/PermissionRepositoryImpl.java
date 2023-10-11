@@ -10,6 +10,7 @@ import com.example.canary.sys.entity.PermissionVO;
 import com.example.canary.sys.mapper.MenuMapper;
 import com.example.canary.sys.mapper.PermissionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -96,6 +97,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      * @return
      */
     @Override
+    @Cacheable(cacheNames = "permission", key = "#root.method.name + '::' + #p0")
     public List<MenuPermissionVO> selectByUserId(String userId) {
         // 权限
         List<PermissionDTO> permissionDtos = permissionMapper.selectByUserId(userId);
@@ -138,6 +140,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      * @return
      */
     @Override
+    @Cacheable(cacheNames = "permission", key = "#root.method.name")
     public List<MenuPermissionVO> list() {
         // 一级菜单
         List<MenuPO> menu1stPoList = menuRepository.selectByLevel(1);

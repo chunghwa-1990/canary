@@ -42,7 +42,7 @@ public class PermissionController {
      * @return
      */
     @GetMapping
-    public ResultEntity<List<MenuPermissionVO>> queryPermissions(String userId) {
+    public ResultEntity<List<MenuPermissionVO>> queryPermissions(@NotBlank String userId) {
         return permissionService.queryPermissions(userId);
     }
 
