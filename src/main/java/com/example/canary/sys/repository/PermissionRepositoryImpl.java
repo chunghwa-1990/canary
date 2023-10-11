@@ -8,9 +8,7 @@ import com.example.canary.sys.entity.PermissionDTO;
 import com.example.canary.sys.entity.PermissionPO;
 import com.example.canary.sys.entity.PermissionVO;
 import com.example.canary.sys.mapper.MenuMapper;
-import com.example.canary.sys.mapper.MenuPermissionMapper;
 import com.example.canary.sys.mapper.PermissionMapper;
-import com.example.canary.sys.mapper.RolePermissionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -35,12 +33,6 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     @Autowired
     private PermissionMapper permissionMapper;
-
-    @Autowired
-    private RolePermissionMapper rolePermissionMapper;
-
-    @Autowired
-    private MenuPermissionMapper menuPermissionMapper;
 
     /**
      * insert

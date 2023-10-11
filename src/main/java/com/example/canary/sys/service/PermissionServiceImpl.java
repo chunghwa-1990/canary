@@ -1,17 +1,11 @@
 package com.example.canary.sys.service;
 
 import com.example.canary.common.exception.ResultEntity;
-import com.example.canary.sys.entity.Menu1stDTO;
-import com.example.canary.sys.entity.Menu2ndDTO;
-import com.example.canary.sys.entity.MenuPO;
 import com.example.canary.sys.entity.MenuPermissionPO;
 import com.example.canary.sys.entity.MenuPermissionVO;
 import com.example.canary.sys.entity.PermissionAO;
-import com.example.canary.sys.entity.PermissionDTO;
 import com.example.canary.sys.entity.PermissionPO;
-import com.example.canary.sys.entity.PermissionVO;
 import com.example.canary.sys.repository.MenuPermissionRepository;
-import com.example.canary.sys.repository.MenuRepository;
 import com.example.canary.sys.repository.PermissionRepository;
 import com.example.canary.sys.repository.RolePermissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
