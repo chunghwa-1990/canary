@@ -1,8 +1,6 @@
 package com.example.canary.sys.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.canary.sys.entity.PermissionDTO;
-import com.example.canary.sys.entity.PermissionPO;
 import com.example.canary.sys.entity.RolePermissionPO;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
@@ -46,18 +44,4 @@ public interface RolePermissionMapper extends BaseMapper<RolePermissionPO> {
     @Update("UPDATE sys_role_permission SET is_deleted = id WHERE permission_id = #{permissionId}")
     int deleteByPermissionId(@Param("permissionId") String permissionId);
 
-    /**
-     * 根据角色id 查询权限
-     *
-     * @param roleIds
-     * @return
-     */
-    List<PermissionPO> selectPermissionsByRoleIds(@Param("roleIds") List<String> roleIds);
-
-    /**
-     *
-     * @param userId
-     * @return
-     */
-    List<PermissionDTO> selectPermissionsByUserId(@Param("userId") String userId);
 }

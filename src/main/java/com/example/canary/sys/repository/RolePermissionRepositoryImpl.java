@@ -66,14 +66,4 @@ public class RolePermissionRepositoryImpl implements RolePermissionRepository {
         return rolePermissionMapper.deleteByPermissionId(permissionId);
     }
 
-    /**
-     * 根据角色id 查询权限
-     *
-     * @param roleIds
-     * @return
-     */
-    @Override
-    public List<PermissionPO> selectPermissionsByRoleIds(List<String> roleIds) {
-        return rolePermissionMapper.selectPermissionsByRoleIds(roleIds);
-    }
 }

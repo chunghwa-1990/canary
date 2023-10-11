@@ -106,7 +106,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
     @Override
     public List<MenuPermissionVO> selectByUserId(String userId) {
         // 权限
-        List<PermissionDTO> permissionDtos = rolePermissionMapper.selectPermissionsByUserId(userId);
+        List<PermissionDTO> permissionDtos = permissionMapper.selectByUserId(userId);
         if (CollectionUtils.isEmpty(permissionDtos)) {
             return Collections.emptyList();
         }

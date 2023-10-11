@@ -1,6 +1,7 @@
 package com.example.canary.sys.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.canary.sys.entity.PermissionDTO;
 import com.example.canary.sys.entity.PermissionPO;
 import com.example.canary.sys.entity.PermissionVO;
 import com.example.canary.sys.entity.UserPO;
@@ -43,4 +44,20 @@ public interface PermissionMapper extends BaseMapper<PermissionPO> {
      * @return
      */
     List<PermissionVO> list();
+
+    /**
+     * 根据角色id 查询权限
+     *
+     * @param roleIds
+     * @return
+     */
+    List<PermissionPO> selectByRoleIds(@Param("roleIds") List<String> roleIds);
+
+    /**
+     * 根据用户id 查询权限
+     *
+     * @param userId
+     * @return
+     */
+    List<PermissionDTO> selectByUserId(@Param("userId") String userId);
 }

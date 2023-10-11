@@ -1,10 +1,8 @@
 package com.example.canary.sys.repository;
 
-import com.example.canary.sys.entity.PermissionPO;
 import com.example.canary.sys.entity.RolePermissionPO;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * 角色权限关联关系
@@ -46,11 +44,4 @@ public interface RolePermissionRepository {
      */
     int deleteByPermissionId(String permissionId);
 
-    /**
-     * 根据角色id 查询权限
-     *
-     * @param roleIds
-     * @return
-     */
-    List<PermissionPO> selectPermissionsByRoleIds(List<String> roleIds);
 }
