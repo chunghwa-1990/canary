@@ -8,6 +8,7 @@ import com.example.canary.sys.entity.UserQuery;
 import com.example.canary.sys.mapper.UserMapper;
 import com.example.canary.util.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
@@ -21,6 +22,7 @@ import java.nio.charset.StandardCharsets;
  * @author zhaohongliang
  */
 @Service
+@CacheConfig(cacheNames = "user")
 public class UserRepositoryImpl implements UserRepository {
 
     @Autowired
