@@ -18,7 +18,7 @@ public interface UserRepository {
      * @param query
      * @return
      */
-    IPage<UserPO> selectPage(UserQuery query);
+    IPage<UserPO> pages(UserQuery query);
 
     /**
      * 根据账号查询

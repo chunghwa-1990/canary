@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResultEntity<IPage<UserVO>> pagesUser(UserQuery query) {
         // 分页
-        IPage<UserPO> pagePo = userRepository.selectPage(query);
+        IPage<UserPO> pagePo = userRepository.pages(query);
         // 转化
         List<UserVO> records = pagePo.getRecords().stream().map(UserVO::new).toList();
         IPage<UserVO> pageVo = PageUtils.convertToVo(pagePo, records);
