@@ -119,7 +119,7 @@ public class RedisConfig implements CachingConfigurer {
         ObjectMapper objectMapper = new ObjectMapper();
         // 设置 objectMapper 的访问权限
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        // 记录序列化之后的数据类型，方便反序列化
+        // 记录序列化之后的数据类型，方便反序列化，保留这行会报错：Unexpected token (VALUE_STRING)
         // objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL);
 
         // LocalDate 和 LocalDateTime 序列化
