@@ -28,9 +28,15 @@ import java.util.Map;
 @AllArgsConstructor
 public class TokenService {
 
-   private String secret;
+    /**
+     * 密钥
+     */
+    private String secret;
 
-   private Duration timeout;
+    /**
+     * 过期时间
+     */
+    private Duration timeout;
 
     /**
      * 创建token
