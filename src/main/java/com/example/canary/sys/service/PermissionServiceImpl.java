@@ -61,8 +61,8 @@ public class PermissionServiceImpl implements PermissionService {
      * @return
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     @SuppressWarnings("rawtypes")
+    @Transactional(rollbackFor = Exception.class)
     public ResultEntity addPermission(PermissionAO permissionAo) {
         // insert permission
         PermissionPO permissionPo = permissionAo.convertToPo();

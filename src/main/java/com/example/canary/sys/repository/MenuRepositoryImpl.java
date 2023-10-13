@@ -7,6 +7,7 @@ import com.example.canary.sys.entity.MenuQuery;
 import com.example.canary.sys.entity.MenuVO;
 import com.example.canary.sys.mapper.MenuMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,6 +42,7 @@ public class MenuRepositoryImpl implements MenuRepository {
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = "permission", allEntries = true)
     public int insert(MenuPO menuPo) {
         return menuMapper.insert(menuPo);
     }
@@ -52,6 +54,7 @@ public class MenuRepositoryImpl implements MenuRepository {
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = "permission", allEntries = true)
     public int update(MenuPO menuPo) {
         return menuMapper.updateById(menuPo);
     }
@@ -63,6 +66,7 @@ public class MenuRepositoryImpl implements MenuRepository {
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = "permission", allEntries = true)
     public int deleteById(String id) {
         return menuMapper.deleteById(id);
     }

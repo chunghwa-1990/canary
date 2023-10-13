@@ -22,7 +22,6 @@ import java.nio.charset.StandardCharsets;
  * @author zhaohongliang
  */
 @Service
-@CacheConfig(cacheNames = "user")
 public class UserRepositoryImpl implements UserRepository {
 
     @Autowired

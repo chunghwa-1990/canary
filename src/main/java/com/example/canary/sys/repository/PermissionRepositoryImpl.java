@@ -11,7 +11,6 @@ import com.example.canary.sys.mapper.MenuMapper;
 import com.example.canary.sys.mapper.PermissionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -45,7 +44,6 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      * @return
      */
     @Override
-    @CacheEvict(key = "'list'")
     public int insert(PermissionPO permissionPo) {
         return permissionMapper.insert(permissionPo);
     }
@@ -57,7 +55,6 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      * @return
      */
     @Override
-    @CacheEvict(key = "'list'")
     public int update(PermissionPO permissionPo) {
         return permissionMapper.updateById(permissionPo);
     }
@@ -69,7 +66,6 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      * @return
      */
     @Override
-    @CacheEvict(key = "'list'")
     public int deleteById(String id) {
         return permissionMapper.deleteById(id);
     }
@@ -103,7 +99,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      * @return
      */
     @Override
-    @Cacheable(key = "#root.method.name + '::' + #p0")
+    @Cacheable(key = "#root.method.name + ':' + #p0")
     public List<MenuPermissionVO> selectByUserId(String userId) {
         // 权限
         List<PermissionDTO> permissionDtos = permissionMapper.selectByUserId(userId);

@@ -5,6 +5,7 @@ import com.example.canary.sys.entity.PermissionPO;
 import com.example.canary.sys.entity.RolePermissionPO;
 import com.example.canary.sys.mapper.RolePermissionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class RolePermissionRepositoryImpl implements RolePermissionRepository {
      */
     @Override
     public int insert(RolePermissionPO rolePermissionPo) {
-        return 0;
+        return rolePermissionMapper.insert(rolePermissionPo);
     }
 
     /**
@@ -40,6 +41,7 @@ public class RolePermissionRepositoryImpl implements RolePermissionRepository {
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = "permission", allEntries = true)
     public int batchInsert(List<RolePermissionPO> list) {
         return rolePermissionMapper.batchInsert(list);
     }
@@ -51,6 +53,7 @@ public class RolePermissionRepositoryImpl implements RolePermissionRepository {
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = "permission", allEntries = true)
     public int deleteByRoleId(String roleId) {
         return rolePermissionMapper.deleteByRoleId(roleId);
     }
@@ -62,6 +65,7 @@ public class RolePermissionRepositoryImpl implements RolePermissionRepository {
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = "permission", allEntries = true)
     public int deleteByPermissionId(String permissionId) {
         return rolePermissionMapper.deleteByPermissionId(permissionId);
     }

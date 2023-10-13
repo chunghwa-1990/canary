@@ -16,7 +16,7 @@ public interface UserRoleRepository {
     /**
      * insert
      *
-     * @param userRole
+     * @param userRolePo
      * @return
      */
     int insert(UserRolePO userRolePo);
@@ -32,7 +32,7 @@ public interface UserRoleRepository {
     /**
      * delete by userId
      *
-     * @param id
+     * @param userId
      * @return
      */
     int deleteByUserId(String userId);
@@ -40,7 +40,7 @@ public interface UserRoleRepository {
     /**
      * delete by roleId
      *
-     * @param id
+     * @param roleId
      * @return
      */
     int deleteByRoleId(String roleId);
