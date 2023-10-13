@@ -41,7 +41,7 @@ public class MenuServiceImpl implements MenuService {
      */
     @Override
     public ResultEntity<IPage<MenuVO>> pagesMenu(MenuQuery query) {
-        IPage<MenuVO> pageVo = menuRepository.selectPageVo(query);
+        IPage<MenuVO> pageVo = menuRepository.pages(query);
         return ResultEntity.success(pageVo);
     }
 

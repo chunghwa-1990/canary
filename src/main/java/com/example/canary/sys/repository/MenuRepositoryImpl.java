@@ -31,8 +31,8 @@ public class MenuRepositoryImpl implements MenuRepository {
      * @return
      */
     @Override
-    public IPage<MenuVO> selectPageVo(MenuQuery query) {
-        return menuMapper.selectPageVo(query.getPage(), query);
+    public IPage<MenuVO> pages(MenuQuery query) {
+        return menuMapper.pages(query.getPage(), query);
     }
 
     /**

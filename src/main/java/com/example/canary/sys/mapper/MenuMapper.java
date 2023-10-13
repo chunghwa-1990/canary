@@ -29,7 +29,7 @@ public interface MenuMapper extends BaseMapper<MenuPO> {
      * @param query
      * @return
      */
-    IPage<MenuVO> selectPageVo(@Param("page") Page<MenuPO> page, @Param("query") MenuQuery query);
+    IPage<MenuVO> pages(@Param("page") Page<MenuPO> page, @Param("query") MenuQuery query);
 
     /**
      * delete

@@ -21,7 +21,7 @@ public interface MenuRepository {
      * @param query
      * @return
      */
-    IPage<MenuVO> selectPageVo(MenuQuery query);
+    IPage<MenuVO> pages(MenuQuery query);
 
     /**
      * insert
