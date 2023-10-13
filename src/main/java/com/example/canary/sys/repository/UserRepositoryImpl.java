@@ -5,15 +5,17 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.canary.common.enums.StatusEnum;
 import com.example.canary.sys.entity.UserPO;
 import com.example.canary.sys.entity.UserQuery;
+import com.example.canary.sys.entity.UserVO;
 import com.example.canary.sys.mapper.UserMapper;
+import com.example.canary.util.PageUtils;
 import com.example.canary.util.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * user
@@ -34,12 +36,15 @@ public class UserRepositoryImpl implements UserRepository {
      * @return
      */
     @Override
-    public IPage<UserPO> pages(UserQuery query) {
+    public IPage<UserVO> pages(UserQuery query) {
         LambdaQueryWrapper<UserPO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.and(StringUtils.hasText(query.getKeywords()), wrapper -> wrapper.like(UserPO::getAccount, query.getKeywords())
                 .or().like(UserPO::getNickName, query.getKeywords())
                 .or().like(UserPO::getRealName, query.getKeywords()));
-        return userMapper.selectPage(query.getPage(), queryWrapper);
+        IPage<UserPO> pagePo = userMapper.selectPage(query.getPage(), queryWrapper);
+        // 转化
+        List<UserVO> records = pagePo.getRecords().stream().map(UserVO::new).toList();
+        return PageUtils.convertToVo(pagePo, records);
     }
 
     /**

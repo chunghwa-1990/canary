@@ -7,11 +7,9 @@ import com.example.canary.sys.entity.RolePO;
 import com.example.canary.sys.entity.RolePermissionPO;
 import com.example.canary.sys.entity.RoleQuery;
 import com.example.canary.sys.entity.RoleVO;
-import com.example.canary.sys.entity.UserRolePO;
 import com.example.canary.sys.repository.RolePermissionRepository;
 import com.example.canary.sys.repository.RoleRepository;
 import com.example.canary.sys.repository.UserRoleRepository;
-import com.example.canary.util.PageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,10 +45,8 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public ResultEntity<IPage<RoleVO>> pagesRole(RoleQuery query) {
-        IPage<RolePO> pagePo = roleRepository.selectPagePo(query);
-        List<RoleVO> records = pagePo.getRecords().stream().map(RoleVO::new).toList();
-        IPage<RoleVO> pageVo = PageUtils.convertToVo(pagePo, records);
-        return ResultEntity.success(pageVo);
+        IPage<RoleVO> pages = roleRepository.pages(query);
+        return ResultEntity.success(pages);
     }
 
     /**

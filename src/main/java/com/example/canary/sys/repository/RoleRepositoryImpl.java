@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.canary.sys.entity.RolePO;
 import com.example.canary.sys.entity.RoleQuery;
+import com.example.canary.sys.entity.RoleVO;
 import com.example.canary.sys.mapper.RoleMapper;
+import com.example.canary.util.PageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -31,11 +33,13 @@ public class RoleRepositoryImpl implements RoleRepository {
      * @return
      */
     @Override
-    public IPage<RolePO> selectPagePo(RoleQuery query) {
+    public IPage<RoleVO> pages(RoleQuery query) {
         LambdaQueryWrapper<RolePO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.and(StringUtils.hasText(query.getKeywords()), wrapper -> wrapper.like(RolePO::getName, query.getKeywords())
                 .or().like(RolePO::getDescription, query.getKeywords()));
-        return roleMapper.selectPage(query.getPage(), queryWrapper);
+        IPage<RolePO> pagePo = roleMapper.selectPage(query.getPage(), queryWrapper);
+        List<RoleVO> records = pagePo.getRecords().stream().map(RoleVO::new).toList();
+        return PageUtils.convertToVo(pagePo, records);
     }
 
     /**

@@ -3,6 +3,7 @@ package com.example.canary.sys.repository;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.canary.sys.entity.UserPO;
 import com.example.canary.sys.entity.UserQuery;
+import com.example.canary.sys.entity.UserVO;
 
 /**
  * user
@@ -18,7 +19,7 @@ public interface UserRepository {
      * @param query
      * @return
      */
-    IPage<UserPO> pages(UserQuery query);
+    IPage<UserVO> pages(UserQuery query);
 
     /**
      * 根据账号查询

@@ -10,7 +10,6 @@ import com.example.canary.sys.entity.UserRolePO;
 import com.example.canary.sys.entity.UserVO;
 import com.example.canary.sys.repository.UserRepository;
 import com.example.canary.sys.repository.UserRoleRepository;
-import com.example.canary.util.PageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,12 +42,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public ResultEntity<IPage<UserVO>> pagesUser(UserQuery query) {
-        // 分页
-        IPage<UserPO> pagePo = userRepository.pages(query);
-        // 转化
-        List<UserVO> records = pagePo.getRecords().stream().map(UserVO::new).toList();
-        IPage<UserVO> pageVo = PageUtils.convertToVo(pagePo, records);
-        return ResultEntity.success(pageVo);
+        IPage<UserVO> pages = userRepository.pages(query);
+        return ResultEntity.success(pages);
     }
 
     /**
