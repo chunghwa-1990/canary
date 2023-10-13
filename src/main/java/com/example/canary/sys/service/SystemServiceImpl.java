@@ -33,12 +33,6 @@ public class SystemServiceImpl implements SystemService {
     private UserRepository userRepository;
 
     @Autowired
-    private UserRoleRepository userRoleRepository;
-
-    @Autowired
-    private MenuPermissionRepository menuPermissionRepository;
-
-    @Autowired
     private TokenService tokenService;
 
     @Autowired
