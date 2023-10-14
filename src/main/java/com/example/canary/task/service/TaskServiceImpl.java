@@ -2,6 +2,7 @@ package com.example.canary.task.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.canary.common.context.SpringContext;
+import com.example.canary.common.exception.BusinessException;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.task.entity.TaskAO;
 import com.example.canary.task.entity.TaskPO;
@@ -43,7 +44,7 @@ public class TaskServiceImpl implements TaskService {
      * @return response page result
      */
     @Override
-    public ResultEntity<Page<TaskVO>> pagesTask(TaskQuery query) {
+    public Page<TaskVO> pagesTask(TaskQuery query) {
         return null;
     }
 
@@ -54,11 +55,10 @@ public class TaskServiceImpl implements TaskService {
      * @return response result
      */
     @Override
-    @SuppressWarnings("rawtypes")
-    public ResultEntity addTask(TaskAO taskAo) {
+    public TaskVO addTask(TaskAO taskAo) {
         TaskPO taskPo = taskAo.convertToPo();
         taskRepository.insert(taskPo);
-        return ResultEntity.success();
+        return new TaskVO(taskPo);
     }
 
     /**
@@ -68,38 +68,32 @@ public class TaskServiceImpl implements TaskService {
      * @return response result
      */
     @Override
-    @SuppressWarnings("rawtypes")
-    public ResultEntity editTask(TaskAO taskAo) {
+    public TaskVO editTask(TaskAO taskAo) {
         TaskPO taskPo = taskAo.convertToPo();
         taskRepository.update(taskPo);
-        return ResultEntity.success();
+        return new TaskVO(taskPo);
     }
 
     /**
      * delete
      *
      * @param taskId task primary key
-     * @return response result
      */
     @Override
-    @SuppressWarnings("rawtypes")
-    public ResultEntity deleteTask(String taskId) {
+    public void deleteTask(String taskId) {
         taskRepository.deleteById(taskId);
-        return ResultEntity.success();
     }
 
     /**
      * execute
      *
      * @param taskId task primary key
-     * @return response result
      */
     @Override
-    @SuppressWarnings("rawtypes")
-    public ResultEntity executeTask(String taskId) {
+    public void executeTask(String taskId) {
         TaskPO taskPo = taskRepository.selectById(taskId);
         if (taskPo == null) {
-            return ResultEntity.fail();
+            throw new BusinessException("任务不存在");
         }
 
         Object object = null;
@@ -111,30 +105,27 @@ public class TaskServiceImpl implements TaskService {
             method = clazz.getMethod(taskPo.getMethodName());
         } catch (ClassNotFoundException e) {
             log.error("启动 {} 任务失败，原因：找不到 {} 类，异常信息：{}", taskPo.getName(),  taskPo.getClassName(), e.getMessage());
-            return ResultEntity.fail("启动 " + taskPo.getName() + " 任务失败，原因：找不到" + taskPo.getClassName() + "类");
+            throw new BusinessException("启动 " + taskPo.getName() + " 任务失败，原因：找不到" + taskPo.getClassName() + "类");
         } catch (NoSuchMethodException e) {
             log.error("启动 {} 任务失败，原因：找不到 {} 方法，异常信息：{}", taskPo.getName(), taskPo.getMethodName(), e.getMessage());
-            return ResultEntity.fail("启动 " + taskPo.getName() + " 任务失败，原因：找不到" + taskPo.getMethodName() + "方法");
+            throw  new BusinessException("启动 " + taskPo.getName() + " 任务失败，原因：找不到" + taskPo.getMethodName() + "方法");
         }
 
         AbstractTask task = new BusinessTask(taskPo.getName(), taskPo.getCronExpression(), object, method);
         cronTaskRegistrar.executeCronTask(task);
 
-        return ResultEntity.success();
     }
 
     /**
      * start
      *
      * @param taskId task primary key
-     * @return response result
      */
     @Override
-    @SuppressWarnings("rawtypes")
-    public ResultEntity startTask(String taskId) {
+    public void startTask(String taskId) {
         TaskPO taskPo = taskRepository.selectById(taskId);
         if (taskPo == null) {
-            return ResultEntity.fail();
+            throw new BusinessException("任务不存在");
         }
 
         Object object = null;
@@ -146,33 +137,28 @@ public class TaskServiceImpl implements TaskService {
             method = clazz.getMethod(taskPo.getMethodName());
         } catch (ClassNotFoundException e) {
             log.error("启动 {} 任务失败，原因：找不到 {} 类，异常信息：{}", taskPo.getName(),  taskPo.getClassName(), e.getMessage());
-            return ResultEntity.fail("启动 " + taskPo.getName() + " 任务失败，原因：找不到" + taskPo.getClassName() + "类");
+            throw new BusinessException("启动 " + taskPo.getName() + " 任务失败，原因：找不到" + taskPo.getClassName() + "类");
         } catch (NoSuchMethodException e) {
             log.error("启动 {} 任务失败，原因：找不到 {} 方法，异常信息：{}", taskPo.getName(), taskPo.getMethodName(), e.getMessage());
-            return ResultEntity.fail("启动 " + taskPo.getName() + " 任务失败，原因：找不到" + taskPo.getMethodName() + "方法");
+            throw new BusinessException("启动 " + taskPo.getName() + " 任务失败，原因：找不到" + taskPo.getMethodName() + "方法");
         }
 
         AbstractTask task = new BusinessTask(taskPo.getName(), taskPo.getCronExpression(), object, method);
         cronTaskRegistrar.addCronTask(taskPo.getId(), task, task.getCornExpression());
-
-        return ResultEntity.success();
     }
 
     /**
      * stop
      *
      * @param taskId task primary key
-     * @return response result
      */
     @Override
-    @SuppressWarnings("rawtypes")
-    public ResultEntity stopTask(String taskId) {
+    public void stopTask(String taskId) {
         TaskPO taskPo = taskRepository.selectById(taskId);
         if (taskPo == null) {
-            return ResultEntity.fail();
+            throw new BusinessException("任务不存在");
         }
         cronTaskRegistrar.removeCronTask(taskId);
-        return ResultEntity.success();
     }
 
 }

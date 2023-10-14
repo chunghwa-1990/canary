@@ -50,15 +50,15 @@ public class FileServiceImpl implements FileService {
      * @return
      */
     @Override
-    public ResultEntity<FileVO> uploadFile(MultipartFile file, FileAO fileAo) {
+    public FileVO uploadFile(MultipartFile file, FileAO fileAo) {
         // 判断文件内容是否为空
         if (file.isEmpty()) {
-            return ResultEntity.fail("文件内容不可以为空");
+            throw new BusinessException("文件内容不可以为空");
         }
         // 原文件名称(名称+后缀)
         String originalFilename = file.getOriginalFilename();
         if (!StringUtils.hasText(originalFilename)) {
-            return ResultEntity.fail("文件名字不可以为空");
+            throw new BusinessException("文件名字不可以为空");
         }
         // 文件后缀
         String fileSuffix = FileUtils.getFileSuffix(originalFilename);
@@ -75,7 +75,7 @@ public class FileServiceImpl implements FileService {
         if (!StringUtils.hasText(contentType) || !(contentType.equals(MediaType.IMAGE_JPEG_VALUE)
                 || contentType.equals(MediaType.IMAGE_PNG_VALUE) || contentType.equals(MediaType.parseMediaType("image/bmp").getType())
                 || contentType.startsWith("video/"))) {
-            return ResultEntity.fail("不支持" + fileSuffix + "文件类型，支持类型：.jpg .bmp .png 和视屏文件");
+            throw new BusinessException("不支持" + fileSuffix + "文件类型，支持类型：.jpg .bmp .png 和视屏文件");
         }
         // 原文件大小
         long fileSize = file.getSize();
@@ -91,7 +91,7 @@ public class FileServiceImpl implements FileService {
                 file.transferTo(newFile);
             } catch (IOException e) {
                 log.error("上传文件发生异常，异常信息：{}", e.getMessage());
-                return ResultEntity.fail("上传文件发生异常");
+                throw new BusinessException("上传文件发生异常");
             }
         }
 
@@ -107,7 +107,7 @@ public class FileServiceImpl implements FileService {
             }
         } catch (IOException | NoSuchAlgorithmException e) {
             log.error("计算文件的SHA256/MD5摘要发生异常:" + e.getMessage());
-            return ResultEntity.fail("计算文件的SHA256/MD5摘要发生异常，请稍后再试");
+            throw new BusinessException("计算文件的SHA256/MD5摘要发生异常，请稍后再试");
         }
 
         FilePO filePo = new FilePO();
@@ -124,7 +124,7 @@ public class FileServiceImpl implements FileService {
         filePo.setDescription(fileAo.getDescription());
         fileRepository.insert(filePo);
 
-        return ResultEntity.success(new FileVO(filePo));
+        return new FileVO(filePo);
     }
 
     /**

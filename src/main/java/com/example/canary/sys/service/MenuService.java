@@ -1,8 +1,6 @@
 package com.example.canary.sys.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.MenuAO;
 import com.example.canary.sys.entity.MenuQuery;
 import com.example.canary.sys.entity.MenuVO;

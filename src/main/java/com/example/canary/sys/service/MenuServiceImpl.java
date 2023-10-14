@@ -2,7 +2,6 @@ package com.example.canary.sys.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.canary.common.exception.BusinessException;
-import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.MenuAO;
 import com.example.canary.sys.entity.MenuPO;
 import com.example.canary.sys.entity.MenuPermissionPO;
@@ -42,8 +41,7 @@ public class MenuServiceImpl implements MenuService {
      */
     @Override
     public IPage<MenuVO> pagesMenu(MenuQuery query) {
-        IPage<MenuVO> pageVo = menuRepository.pages(query);
-        return pageVo;
+        return menuRepository.pages(query);
     }
 
     /**

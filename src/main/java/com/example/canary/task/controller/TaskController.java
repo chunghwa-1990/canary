@@ -1,13 +1,13 @@
 package com.example.canary.task.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.canary.common.api.ApiVersion;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.common.exception.ValidGroup;
 import com.example.canary.task.entity.TaskAO;
 import com.example.canary.task.entity.TaskQuery;
-import com.example.canary.task.service.TaskService;
 import com.example.canary.task.entity.TaskVO;
+import com.example.canary.task.service.TaskService;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -41,7 +41,7 @@ public class TaskController {
      * @return response page result
      */
     @GetMapping("/pages")
-    public ResultEntity<Page<TaskVO>> pagesTask(TaskQuery query) {
+    public IPage<TaskVO> pagesTask(TaskQuery query) {
         return taskService.pagesTask(query);
     }
 
@@ -52,8 +52,7 @@ public class TaskController {
      * @return response result
      */
     @PostMapping("/add")
-    @SuppressWarnings("rawtypes")
-    public ResultEntity addTask(@Validated({ ValidGroup.Add.class }) @RequestBody TaskAO taskAo) {
+    public TaskVO addTask(@Validated({ ValidGroup.Add.class }) @RequestBody TaskAO taskAo) {
         return taskService.addTask(taskAo);
     }
 
@@ -64,8 +63,7 @@ public class TaskController {
      * @return response result
      */
     @PutMapping("/edit")
-    @SuppressWarnings("rawtypes")
-    public ResultEntity editTask(@Validated({ ValidGroup.Edit.class }) @RequestBody TaskAO taskAo) {
+    public TaskVO editTask(@Validated({ ValidGroup.Edit.class }) @RequestBody TaskAO taskAo) {
         return taskService.editTask(taskAo);
     }
 
@@ -73,48 +71,40 @@ public class TaskController {
      * delete
      *
      * @param taskId task primary key
-     * @return response result
      */
     @DeleteMapping("/delete")
-    @SuppressWarnings("rawtypes")
-    public ResultEntity deleteTask(@NotBlank String taskId) {
-        return taskService.deleteTask(taskId);
+    public void deleteTask(@NotBlank String taskId) {
+        taskService.deleteTask(taskId);
     }
 
     /**
      * execute
      *
      * @param taskId task primary key
-     * @return response result
      */
     @GetMapping("/execute")
-    @SuppressWarnings("rawtypes")
-    public ResultEntity executeTask(@NotBlank String taskId) {
-        return taskService.executeTask(taskId);
+    public void executeTask(@NotBlank String taskId) {
+        taskService.executeTask(taskId);
     }
 
     /**
      * start
      *
      * @param taskId task primary key
-     * @return response result
      */
     @GetMapping("/start")
-    @SuppressWarnings("rawtypes")
-    public ResultEntity startTask(@NotBlank String taskId) {
-        return taskService.startTask(taskId);
+    public void startTask(@NotBlank String taskId) {
+        taskService.startTask(taskId);
     }
 
     /**
      * stop
      *
      * @param taskId task primary key
-     * @return response result
      */
     @GetMapping("/stop")
-    @SuppressWarnings("rawtypes")
-    public ResultEntity stopTask(@NotBlank String taskId) {
-        return taskService.stopTask(taskId);
+    public void stopTask(@NotBlank String taskId) {
+        taskService.stopTask(taskId);
     }
 
 }

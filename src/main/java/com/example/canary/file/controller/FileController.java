@@ -42,7 +42,7 @@ public class FileController {
      * @return
      */
     @PostMapping("/upload")
-    public ResultEntity<FileVO> uploadFile(@RequestPart("file") MultipartFile file, FileAO fileAo) {
+    public FileVO uploadFile(@RequestPart("file") MultipartFile file, FileAO fileAo) {
         return fileService.uploadFile(file, fileAo);
     }
 

@@ -1,6 +1,5 @@
 package com.example.canary.sys.repository;
 
-import com.example.canary.sys.entity.RolePO;
 import com.example.canary.sys.entity.UserRolePO;
 
 import java.util.List;

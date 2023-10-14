@@ -1,8 +1,8 @@
 package com.example.canary.sys.service;
 
-import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.MenuPermissionVO;
 import com.example.canary.sys.entity.PermissionAO;
+import com.example.canary.sys.entity.PermissionVO;
 
 import java.util.List;
 
@@ -20,14 +20,14 @@ public interface PermissionService {
      * @param userId
      * @return
      */
-    ResultEntity<List<MenuPermissionVO>> queryPermissions(String userId);
+    List<MenuPermissionVO> queryPermissions(String userId);
 
     /**
      * list
      *
      * @return
      */
-    ResultEntity<List<MenuPermissionVO>> listPermissions();
+    List<MenuPermissionVO> listPermissions();
 
     /**
      * add
@@ -35,8 +35,7 @@ public interface PermissionService {
      * @param permissionAo
      * @return
      */
-    @SuppressWarnings("rawtypes")
-    ResultEntity addPermission(PermissionAO permissionAo);
+    PermissionVO addPermission(PermissionAO permissionAo);
 
     /**
      * update
@@ -44,15 +43,12 @@ public interface PermissionService {
      * @param permissionAo
      * @return
      */
-    @SuppressWarnings("rawtypes")
-    ResultEntity editPermission(PermissionAO permissionAo);
+    PermissionVO editPermission(PermissionAO permissionAo);
 
     /**
      * delete
      *
      * @param id
-     * @return
      */
-    @SuppressWarnings("rawtypes")
-    ResultEntity deletePermission(String id);
+    void deletePermission(String id);
 }

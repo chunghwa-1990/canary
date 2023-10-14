@@ -45,8 +45,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public IPage<RoleVO> pagesRole(RoleQuery query) {
-        IPage<RoleVO> pages = roleRepository.pages(query);
-        return pages;
+        return roleRepository.pages(query);
     }
 
     /**
@@ -95,7 +94,6 @@ public class RoleServiceImpl implements RoleService {
      * delete
      *
      * @param id
-     * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)

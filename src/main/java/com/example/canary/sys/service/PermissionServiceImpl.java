@@ -1,10 +1,11 @@
 package com.example.canary.sys.service;
 
-import com.example.canary.common.exception.ResultEntity;
+import com.example.canary.common.exception.BusinessException;
 import com.example.canary.sys.entity.MenuPermissionPO;
 import com.example.canary.sys.entity.MenuPermissionVO;
 import com.example.canary.sys.entity.PermissionAO;
 import com.example.canary.sys.entity.PermissionPO;
+import com.example.canary.sys.entity.PermissionVO;
 import com.example.canary.sys.repository.MenuPermissionRepository;
 import com.example.canary.sys.repository.PermissionRepository;
 import com.example.canary.sys.repository.RolePermissionRepository;
@@ -40,8 +41,8 @@ public class PermissionServiceImpl implements PermissionService {
      * @return
      */
     @Override
-    public ResultEntity<List<MenuPermissionVO>> queryPermissions(String userId) {
-        return ResultEntity.success(permissionRepository.selectByUserId(userId));
+    public List<MenuPermissionVO> queryPermissions(String userId) {
+        return permissionRepository.selectByUserId(userId);
     }
 
     /**
@@ -50,8 +51,8 @@ public class PermissionServiceImpl implements PermissionService {
      * @return
      */
     @Override
-    public ResultEntity<List<MenuPermissionVO>> listPermissions() {
-        return ResultEntity.success(permissionRepository.list());
+    public List<MenuPermissionVO> listPermissions() {
+        return permissionRepository.list();
     }
 
     /**
@@ -61,16 +62,15 @@ public class PermissionServiceImpl implements PermissionService {
      * @return
      */
     @Override
-    @SuppressWarnings("rawtypes")
     @Transactional(rollbackFor = Exception.class)
-    public ResultEntity addPermission(PermissionAO permissionAo) {
+    public PermissionVO addPermission(PermissionAO permissionAo) {
         // insert permission
         PermissionPO permissionPo = permissionAo.convertToPo();
         permissionRepository.insert(permissionPo);
         // insert relation
         MenuPermissionPO menuPermissionPo = new MenuPermissionPO(permissionAo.getMenuId(), permissionPo.getId());
         menuPermissionRepository.insert(menuPermissionPo);
-        return ResultEntity.success();
+        return new PermissionVO(permissionPo);
     }
 
     /**
@@ -80,9 +80,8 @@ public class PermissionServiceImpl implements PermissionService {
      * @return
      */
     @Override
-    @SuppressWarnings("rawtypes")
     @Transactional(rollbackFor = Exception.class)
-    public ResultEntity editPermission(PermissionAO permissionAo) {
+    public PermissionVO editPermission(PermissionAO permissionAo) {
         // update permission
         PermissionPO permissionPo = permissionAo.convertToPo();
         permissionRepository.update(permissionPo);
@@ -91,29 +90,26 @@ public class PermissionServiceImpl implements PermissionService {
         // insert relation
         MenuPermissionPO menuPermissionPo = new MenuPermissionPO(permissionAo.getMenuId(), permissionPo.getId());
         menuPermissionRepository.insert(menuPermissionPo);
-        return ResultEntity.success();
+        return new PermissionVO(permissionPo);
     }
 
     /**
      * delete
      * 
      * @param id
-     * @return
      */
     @Override
-    @SuppressWarnings("rawtypes")
     @Transactional(rollbackFor = Exception.class)
-    public ResultEntity deletePermission(String id) {
+    public void deletePermission(String id) {
         // 查询当前权限是否正在被用户使用
         boolean beingUsed = permissionRepository.isBeingUsed(id);
         if (beingUsed) {
-            return ResultEntity.fail("此权限正在被用户使用，请先结束绑定后再删除");
+            throw new BusinessException("此权限正在被用户使用，请先结束绑定后再删除");
         }
         // delete permission
         permissionRepository.deleteById(id);
         // delete relation
         menuPermissionRepository.deleteByPermissionId(id);
         rolePermissionRepository.deleteByPermissionId(id);
-        return ResultEntity.success();
     }
 }

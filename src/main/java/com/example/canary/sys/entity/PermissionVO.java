@@ -2,6 +2,7 @@ package com.example.canary.sys.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.beans.BeanUtils;
 
 import java.io.Serial;
 
@@ -23,5 +24,10 @@ public class PermissionVO extends PermissionBase {
      */
     private String menuId;
 
+    public PermissionVO() {
+    }
 
+    public PermissionVO(PermissionPO permissionPo) {
+        BeanUtils.copyProperties(permissionPo, this);
+    }
 }

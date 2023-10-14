@@ -2,7 +2,6 @@ package com.example.canary.sys.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.canary.common.api.ApiVersion;
-import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.common.exception.ValidGroup;
 import com.example.canary.sys.entity.UserAO;
 import com.example.canary.sys.entity.UserQuery;
@@ -40,7 +39,7 @@ public class UserController {
      * @return
      */
     @RequestMapping("/pages")
-    public ResultEntity<IPage<UserVO>> pagesUser(UserQuery query) {
+    public IPage<UserVO> pagesUser(UserQuery query) {
         return userService.pagesUser(query);
     }
 
@@ -51,8 +50,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/add")
-    @SuppressWarnings("rawtypes")
-    public ResultEntity addUser(@Validated({ ValidGroup.Add.class }) @RequestBody UserAO userAo) {
+    public UserVO addUser(@Validated({ ValidGroup.Add.class }) @RequestBody UserAO userAo) {
         return userService.addUser(userAo);
     }
 
@@ -63,8 +61,7 @@ public class UserController {
      * @return
      */
     @PutMapping("/edit")
-    @SuppressWarnings("rawtypes")
-    public ResultEntity editUser(@Validated({ ValidGroup.Edit.class }) @RequestBody UserAO userAo) {
+    public UserVO editUser(@Validated({ ValidGroup.Edit.class }) @RequestBody UserAO userAo) {
         return userService.editUser(userAo);
     }
 
@@ -72,11 +69,9 @@ public class UserController {
      * delete
      *
      * @param id
-     * @return
      */
     @DeleteMapping("/delete")
-    @SuppressWarnings("rawtypes")
-    public ResultEntity deleteUser(@NotBlank String id) {
-        return userService.deleteUser(id);
+    public void deleteUser(@NotBlank String id) {
+        userService.deleteUser(id);
     }
 }

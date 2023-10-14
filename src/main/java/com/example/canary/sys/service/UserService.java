@@ -1,7 +1,6 @@
 package com.example.canary.sys.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.UserAO;
 import com.example.canary.sys.entity.UserQuery;
 import com.example.canary.sys.entity.UserVO;
@@ -20,7 +19,7 @@ public interface UserService {
      * @param query
      * @return
      */
-    ResultEntity<IPage<UserVO>> pagesUser(UserQuery query);
+    IPage<UserVO> pagesUser(UserQuery query);
 
     /**
      * add
@@ -28,8 +27,7 @@ public interface UserService {
      * @param userAo
      * @return
      */
-    @SuppressWarnings("rawtypes")
-    ResultEntity addUser(UserAO userAo);
+    UserVO addUser(UserAO userAo);
 
     /**
      * edit
@@ -37,15 +35,12 @@ public interface UserService {
      * @param userAo
      * @return
      */
-    @SuppressWarnings("rawtypes")
-    ResultEntity editUser(UserAO userAo);
+    UserVO editUser(UserAO userAo);
 
     /**
      * delete
      *
      * @param id
-     * @return
      */
-    @SuppressWarnings("rawtypes")
-    ResultEntity deleteUser(String id);
+    void deleteUser(String id);
 }

@@ -1,11 +1,9 @@
 package com.example.canary.sys.controller;
 
 import com.example.canary.common.api.ApiVersion;
-import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.common.exception.ValidGroup;
 import com.example.canary.sys.entity.MenuPermissionVO;
 import com.example.canary.sys.entity.PermissionAO;
-import com.example.canary.sys.entity.PermissionQuery;
 import com.example.canary.sys.entity.PermissionVO;
 import com.example.canary.sys.service.PermissionService;
 import jakarta.validation.constraints.NotBlank;
@@ -42,7 +40,7 @@ public class PermissionController {
      * @return
      */
     @GetMapping
-    public ResultEntity<List<MenuPermissionVO>> queryPermissions(@NotBlank String userId) {
+    public List<MenuPermissionVO> queryPermissions(@NotBlank String userId) {
         return permissionService.queryPermissions(userId);
     }
 
@@ -52,7 +50,7 @@ public class PermissionController {
      * @return
      */
     @GetMapping("/list")
-    public ResultEntity<List<MenuPermissionVO>> listPermissions() {
+    public List<MenuPermissionVO> listPermissions() {
         return permissionService.listPermissions();
     }
 
@@ -62,8 +60,7 @@ public class PermissionController {
      * @return
      */
     @PostMapping("/add")
-    @SuppressWarnings("rawtypes")
-    public ResultEntity addPermission(@Validated({ ValidGroup.Add.class }) @RequestBody PermissionAO permissionAo) {
+    public PermissionVO addPermission(@Validated({ ValidGroup.Add.class }) @RequestBody PermissionAO permissionAo) {
         return permissionService.addPermission(permissionAo);
     }
 
@@ -73,8 +70,7 @@ public class PermissionController {
      * @return
      */
     @PutMapping("/edit")
-    @SuppressWarnings("rawtypes")
-    public ResultEntity editPermission(@Validated({ ValidGroup.Edit.class }) @RequestBody PermissionAO permissionAo) {
+    public PermissionVO editPermission(@Validated({ ValidGroup.Edit.class }) @RequestBody PermissionAO permissionAo) {
         return permissionService.editPermission(permissionAo);
     }
 
@@ -82,12 +78,10 @@ public class PermissionController {
      * delete
      *
      * @param id
-     * @return
      */
     @DeleteMapping("/delete")
-    @SuppressWarnings("rawtypes")
-    public ResultEntity deletePermission(@NotBlank String id) {
-        return permissionService.deletePermission(id);
+    public void deletePermission(@NotBlank String id) {
+        permissionService.deletePermission(id);
     }
 
 }

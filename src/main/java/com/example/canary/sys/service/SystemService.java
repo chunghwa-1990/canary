@@ -21,8 +21,6 @@ public interface SystemService {
 
     /**
      * logout
-     *
-     * @return
      */
     void logout();
 

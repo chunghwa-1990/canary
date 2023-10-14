@@ -2,7 +2,7 @@ package com.example.canary.sys.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.canary.common.context.CanaryContext;
-import com.example.canary.common.exception.ResultEntity;
+import com.example.canary.common.exception.BusinessException;
 import com.example.canary.sys.entity.UserAO;
 import com.example.canary.sys.entity.UserPO;
 import com.example.canary.sys.entity.UserQuery;
@@ -41,9 +41,8 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public ResultEntity<IPage<UserVO>> pagesUser(UserQuery query) {
-        IPage<UserVO> pages = userRepository.pages(query);
-        return ResultEntity.success(pages);
+    public IPage<UserVO> pagesUser(UserQuery query) {
+        return userRepository.pages(query);
     }
 
     /**
@@ -53,9 +52,8 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    @SuppressWarnings("rawtypes")
     @Transactional(rollbackFor = Exception.class)
-    public ResultEntity addUser(UserAO userAo) {
+    public UserVO addUser(UserAO userAo) {
         // insert user
         UserPO userPo = userAo.convertToPo();
         userRepository.insert(userPo);
@@ -64,7 +62,7 @@ public class UserServiceImpl implements UserService {
         if (!CollectionUtils.isEmpty(userRoles)) {
             userRoleRepository.batchInsert(userRoles);
         }
-        return ResultEntity.success();
+        return new UserVO(userPo);
     }
 
     /**
@@ -74,8 +72,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    @SuppressWarnings("rawtypes")
-    public ResultEntity editUser(UserAO userAo) {
+    public UserVO editUser(UserAO userAo) {
         // update user
         UserPO userPo = userAo.convertToPo();
         userRepository.update(userPo);
@@ -86,35 +83,32 @@ public class UserServiceImpl implements UserService {
         if (!CollectionUtils.isEmpty(userRoles)) {
             userRoleRepository.batchInsert(userRoles);
         }
-        return ResultEntity.success();
+        return new UserVO(userPo);
     }
 
     /**
      * deleted
      *
      * @param id
-     * @return
      */
     @Override
-    @SuppressWarnings("rawtypes")
-    public ResultEntity deleteUser(String id) {
+    public void deleteUser(String id) {
         // 当前用户
         String currentUserId = CanaryContext.getCurrentUser().getUserId();
         if (id.equals(currentUserId)) {
-            return ResultEntity.fail("无法删除当前用户");
+            throw new BusinessException("无法删除当前用户");
         }
         // 查询当前删除的用户
         UserPO userPo = userRepository.selectById(id);
         if (userPo == null) {
-            return ResultEntity.fail("此用户不存在或ID错误");
+            throw new BusinessException("此用户不存在或ID错误");
         }
         if (userPo.getIsAdmin() == 1) {
-            return ResultEntity.fail("无法删除超级管理员");
+            throw new BusinessException("无法删除超级管理员");
         }
         // delete user
         userRepository.deleteById(id);
         // delete relation
         userRoleRepository.deleteByUserId(id);
-        return ResultEntity.success();
     }
 }

@@ -66,17 +66,13 @@ public class SystemServiceImpl implements SystemService {
 
         // redis
         redisService.set(userPo.getId(), token, tokenService.getTimeout());
-        LoginVO loginVo = new LoginVO(token);
-        return loginVo;
+        return new LoginVO(token);
     }
 
     /**
      * logout
-     *
-     * @return
      */
     @Override
-    @SuppressWarnings("rawtypes")
     public void logout() {
         String key = CanaryContext.getCurrentUser().getUserId();
         redisService.delete(key);

@@ -1,10 +1,9 @@
 package com.example.canary.task.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.canary.common.exception.ResultEntity;
-import com.example.canary.task.entity.TaskVO;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.canary.task.entity.TaskAO;
 import com.example.canary.task.entity.TaskQuery;
+import com.example.canary.task.entity.TaskVO;
 
 /**
  * 任务
@@ -20,7 +19,7 @@ public interface TaskService {
      * @param query request query parameters
      * @return response page result
      */
-    ResultEntity<Page<TaskVO>> pagesTask(TaskQuery query);
+    IPage<TaskVO> pagesTask(TaskQuery query);
 
     /**
      * add
@@ -28,8 +27,7 @@ public interface TaskService {
      * @param taskAo request object
      * @return response result
      */
-    @SuppressWarnings("rawtypes")
-    ResultEntity addTask(TaskAO taskAo);
+    TaskVO addTask(TaskAO taskAo);
 
     /**
      * update
@@ -37,35 +35,28 @@ public interface TaskService {
      * @param taskAo request object
      * @return response result
      */
-    @SuppressWarnings("rawtypes")
-    ResultEntity editTask(TaskAO taskAo);
+    TaskVO editTask(TaskAO taskAo);
 
     /**
      * delete
      *
      * @param taskId task primary key
-     * @return response result
      */
-    @SuppressWarnings("rawtypes")
-    ResultEntity deleteTask(String taskId);
+    void deleteTask(String taskId);
 
     /**
      * execute
      *
      * @param taskId task primary key
-     * @return response result
      */
-    @SuppressWarnings("rawtypes")
-    ResultEntity executeTask(String taskId);
+    void executeTask(String taskId);
 
     /**
      * start
      *
      * @param taskId task primary key
-     * @return response result
      */
-    @SuppressWarnings("rawtypes")
-    ResultEntity startTask(String taskId);
+    void startTask(String taskId);
 
     /**
      * stop
@@ -73,6 +64,5 @@ public interface TaskService {
      * @param taskId task primary key
      * @return response result
      */
-    @SuppressWarnings("rawtypes")
-    ResultEntity stopTask(String taskId);
+    void stopTask(String taskId);
 }
