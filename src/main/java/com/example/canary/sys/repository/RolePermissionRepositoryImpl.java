@@ -1,7 +1,5 @@
 package com.example.canary.sys.repository;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.example.canary.sys.entity.PermissionPO;
 import com.example.canary.sys.entity.RolePermissionPO;
 import com.example.canary.sys.mapper.RolePermissionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +7,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * 角色权限关联关系
