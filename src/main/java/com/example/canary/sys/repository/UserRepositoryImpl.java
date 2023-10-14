@@ -36,15 +36,12 @@ public class UserRepositoryImpl implements UserRepository {
      * @return
      */
     @Override
-    public IPage<UserVO> pages(UserQuery query) {
+    public IPage<UserPO> pages(UserQuery query) {
         LambdaQueryWrapper<UserPO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.and(StringUtils.hasText(query.getKeywords()), wrapper -> wrapper.like(UserPO::getAccount, query.getKeywords())
                 .or().like(UserPO::getNickName, query.getKeywords())
                 .or().like(UserPO::getRealName, query.getKeywords()));
-        IPage<UserPO> pagePo = userMapper.selectPage(query.getPage(), queryWrapper);
-        // 转化
-        List<UserVO> records = pagePo.getRecords().stream().map(UserVO::new).toList();
-        return PageUtils.convertToVo(pagePo, records);
+        return userMapper.selectPage(query.getPage(), queryWrapper);
     }
 
     /**
