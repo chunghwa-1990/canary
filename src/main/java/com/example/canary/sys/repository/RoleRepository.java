@@ -3,7 +3,6 @@ package com.example.canary.sys.repository;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.canary.sys.entity.RolePO;
 import com.example.canary.sys.entity.RoleQuery;
-import com.example.canary.sys.entity.RoleVO;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ public interface RoleRepository {
      * @param query
      * @return
      */
-    IPage<RoleVO> pages(RoleQuery query);
+    IPage<RolePO> pages(RoleQuery query);
 
     /**
      * insert
