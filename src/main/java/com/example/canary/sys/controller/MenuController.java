@@ -1,9 +1,7 @@
 package com.example.canary.sys.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.canary.common.api.ApiVersion;
-import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.common.exception.ValidGroup;
 import com.example.canary.sys.entity.MenuAO;
 import com.example.canary.sys.entity.MenuQuery;
@@ -42,7 +40,7 @@ public class MenuController {
      * @return
      */
     @GetMapping("/pages")
-    public ResultEntity<IPage<MenuVO>> pagesMenu(MenuQuery query) {
+    public IPage<MenuVO> pagesMenu(MenuQuery query) {
         return menuService.pagesMenu(query);
     }
 
@@ -53,8 +51,7 @@ public class MenuController {
      * @return
      */
     @PostMapping("/add")
-    @SuppressWarnings("rawtypes")
-    public ResultEntity addMenu(@Validated({ ValidGroup.Add.class }) @RequestBody MenuAO menuAo) {
+    public MenuVO addMenu(@Validated({ ValidGroup.Add.class }) @RequestBody MenuAO menuAo) {
         return menuService.addMenu(menuAo);
     }
 
@@ -65,8 +62,7 @@ public class MenuController {
      * @return
      */
     @PutMapping("/edit")
-    @SuppressWarnings("rawtypes")
-    public ResultEntity editMenu(@Validated({ ValidGroup.Edit.class }) @RequestBody MenuAO menuAo) {
+    public MenuVO editMenu(@Validated({ ValidGroup.Edit.class }) @RequestBody MenuAO menuAo) {
         return menuService.editMenu(menuAo);
     }
 
@@ -74,12 +70,10 @@ public class MenuController {
      * delete
      *
      * @param id
-     * @return
      */
     @DeleteMapping("/delete")
-    @SuppressWarnings("rawtypes")
-    public ResultEntity deleteMenu(@NotBlank String id) {
-        return menuService.deleteMenu(id);
+    public void deleteMenu(@NotBlank String id) {
+        menuService.deleteMenu(id);
     }
 
 

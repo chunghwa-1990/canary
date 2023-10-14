@@ -21,7 +21,7 @@ public interface MenuService {
      * @param query
      * @return
      */
-    ResultEntity<IPage<MenuVO>> pagesMenu(MenuQuery query);
+    IPage<MenuVO> pagesMenu(MenuQuery query);
 
     /**
      * add
@@ -29,8 +29,7 @@ public interface MenuService {
      * @param menuAo
      * @return
      */
-    @SuppressWarnings("rawtypes")
-    ResultEntity addMenu(MenuAO menuAo);
+    MenuVO addMenu(MenuAO menuAo);
 
     /**
      * update
@@ -38,8 +37,7 @@ public interface MenuService {
      * @param menuAo
      * @return
      */
-    @SuppressWarnings("rawtypes")
-    ResultEntity editMenu(MenuAO menuAo);
+    MenuVO editMenu(MenuAO menuAo);
 
     /**
      * delete
@@ -47,6 +45,5 @@ public interface MenuService {
      * @param id
      * @return
      */
-    @SuppressWarnings("rawtypes")
-    ResultEntity deleteMenu(String id);
+    void deleteMenu(String id);
 }
