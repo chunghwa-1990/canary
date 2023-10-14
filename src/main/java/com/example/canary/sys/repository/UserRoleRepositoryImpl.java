@@ -54,9 +54,7 @@ public class UserRoleRepositoryImpl implements UserRoleRepository{
     @Override
     @CacheEvict(cacheNames = "permission", key = "'selectByUserId:' + #userId")
     public int deleteByUserId(String userId) {
-        LambdaQueryWrapper<UserRolePO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(UserRoleBase::getUserId, userId);
-        return userRoleMapper.delete(queryWrapper);
+        return userRoleMapper.deleteByUserId(userId);
     }
 
     /**

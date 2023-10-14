@@ -34,4 +34,12 @@ public interface UserRoleMapper extends BaseMapper<UserRolePO> {
     @Update("UPDATE sys_user_role SET is_deleted = id WHERE role_id = #{roleId}")
     int deleteByRoleId(@Param("roleId") String roleId);
 
+    /**
+     * delete by userId
+     *
+     * @param userId
+     * @return
+     */
+    @Update("UPDATE sys_user_role SET is_deleted = id WHERE user_id = #{userId}")
+    int deleteByUserId(String userId);
 }
