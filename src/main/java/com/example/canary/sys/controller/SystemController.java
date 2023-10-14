@@ -34,7 +34,7 @@ public class SystemController {
      * @return
      */
     @PostMapping("/login")
-    public ResultEntity<LoginVO> login(@Validated @RequestBody LoginAO loginAo) {
+    public LoginVO login(@Validated @RequestBody LoginAO loginAo) {
         return systemService.login(loginAo);
     }
 
@@ -44,9 +44,8 @@ public class SystemController {
      * @return
      */
     @PostMapping("/logout")
-    @SuppressWarnings("rawtypes")
-    public ResultEntity logout() {
-        return systemService.logout();
+    public void logout() {
+        systemService.logout();
     }
 
 }

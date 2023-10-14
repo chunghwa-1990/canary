@@ -1,6 +1,5 @@
 package com.example.canary.sys.service;
 
-import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.LoginAO;
 import com.example.canary.sys.entity.LoginVO;
 
@@ -18,14 +17,13 @@ public interface SystemService {
      * @param loginAo
      * @return
      */
-    ResultEntity<LoginVO> login(LoginAO loginAo);
+    LoginVO login(LoginAO loginAo);
 
     /**
      * logout
      *
      * @return
      */
-    @SuppressWarnings("rawtypes")
-    ResultEntity logout();
+    void logout();
 
 }

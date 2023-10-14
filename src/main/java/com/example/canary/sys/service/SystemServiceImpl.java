@@ -2,7 +2,6 @@ package com.example.canary.sys.service;
 
 import com.example.canary.common.context.CanaryContext;
 import com.example.canary.common.exception.BusinessException;
-import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.common.redis.RedisService;
 import com.example.canary.common.token.TokenService;
 import com.example.canary.sys.entity.LoginAO;
@@ -43,11 +42,11 @@ public class SystemServiceImpl implements SystemService {
      * @return
      */
     @Override
-    public ResultEntity<LoginVO> login(LoginAO loginAo) {
+    public LoginVO login(LoginAO loginAo) {
 
         UserPO userPo = userRepository.selectByAccount(loginAo.getAccount());
         if (userPo == null) {
-            return ResultEntity.fail("用户名或密码错误");
+            throw new BusinessException("用户名或密码错误");
         }
 
         // 待加密的明文
@@ -55,7 +54,7 @@ public class SystemServiceImpl implements SystemService {
         // 加密后的秘文
         String cipherText = DigestUtils.md5DigestAsHex(planText.getBytes(StandardCharsets.UTF_8));
         if (!userPo.getPassword().equals(cipherText)) {
-            return ResultEntity.fail("用户名或密码错误");
+            throw new BusinessException("用户名或密码错误");
         }
 
         String token = null;
@@ -68,7 +67,7 @@ public class SystemServiceImpl implements SystemService {
         // redis
         redisService.set(userPo.getId(), token, tokenService.getTimeout());
         LoginVO loginVo = new LoginVO(token);
-        return ResultEntity.success(loginVo);
+        return loginVo;
     }
 
     /**
@@ -78,10 +77,9 @@ public class SystemServiceImpl implements SystemService {
      */
     @Override
     @SuppressWarnings("rawtypes")
-    public ResultEntity logout() {
+    public void logout() {
         String key = CanaryContext.getCurrentUser().getUserId();
         redisService.delete(key);
-        return ResultEntity.success();
     }
 
 }
