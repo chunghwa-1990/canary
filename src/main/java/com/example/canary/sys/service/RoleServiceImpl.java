@@ -1,7 +1,7 @@
 package com.example.canary.sys.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.canary.common.exception.ResultEntity;
+import com.example.canary.common.exception.BusinessException;
 import com.example.canary.sys.entity.RoleAO;
 import com.example.canary.sys.entity.RolePO;
 import com.example.canary.sys.entity.RolePermissionPO;
@@ -44,9 +44,9 @@ public class RoleServiceImpl implements RoleService {
      * @return
      */
     @Override
-    public ResultEntity<IPage<RoleVO>> pagesRole(RoleQuery query) {
+    public IPage<RoleVO> pagesRole(RoleQuery query) {
         IPage<RoleVO> pages = roleRepository.pages(query);
-        return ResultEntity.success(pages);
+        return pages;
     }
 
     /**
@@ -56,9 +56,8 @@ public class RoleServiceImpl implements RoleService {
      * @return
      */
     @Override
-    @SuppressWarnings("rawtypes")
     @Transactional(rollbackFor = Exception.class)
-    public ResultEntity addRole(RoleAO roleAo) {
+    public RoleVO addRole(RoleAO roleAo) {
         // insert role
         RolePO rolePo = roleAo.convertToPo();
         roleRepository.insert(rolePo);
@@ -67,7 +66,7 @@ public class RoleServiceImpl implements RoleService {
         if (!CollectionUtils.isEmpty(rolePermissions)) {
             rolePermissionRepository.batchInsert(rolePermissions);
         }
-        return ResultEntity.success();
+        return new RoleVO(rolePo);
     }
 
     /**
@@ -77,9 +76,8 @@ public class RoleServiceImpl implements RoleService {
      * @return
      */
     @Override
-    @SuppressWarnings("rawtypes")
     @Transactional(rollbackFor = Exception.class)
-    public ResultEntity editRole(RoleAO roleAo) {
+    public RoleVO editRole(RoleAO roleAo) {
         // update role
         RolePO rolePo = roleAo.convertToPo();
         roleRepository.update(rolePo);
@@ -90,7 +88,7 @@ public class RoleServiceImpl implements RoleService {
         if (!CollectionUtils.isEmpty(rolePermissions)) {
             rolePermissionRepository.batchInsert(rolePermissions);
         }
-        return ResultEntity.success();
+        return new RoleVO(rolePo);
     }
 
     /**
@@ -100,19 +98,17 @@ public class RoleServiceImpl implements RoleService {
      * @return
      */
     @Override
-    @SuppressWarnings("rawtypes")
     @Transactional(rollbackFor = Exception.class)
-    public ResultEntity deleteRole(String id) {
+    public void deleteRole(String id) {
         // 查询角色是否正在被用户使用
         boolean beingUsed = roleRepository.isBeingUsed(id);
         if (beingUsed) {
-            return ResultEntity.fail("此角色正在被用户使用，请先结束绑定后再删除");
+            throw new BusinessException("此角色正在被用户使用，请先结束绑定后再删除");
         }
         // delete role
         roleRepository.deleteById(id);
         // delete relation
         userRoleRepository.deleteByRoleId(id);
         rolePermissionRepository.deleteByRoleId(id);
-        return ResultEntity.success();
     }
 }

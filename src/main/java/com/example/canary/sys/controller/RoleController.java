@@ -2,7 +2,6 @@ package com.example.canary.sys.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.canary.common.api.ApiVersion;
-import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.common.exception.ValidGroup;
 import com.example.canary.sys.entity.RoleAO;
 import com.example.canary.sys.entity.RoleQuery;
@@ -40,7 +39,7 @@ public class RoleController {
      * @return
      */
     @RequestMapping("/pages")
-    public ResultEntity<IPage<RoleVO>> pagesRole(RoleQuery query) {
+    public IPage<RoleVO> pagesRole(RoleQuery query) {
         return roleService.pagesRole(query);
     }
 
@@ -51,8 +50,7 @@ public class RoleController {
      * @return
      */
     @PostMapping("/add")
-    @SuppressWarnings("rawtypes")
-    public ResultEntity addRole(@Validated({ ValidGroup.Add.class }) @RequestBody RoleAO roleAo) {
+    public RoleVO addRole(@Validated({ ValidGroup.Add.class }) @RequestBody RoleAO roleAo) {
         return roleService.addRole(roleAo);
     }
 
@@ -63,8 +61,7 @@ public class RoleController {
      * @return
      */
     @PutMapping("/edit")
-    @SuppressWarnings("rawtypes")
-    public ResultEntity editRole(@Validated({ ValidGroup.Add.class }) @RequestBody RoleAO roleAo) {
+    public RoleVO editRole(@Validated({ ValidGroup.Add.class }) @RequestBody RoleAO roleAo) {
         return roleService.editRole(roleAo);
     }
 
@@ -72,11 +69,9 @@ public class RoleController {
      * delete
      *
      * @param id
-     * @return
      */
     @DeleteMapping("/delete")
-    @SuppressWarnings("rawtypes")
-    public ResultEntity deleteRole(@NotBlank String id) {
-        return roleService.deleteRole(id);
+    public void deleteRole(@NotBlank String id) {
+        roleService.deleteRole(id);
     }
 }

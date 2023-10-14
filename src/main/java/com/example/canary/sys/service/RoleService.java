@@ -1,7 +1,6 @@
 package com.example.canary.sys.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.sys.entity.RoleAO;
 import com.example.canary.sys.entity.RoleQuery;
 import com.example.canary.sys.entity.RoleVO;
@@ -20,7 +19,7 @@ public interface RoleService {
      * @param query
      * @return
      */
-    ResultEntity<IPage<RoleVO>> pagesRole(RoleQuery query);
+    IPage<RoleVO> pagesRole(RoleQuery query);
 
     /**
      * add
@@ -28,8 +27,7 @@ public interface RoleService {
      * @param roleAo
      * @return
      */
-    @SuppressWarnings("rawtypes")
-    ResultEntity addRole(RoleAO roleAo);
+    RoleVO addRole(RoleAO roleAo);
 
     /**
      * edit
@@ -37,15 +35,12 @@ public interface RoleService {
      * @param roleAo
      * @return
      */
-    @SuppressWarnings("rawtypes")
-    ResultEntity editRole(RoleAO roleAo);
+    RoleVO editRole(RoleAO roleAo);
 
     /**
      * delete
      *
      * @param id
-     * @return
      */
-    @SuppressWarnings("rawtypes")
-    ResultEntity deleteRole(String id);
+    void deleteRole(String id);
 }
