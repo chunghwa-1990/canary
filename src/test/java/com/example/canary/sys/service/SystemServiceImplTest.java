@@ -26,9 +26,9 @@ class SystemServiceImplTest {
         LoginAO loginAo = new LoginAO();
         loginAo.setAccount("admin");
         loginAo.setPassword("123456");
-        ResultEntity<LoginVO> result = systemService.login(loginAo);
+        LoginVO result = systemService.login(loginAo);
         ObjectMapper objectMapper = new ObjectMapper();
-        log.info(objectMapper.writeValueAsString(result));
+        log.info(objectMapper.writeValueAsString(ResultEntity.success(result)));
     }
 
 }
