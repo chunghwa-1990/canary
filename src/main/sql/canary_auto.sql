@@ -70,7 +70,6 @@ DROP TABLE IF EXISTS `sys_permission`;
 -- create table sys_permission
 CREATE TABLE `sys_permission` (
     `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
-    `menu_id` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
     `name` varchar(200) NOT NULL COMMENT '名称',
     `icon` varchar(20) DEFAULT NULL COMMENT '图标',
     `route` varchar(100) NOT NULL COMMENT '路由',
