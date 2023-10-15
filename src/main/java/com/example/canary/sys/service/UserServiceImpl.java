@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    @CacheEvict(cacheNames = "permission", key = "'selectByUserId:' + #p0.id")
+    @CacheEvict(cacheNames = "permission", key = "'user:' + #p0.id")
     public UserVO editUser(UserAO userAo) {
         // update user
         UserPO userPo = userAo.convertToPo();
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
      * @param id
      */
     @Override
-    @CacheEvict(cacheNames = "permission", key = "'selectByUserId:' + #id")
+    @CacheEvict(cacheNames = "permission", key = "'user:' + #id")
     public void deleteUser(String id) {
         // 当前用户
         String currentUserId = CanaryContext.getCurrentUser().getUserId();

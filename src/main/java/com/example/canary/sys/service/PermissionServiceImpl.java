@@ -55,7 +55,7 @@ public class PermissionServiceImpl implements PermissionService {
      * @return
      */
     @Override
-    @Cacheable(key = "#root.method.name + ':' + #p0")
+    @Cacheable(key = "'user:' + #p0")
     public List<MenuPermissionVO> queryPermissions(String userId) {
         // 权限
         List<PermissionDTO> permissionDtos = permissionRepository.selectByUserId(userId);
@@ -98,7 +98,7 @@ public class PermissionServiceImpl implements PermissionService {
      * @return
      */
     @Override
-    @Cacheable(key = "#root.method.name")
+    @Cacheable(key = "'list'")
     public List<MenuPermissionVO> listPermissions() {
         // 一级菜单
         List<MenuPO> menu1stPoList = menuRepository.selectByLevel(1);
