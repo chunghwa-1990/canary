@@ -1,18 +1,28 @@
 package com.example.canary.sys.service;
 
 import com.example.canary.common.exception.BusinessException;
+import com.example.canary.sys.entity.Menu1stDTO;
+import com.example.canary.sys.entity.Menu2ndDTO;
+import com.example.canary.sys.entity.MenuPO;
 import com.example.canary.sys.entity.MenuPermissionPO;
 import com.example.canary.sys.entity.MenuPermissionVO;
 import com.example.canary.sys.entity.PermissionAO;
+import com.example.canary.sys.entity.PermissionDTO;
 import com.example.canary.sys.entity.PermissionPO;
 import com.example.canary.sys.entity.PermissionVO;
 import com.example.canary.sys.repository.MenuPermissionRepository;
+import com.example.canary.sys.repository.MenuRepository;
 import com.example.canary.sys.repository.PermissionRepository;
 import com.example.canary.sys.repository.RolePermissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,7 +32,11 @@ import java.util.List;
  * @since 1.0
  */
 @Service
+@CacheConfig(cacheNames = "permission")
 public class PermissionServiceImpl implements PermissionService {
+
+    @Autowired
+    private MenuRepository menuRepository;
 
     @Autowired
     private PermissionRepository permissionRepository;
@@ -41,8 +55,41 @@ public class PermissionServiceImpl implements PermissionService {
      * @return
      */
     @Override
+    @Cacheable(key = "#root.method.name + ':' + #p0")
     public List<MenuPermissionVO> queryPermissions(String userId) {
-        return permissionRepository.selectByUserId(userId);
+        // 权限
+        List<PermissionDTO> permissionDtos = permissionRepository.selectByUserId(userId);
+        if (CollectionUtils.isEmpty(permissionDtos)) {
+            return Collections.emptyList();
+        }
+        List<String> permissionIds = permissionDtos.stream().map(PermissionDTO::getId).toList();
+
+        // 二级菜单
+        List<MenuPO> menu2ndPoList = menuRepository.selectByPermissionIds(permissionIds);
+        List<Menu2ndDTO> menu2ndDtos = menu2ndPoList.stream().map(Menu2ndDTO::new).toList();
+        List<String> menu1stIds = menu2ndPoList.stream().map(MenuPO::getParentId).toList();
+
+        // 一级菜单
+        List<MenuPO> menu1stPoList = menuRepository.selectByIds(menu1stIds);
+        List<Menu1stDTO> menu1stDtos = menu1stPoList.stream().map(Menu1stDTO::new).toList();
+
+        for (Menu2ndDTO menu2ndDto : menu2ndDtos) {
+            for (PermissionDTO permissionDto : permissionDtos) {
+                if (menu2ndDto.getId().equals(permissionDto.getMenuId())) {
+                    menu2ndDto.getChildren().add(permissionDto);
+                }
+            }
+        }
+
+        for (Menu1stDTO menu1stDto : menu1stDtos) {
+            for(Menu2ndDTO menu2ndDto : menu2ndDtos) {
+                if (menu1stDto.getId().equals(menu2ndDto.getParentId())) {
+                    menu1stDto.getChildren().add(menu2ndDto);
+                }
+            }
+        }
+
+        return menu1stDtos.stream().map(MenuPermissionVO::new).toList();
     }
 
     /**
@@ -51,8 +98,37 @@ public class PermissionServiceImpl implements PermissionService {
      * @return
      */
     @Override
+    @Cacheable(key = "#root.method.name")
     public List<MenuPermissionVO> listPermissions() {
-        return permissionRepository.list();
+        // 一级菜单
+        List<MenuPO> menu1stPoList = menuRepository.selectByLevel(1);
+        List<Menu1stDTO> menu1stDtos = menu1stPoList.stream().map(Menu1stDTO::new).toList();
+
+        // 二级菜单
+        List<MenuPO> menu2ndPoList = menuRepository.selectByLevel(2);
+        List<Menu2ndDTO> menu2ndDtos = menu2ndPoList.stream().map(Menu2ndDTO::new).toList();
+
+        // 权限
+        List<PermissionVO> permissionVoList = permissionRepository.list();
+        List<PermissionDTO> permissionBos = permissionVoList.stream().map(PermissionDTO::new).toList();
+
+        for (Menu2ndDTO menu2ndDto : menu2ndDtos) {
+            for (PermissionDTO permissionDto : permissionBos) {
+                if (menu2ndDto.getId().equals(permissionDto.getMenuId())) {
+                    menu2ndDto.getChildren().add(permissionDto);
+                }
+            }
+        }
+
+        for (Menu1stDTO menu1stDto : menu1stDtos) {
+            for(Menu2ndDTO menu2ndDto : menu2ndDtos) {
+                if (menu1stDto.getId().equals(menu2ndDto.getParentId())) {
+                    menu1stDto.getChildren().add(menu2ndDto);
+                }
+            }
+        }
+
+        return menu1stDtos.stream().map(MenuPermissionVO::new).toList();
     }
 
     /**
@@ -63,6 +139,7 @@ public class PermissionServiceImpl implements PermissionService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(cacheNames = "permission", key = "'list'")
     public PermissionVO addPermission(PermissionAO permissionAo) {
         // insert permission
         PermissionPO permissionPo = permissionAo.convertToPo();
@@ -81,6 +158,7 @@ public class PermissionServiceImpl implements PermissionService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(cacheNames = "permission", allEntries = true)
     public PermissionVO editPermission(PermissionAO permissionAo) {
         // update permission
         PermissionPO permissionPo = permissionAo.convertToPo();
@@ -100,6 +178,7 @@ public class PermissionServiceImpl implements PermissionService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(cacheNames = "permission", allEntries = true)
     public void deletePermission(String id) {
         // 查询当前权限是否正在被用户使用
         boolean beingUsed = permissionRepository.isBeingUsed(id);

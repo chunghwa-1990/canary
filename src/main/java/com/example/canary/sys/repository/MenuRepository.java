@@ -70,4 +70,20 @@ public interface MenuRepository {
      * @return
      */
     List<MenuPO> selectByParentId(String parentId);
+
+    /**
+     * 根据权限id 查询菜单
+     *
+     * @param permissionIds
+     * @return
+     */
+    List<MenuPO> selectByPermissionIds(List<String> permissionIds);
+
+    /**
+     * 根据id 查询菜单
+     *
+     * @param ids
+     * @return
+     */
+    List<MenuPO> selectByIds(List<String> ids);
 }

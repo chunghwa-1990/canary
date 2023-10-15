@@ -13,6 +13,7 @@ import com.example.canary.sys.repository.UserRoleRepository;
 import com.example.canary.util.PageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -59,6 +60,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(cacheNames = "permission", allEntries = true)
     public RoleVO addRole(RoleAO roleAo) {
         // insert role
         RolePO rolePo = roleAo.convertToPo();
@@ -79,6 +81,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(cacheNames = "permission", allEntries = true)
     public RoleVO editRole(RoleAO roleAo) {
         // update role
         RolePO rolePo = roleAo.convertToPo();
@@ -100,6 +103,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(cacheNames = "permission", allEntries = true)
     public void deleteRole(String id) {
         // 查询角色是否正在被用户使用
         boolean beingUsed = roleRepository.isBeingUsed(id);

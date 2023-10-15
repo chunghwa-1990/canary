@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.canary.sys.entity.UserRolePO;
 import com.example.canary.sys.mapper.UserRoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,7 +38,6 @@ public class UserRoleRepositoryImpl implements UserRoleRepository{
      * @return
      */
     @Override
-    @CacheEvict(cacheNames = "permission", key = "'selectByUserId:' + #list[0].userId")
     public int batchInsert(List<UserRolePO> list) {
         return userRoleMapper.batchInsert(list);
     }
@@ -51,7 +49,6 @@ public class UserRoleRepositoryImpl implements UserRoleRepository{
      * @return
      */
     @Override
-    @CacheEvict(cacheNames = "permission", key = "'selectByUserId:' + #userId")
     public int deleteByUserId(String userId) {
         return userRoleMapper.deleteByUserId(userId);
     }
@@ -63,7 +60,6 @@ public class UserRoleRepositoryImpl implements UserRoleRepository{
      * @return
      */
     @Override
-    @CacheEvict(cacheNames = "permission", allEntries = true)
     public int deleteByRoleId(String roleId) {
         return userRoleMapper.deleteByRoleId(roleId);
     }

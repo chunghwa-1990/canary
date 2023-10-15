@@ -11,6 +11,7 @@ import com.example.canary.sys.repository.MenuPermissionRepository;
 import com.example.canary.sys.repository.MenuRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -51,6 +52,7 @@ public class MenuServiceImpl implements MenuService {
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = "permission", key = "'list'")
     public MenuVO addMenu(MenuAO menuAo) {
         MenuPO menuPo = menuAo.convertToPo();
         menuRepository.insert(menuPo);
@@ -64,6 +66,7 @@ public class MenuServiceImpl implements MenuService {
      * @return
      */
     @Override
+    @CacheEvict(cacheNames = "permission", allEntries = true)
     public MenuVO editMenu(MenuAO menuAo) {
         MenuPO menuPo = menuAo.convertToPo();
         menuRepository.update(menuPo);
@@ -78,6 +81,7 @@ public class MenuServiceImpl implements MenuService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(cacheNames = "permission", allEntries = true)
     public void deleteMenu(String id) {
         MenuPO menuPo = menuRepository.selectById(id);
         if (menuPo == null) {

@@ -1,7 +1,9 @@
 package com.example.canary.sys.repository;
 
 import com.example.canary.sys.entity.MenuPermissionVO;
+import com.example.canary.sys.entity.PermissionDTO;
 import com.example.canary.sys.entity.PermissionPO;
+import com.example.canary.sys.entity.PermissionVO;
 
 import java.util.List;
 
@@ -59,12 +61,12 @@ public interface PermissionRepository {
      * @param userId
      * @return
      */
-    List<MenuPermissionVO> selectByUserId(String userId);
+    List<PermissionDTO> selectByUserId(String userId);
 
     /**
      * list
      *
      * @return
      */
-    List<MenuPermissionVO> list();
+    List<PermissionVO> list();
 }

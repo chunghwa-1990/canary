@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.canary.sys.entity.MenuPermissionPO;
 import com.example.canary.sys.mapper.MenuPermissionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +27,6 @@ public class MenuPermissionRepositoryImpl implements MenuPermissionRepository {
      * @return
      */
     @Override
-    @CacheEvict(cacheNames = "permission", key = "'list'")
     public int insert(MenuPermissionPO menuPermissionPo) {
         return menuPermissionMapper.insert(menuPermissionPo);
     }
@@ -40,7 +38,6 @@ public class MenuPermissionRepositoryImpl implements MenuPermissionRepository {
      * @return
      */
     @Override
-    @CacheEvict(cacheNames = "permission", allEntries = true)
     public int deleteByPermissionId(String permissionId) {
         return menuPermissionMapper.deleteByPermissionId(permissionId);
     }

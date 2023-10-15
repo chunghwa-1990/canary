@@ -1,21 +1,13 @@
 package com.example.canary.sys.repository;
 
-import com.example.canary.sys.entity.Menu1stDTO;
-import com.example.canary.sys.entity.Menu2ndDTO;
-import com.example.canary.sys.entity.MenuPO;
-import com.example.canary.sys.entity.MenuPermissionVO;
 import com.example.canary.sys.entity.PermissionDTO;
 import com.example.canary.sys.entity.PermissionPO;
 import com.example.canary.sys.entity.PermissionVO;
-import com.example.canary.sys.mapper.MenuMapper;
 import com.example.canary.sys.mapper.PermissionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,14 +17,7 @@ import java.util.List;
  * @since 1.0
  */
 @Service
-@CacheConfig(cacheNames = "permission")
 public class PermissionRepositoryImpl implements PermissionRepository {
-
-    @Autowired
-    private MenuRepository menuRepository;
-
-    @Autowired
-    private MenuMapper menuMapper;
 
     @Autowired
     private PermissionMapper permissionMapper;
@@ -99,41 +84,8 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      * @return
      */
     @Override
-    @Cacheable(key = "#root.method.name + ':' + #p0")
-    public List<MenuPermissionVO> selectByUserId(String userId) {
-        // 权限
-        List<PermissionDTO> permissionDtos = permissionMapper.selectByUserId(userId);
-        if (CollectionUtils.isEmpty(permissionDtos)) {
-            return Collections.emptyList();
-        }
-        List<String> permissionIds = permissionDtos.stream().map(PermissionDTO::getId).toList();
-
-        // 二级菜单
-        List<MenuPO> menu2ndPoList = menuMapper.selectByPermissionIds(permissionIds);
-        List<Menu2ndDTO> menu2ndDtos = menu2ndPoList.stream().map(Menu2ndDTO::new).toList();
-        List<String> menu1stIds = menu2ndPoList.stream().map(MenuPO::getParentId).toList();
-
-        // 一级菜单
-        List<MenuPO> menu1stPoList = menuMapper.selectByIds(menu1stIds);
-        List<Menu1stDTO> menu1stDtos = menu1stPoList.stream().map(Menu1stDTO::new).toList();
-
-        for (Menu2ndDTO menu2ndDto : menu2ndDtos) {
-            for (PermissionDTO permissionDto : permissionDtos) {
-                if (menu2ndDto.getId().equals(permissionDto.getMenuId())) {
-                    menu2ndDto.getChildren().add(permissionDto);
-                }
-            }
-        }
-
-        for (Menu1stDTO menu1stDto : menu1stDtos) {
-            for(Menu2ndDTO menu2ndDto : menu2ndDtos) {
-                if (menu1stDto.getId().equals(menu2ndDto.getParentId())) {
-                    menu1stDto.getChildren().add(menu2ndDto);
-                }
-            }
-        }
-
-        return menu1stDtos.stream().map(MenuPermissionVO::new).toList();
+    public List<PermissionDTO> selectByUserId(String userId) {
+        return permissionMapper.selectByUserId(userId);
     }
 
     /**
@@ -142,36 +94,7 @@ public class PermissionRepositoryImpl implements PermissionRepository {
      * @return
      */
     @Override
-    @Cacheable(key = "#root.method.name")
-    public List<MenuPermissionVO> list() {
-        // 一级菜单
-        List<MenuPO> menu1stPoList = menuRepository.selectByLevel(1);
-        List<Menu1stDTO> menu1stDtos = menu1stPoList.stream().map(Menu1stDTO::new).toList();
-
-        // 二级菜单
-        List<MenuPO> menu2ndPoList = menuRepository.selectByLevel(2);
-        List<Menu2ndDTO> menu2ndDtos = menu2ndPoList.stream().map(Menu2ndDTO::new).toList();
-
-        // 权限
-        List<PermissionVO> permissionVoList = permissionMapper.list();
-        List<PermissionDTO> permissionBos = permissionVoList.stream().map(PermissionDTO::new).toList();
-
-        for (Menu2ndDTO menu2ndDto : menu2ndDtos) {
-            for (PermissionDTO permissionDto : permissionBos) {
-                if (menu2ndDto.getId().equals(permissionDto.getMenuId())) {
-                    menu2ndDto.getChildren().add(permissionDto);
-                }
-            }
-        }
-
-        for (Menu1stDTO menu1stDto : menu1stDtos) {
-            for(Menu2ndDTO menu2ndDto : menu2ndDtos) {
-                if (menu1stDto.getId().equals(menu2ndDto.getParentId())) {
-                    menu1stDto.getChildren().add(menu2ndDto);
-                }
-            }
-        }
-
-        return menu1stDtos.stream().map(MenuPermissionVO::new).toList();
+    public List<PermissionVO> list() {
+        return permissionMapper.list();
     }
 }
