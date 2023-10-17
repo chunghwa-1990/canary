@@ -2,6 +2,7 @@ package com.example.canary.sys.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.canary.sys.entity.UserPO;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
  * @since 1.0
  * @author zhaohongliang
  */
+// @Mapper
 @Repository
 public interface UserMapper extends BaseMapper<UserPO> {
 
