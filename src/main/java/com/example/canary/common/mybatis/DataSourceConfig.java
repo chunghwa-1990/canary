@@ -31,7 +31,6 @@ import java.util.Map;
 @Configuration
 @EnableConfigurationProperties
 @MapperScan(value = "com.example.canary.*.mapper", sqlSessionFactoryRef = "sqlSessionFactory")
-// @AutoConfigureAfter(MybatisPlusAutoConfiguration.class)
 public class DataSourceConfig {
 
     /**
