@@ -3,6 +3,9 @@ package com.example.canary.common.mybatis;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 数据源
  *
@@ -32,5 +35,12 @@ public enum ReadWriteEnum {
      * key
      */
     private final String key;
+
+    public static List<ReadWriteEnum> getSlaveValues() {
+        List<ReadWriteEnum> slaveValues = new ArrayList<>();
+        slaveValues.add(SLAVE1);
+        slaveValues.add(SLAVE2);
+        return slaveValues;
+    }
 
 }

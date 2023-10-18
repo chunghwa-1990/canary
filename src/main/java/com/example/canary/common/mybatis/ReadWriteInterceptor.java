@@ -14,6 +14,8 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * 拦截器动态切换数据源
  *
@@ -28,17 +30,21 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 })
 public class ReadWriteInterceptor implements Interceptor {
 
+    private AtomicInteger index = new AtomicInteger(0);
+
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
 
-        // boolean isMaster = mappedStatement.getId().toLowerCase(Locale.ENGLISH).contains(ReadWriteEnum.MASTER.getKey())
-
         MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
+        // boolean isMaster = mappedStatement.getId().toLowerCase(Locale.ENGLISH).contains(ReadWriteEnum.MASTER.getKey())
         boolean synchronizationActive = TransactionSynchronizationManager.isSynchronizationActive();
+        // 当前是否处于事务同步活动状态
         if (!synchronizationActive) {
             if (mappedStatement.getSqlCommandType().equals(SqlCommandType.SELECT)) {
                 // 负载均衡策略
-                DataSourceContextHolder.setDataSourceKey(ReadWriteEnum.SLAVE1);
+                int currentIndex = Math.abs(index.getAndIncrement() % 2);
+                ReadWriteEnum slaveKey = ReadWriteEnum.getSlaveValues().get(currentIndex);
+                DataSourceContextHolder.setDataSourceKey(slaveKey);
             } else {
                 DataSourceContextHolder.setDataSourceKey(ReadWriteEnum.MASTER);
             }
@@ -49,6 +55,11 @@ public class ReadWriteInterceptor implements Interceptor {
         try {
             return invocation.proceed();
         } finally {
+            // reset index
+            if (index.get() == Integer.MAX_VALUE) {
+                index = new AtomicInteger(0);
+            }
+            // clear
             DataSourceContextHolder.clearDataSourceKey();
         }
     }

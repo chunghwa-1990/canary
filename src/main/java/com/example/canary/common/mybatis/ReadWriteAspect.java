@@ -6,6 +6,8 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * 读写分离数据源AOP切面
  *
@@ -28,7 +30,6 @@ public class ReadWriteAspect {
     @Around("@annotation(readOnly)")
     public Object proceed(ProceedingJoinPoint proceedingJoinPoint, ReadOnly readOnly) throws Throwable {
         if (readOnly.value()) {
-            // 负载均衡策略
             DataSourceContextHolder.setDataSourceKey(ReadWriteEnum.SLAVE1);
         } else {
             DataSourceContextHolder.setDataSourceKey(ReadWriteEnum.MASTER);
