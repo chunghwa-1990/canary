@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum DataSourceEnum {
+public enum ReadWriteEnum {
 
     /**
      * master

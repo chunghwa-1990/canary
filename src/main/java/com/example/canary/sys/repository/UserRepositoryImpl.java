@@ -5,9 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.canary.common.enums.StatusEnum;
 import com.example.canary.sys.entity.UserPO;
 import com.example.canary.sys.entity.UserQuery;
-import com.example.canary.sys.entity.UserVO;
 import com.example.canary.sys.mapper.UserMapper;
-import com.example.canary.util.PageUtils;
 import com.example.canary.util.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +13,6 @@ import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 /**
  * user

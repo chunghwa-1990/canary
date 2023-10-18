@@ -80,9 +80,9 @@ public class DataSourceConfig {
                                                        @Qualifier("slave1DataSource") DataSource slave1DataSource,
                                                        @Qualifier("slave2DataSource") DataSource slave2DataSource) {
         Map<Object, Object> targetDataSources = new HashMap<>();
-        targetDataSources.put(DataSourceEnum.MASTER, masterDataSource);
-        targetDataSources.put(DataSourceEnum.SLAVE1, slave1DataSource);
-        targetDataSources.put(DataSourceEnum.SLAVE2, slave2DataSource);
+        targetDataSources.put(ReadWriteEnum.MASTER, masterDataSource);
+        targetDataSources.put(ReadWriteEnum.SLAVE1, slave1DataSource);
+        targetDataSources.put(ReadWriteEnum.SLAVE2, slave2DataSource);
         DynamicRoutingDataSource routingDataSource = new DynamicRoutingDataSource();
         routingDataSource.setTargetDataSources(targetDataSources);
         routingDataSource.setDefaultTargetDataSource(masterDataSource);
@@ -94,7 +94,7 @@ public class DataSourceConfig {
      *
      * @param dynamicDataSource
      * @param mybatisPlusInterceptor
-     * @param dataSourceInterceptor
+     * @param readWriteInterceptor
      * @param mybatisPlusProperties
      * @return
      * @throws Exception
@@ -102,7 +102,7 @@ public class DataSourceConfig {
     @Bean(name = "sqlSessionFactory")
     public SqlSessionFactory sqlSessionFactory(@Qualifier("dynamicRoutingDataSource") DataSource dynamicDataSource,
                                                @Qualifier("mybatisPlusInterceptor") MybatisPlusInterceptor mybatisPlusInterceptor,
-                                               @Qualifier("dataSourceInterceptor") DataSourceInterceptor dataSourceInterceptor,
+                                               @Qualifier("readWriteInterceptor") ReadWriteInterceptor readWriteInterceptor,
                                                MybatisPlusProperties mybatisPlusProperties) throws Exception {
         // mybatis
         // SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
@@ -116,7 +116,7 @@ public class DataSourceConfig {
         sessionFactoryBean.setConfiguration(mybatisPlusProperties.getConfiguration());
         sessionFactoryBean.setGlobalConfig(mybatisPlusProperties.getGlobalConfig());
         sessionFactoryBean.setTypeAliasesPackage(mybatisPlusProperties.getTypeAliasesPackage());
-        sessionFactoryBean.setPlugins(mybatisPlusInterceptor, dataSourceInterceptor);
+        sessionFactoryBean.setPlugins(mybatisPlusInterceptor, readWriteInterceptor);
         return sessionFactoryBean.getObject();
     }
 
@@ -158,9 +158,9 @@ public class DataSourceConfig {
      *
      * @return
      */
-    @Bean("dataSourceInterceptor")
-    public DataSourceInterceptor dataSourceInterceptor() {
-        return new DataSourceInterceptor();
+    @Bean("readWriteInterceptor")
+    public ReadWriteInterceptor dataSourceInterceptor() {
+        return new ReadWriteInterceptor();
     }
 
     /**

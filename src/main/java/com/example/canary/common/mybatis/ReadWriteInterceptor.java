@@ -1,5 +1,6 @@
 package com.example.canary.common.mybatis;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
@@ -19,29 +20,30 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  * @author zhaohongliang 2023-10-16 22:39
  * @since 1.0
  */
+@Slf4j
 @Intercepts({
     @Signature(type = Executor.class, method = "update", args = { MappedStatement.class, Object.class }),
     @Signature(type = Executor.class, method = "query", args = { MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class }),
     @Signature(type = Executor.class, method = "query", args = { MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class })
 })
-public class DataSourceInterceptor implements Interceptor {
+public class ReadWriteInterceptor implements Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
 
-        // boolean isMaster = mappedStatement.getId().toLowerCase(Locale.ENGLISH).contains(DataSourceEnum.MASTER.getKey())
+        // boolean isMaster = mappedStatement.getId().toLowerCase(Locale.ENGLISH).contains(ReadWriteEnum.MASTER.getKey())
 
         MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
         boolean synchronizationActive = TransactionSynchronizationManager.isSynchronizationActive();
-
         if (!synchronizationActive) {
             if (mappedStatement.getSqlCommandType().equals(SqlCommandType.SELECT)) {
-                DataSourceContextHolder.setDataSourceKey(DataSourceEnum.SLAVE1);
+                // 负载均衡策略
+                DataSourceContextHolder.setDataSourceKey(ReadWriteEnum.SLAVE1);
             } else {
-                DataSourceContextHolder.setDataSourceKey(DataSourceEnum.MASTER);
+                DataSourceContextHolder.setDataSourceKey(ReadWriteEnum.MASTER);
             }
         } else {
-            DataSourceContextHolder.setDataSourceKey(DataSourceEnum.MASTER);
+            DataSourceContextHolder.setDataSourceKey(ReadWriteEnum.MASTER);
         }
 
         try {

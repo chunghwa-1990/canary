@@ -10,13 +10,13 @@ public class DataSourceContextHolder {
 
     private DataSourceContextHolder() {}
 
-    private static final ThreadLocal<DataSourceEnum> CONTEXT_HOLDER = new ThreadLocal<>();
+    private static final ThreadLocal<ReadWriteEnum> CONTEXT_HOLDER = new ThreadLocal<>();
 
-    public static void setDataSourceKey(DataSourceEnum dataSourceKey) {
+    public static void setDataSourceKey(ReadWriteEnum dataSourceKey) {
         CONTEXT_HOLDER.set(dataSourceKey);
     }
 
-    public static DataSourceEnum getDataSourceKey() {
+    public static ReadWriteEnum getDataSourceKey() {
         return CONTEXT_HOLDER.get();
     }
 
