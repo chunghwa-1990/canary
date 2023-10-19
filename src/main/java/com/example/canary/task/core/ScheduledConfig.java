@@ -36,7 +36,7 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 @EnableAsync
 @Configuration
 @EnableScheduling
-@EnableConfigurationProperties({TaskProperties.class, TaskSchedulingProperties.class})
+@EnableConfigurationProperties({ TaskProperties.class })
 public class ScheduledConfig implements SchedulingConfigurer {
 
     @Resource
