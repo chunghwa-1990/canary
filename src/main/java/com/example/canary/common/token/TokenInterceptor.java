@@ -113,7 +113,7 @@ public class TokenInterceptor implements HandlerInterceptor {
             writer.write(objectMapper.writeValueAsString(resultEntity));
             writer.flush();
         } catch (IOException e) {
-            log.error("response异常:" + e);
+            log.error("response异常，异常信息：" + e);
         }
     }
 }

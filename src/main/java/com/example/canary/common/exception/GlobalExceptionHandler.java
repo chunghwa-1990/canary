@@ -2,6 +2,7 @@ package com.example.canary.common.exception;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -206,6 +207,17 @@ public class GlobalExceptionHandler {
             String maxSize = ex.getCause().getCause().getMessage().split("maximum permitted size of ")[1];
             return ResultEntity.fail("文件不能超过" + maxSize);
         }
+    }
+
+    /**
+     * myBatisSystemExceptionHandler
+     *
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(value = MyBatisSystemException.class)
+    public ResultEntity<Object> myBatisSystemExceptionHandler(MyBatisSystemException ex) {
+        return ResultEntity.fail(ResultCodeEnum.MYSQL_CONNECTION_REFUSED);
     }
 
     // @ResponseStatus(HttpStatus.FORBIDDEN)

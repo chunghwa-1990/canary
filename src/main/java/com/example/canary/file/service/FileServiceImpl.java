@@ -106,7 +106,7 @@ public class FileServiceImpl implements FileService {
                 sha256Hex = DigesUtils.sha256DigestAsHex(newFile);
             }
         } catch (IOException | NoSuchAlgorithmException e) {
-            log.error("计算文件的SHA256/MD5摘要发生异常:" + e.getMessage());
+            log.error("计算文件的SHA256/MD5摘要发生异常，异常信息：" + e.getMessage());
             throw new BusinessException("计算文件的SHA256/MD5摘要发生异常，请稍后再试");
         }
 

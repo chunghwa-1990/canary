@@ -56,7 +56,7 @@ public class BusinessTask extends AbstractTask {
         try {
             method.invoke(object);
         } catch (Exception e) {
-            log.error("{} 执行失败,异常信息：{}", super.getTaskName(), e.getMessage());
+            log.error("{} 执行失败，异常信息：{}", super.getTaskName(), e.getMessage());
         }
     }
 }

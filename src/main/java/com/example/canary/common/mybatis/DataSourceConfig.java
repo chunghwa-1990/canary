@@ -158,10 +158,10 @@ public class DataSourceConfig {
      *
      * @return
      */
-    @Bean("readWriteInterceptor")
-    public ReadWriteInterceptor dataSourceInterceptor() {
-        return new ReadWriteInterceptor();
-    }
+    // @Bean("readWriteInterceptor")
+    // public ReadWriteInterceptor dataSourceInterceptor() {
+    //     return new ReadWriteInterceptor();
+    // }
 
     /**
      * master jdbc template

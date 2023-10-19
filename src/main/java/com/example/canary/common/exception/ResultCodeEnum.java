@@ -55,8 +55,12 @@ public enum ResultCodeEnum implements ErrorEnum {
     METHOD_NOT_ALLOWED(405, "method not allowed"),
 
     // token
-    TOKEN_ERROR(401, "token error or expired");
+    TOKEN_ERROR(401, "token error or expired"),
 
+    /**
+     * 通信故障，连接失败
+     */
+    MYSQL_CONNECTION_REFUSED(500, "communications link failure, connection refused");
 
     /**
      * 状态码
