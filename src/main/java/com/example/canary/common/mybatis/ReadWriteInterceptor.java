@@ -49,7 +49,7 @@ public class ReadWriteInterceptor implements Interceptor {
         // boolean isMaster = mappedStatement.getId().toLowerCase(Locale.ENGLISH).contains(DataSourceEnum.MASTER.getKey())
         boolean synchronizationActive = TransactionSynchronizationManager.isSynchronizationActive();
         // 获取写入操作数据源 key
-        DataSourceEnum writeDataSourceKey = getWriteDataSourceKey();
+        // DataSourceEnum writeDataSourceKey = getWriteDataSourceKey();
 
         // 当前是否处于事务同步活动状态
         if (!synchronizationActive) {
@@ -59,10 +59,10 @@ public class ReadWriteInterceptor implements Interceptor {
                 DataSourceEnum slaveKey = DataSourceEnum.getSlaveValues().get(currentIndex);
                 DataSourceContextHolder.setDataSourceKey(slaveKey);
             } else {
-                DataSourceContextHolder.setDataSourceKey(writeDataSourceKey);
+                DataSourceContextHolder.setDataSourceKey(DataSourceEnum.MASTER);
             }
         } else {
-            DataSourceContextHolder.setDataSourceKey(writeDataSourceKey);
+            DataSourceContextHolder.setDataSourceKey(DataSourceEnum.MASTER);
         }
 
         try {
