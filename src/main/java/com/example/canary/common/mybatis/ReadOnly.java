@@ -8,10 +8,10 @@ import java.lang.annotation.Target;
 /**
  * 只读
  *
- * @author zhaohongliang 2023-10-18 01:27
+ * @author zhaohongliang 2023-10-20 09:52
  * @since 1.0
  */
-@Target(ElementType.METHOD)
+@Target({ ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ReadOnly {
 

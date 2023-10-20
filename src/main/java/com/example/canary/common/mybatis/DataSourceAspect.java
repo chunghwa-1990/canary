@@ -22,6 +22,30 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataSourceAspect {
 
+    /**
+     * 在 @ReadOnly 方法执行执行前后操作数据源
+     *
+     * @param proceedingJoinPoint
+     * @param dataSource
+     * @return
+     * @throws Throwable
+     */
+    @Around("@annotation(readOnly)")
+    public Object proceed(ProceedingJoinPoint proceedingJoinPoint, ReadOnly readOnly) throws Throwable {
+        if (readOnly.value()) {
+            DataSourceContextHolder.setDataSourceKey(DataSourceEnum.SLAVE1);
+        } else {
+            DataSourceContextHolder.setDataSourceKey(DataSourceEnum.MASTER);
+        }
+
+        try {
+            // 执行目标方法
+            return proceedingJoinPoint.proceed();
+        } finally {
+            DataSourceContextHolder.clearDataSourceKey();
+        }
+    }
+
 
     /**
      * 切点
@@ -45,8 +69,8 @@ public class DataSourceAspect {
 
         if (dataSource != null) {
             // 数据源名称
-            ReadWriteEnum readWriteEnum = dataSource.value();
-            DataSourceContextHolder.setDataSourceKey(readWriteEnum);
+            DataSourceEnum dataSourceEnum = dataSource.value();
+            DataSourceContextHolder.setDataSourceKey(dataSourceEnum);
         }
         // 执行目标方法
         return proceedingJoinPoint.proceed();

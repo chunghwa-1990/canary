@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Getter
 @AllArgsConstructor
-public enum ReadWriteEnum {
+public enum DataSourceEnum {
 
     /**
      * master
@@ -36,8 +36,8 @@ public enum ReadWriteEnum {
      */
     private final String key;
 
-    public static List<ReadWriteEnum> getSlaveValues() {
-        List<ReadWriteEnum> slaveValues = new ArrayList<>();
+    public static List<DataSourceEnum> getSlaveValues() {
+        List<DataSourceEnum> slaveValues = new ArrayList<>();
         slaveValues.add(SLAVE1);
         slaveValues.add(SLAVE2);
         return slaveValues;

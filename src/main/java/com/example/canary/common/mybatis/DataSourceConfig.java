@@ -1,16 +1,12 @@
 package com.example.canary.common.mybatis;
 
-import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
-import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import com.zaxxer.hikari.pool.HikariPool;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -32,8 +28,8 @@ import java.util.Map;
  * @since 1.0
  */
 @Configuration
+@ConditionalOnProperty(value = "spring.datasource.cluster.enabled")
 @EnableConfigurationProperties
-@MapperScan(value = "com.example.canary.*.mapper", sqlSessionFactoryRef = "sqlSessionFactory")
 public class DataSourceConfig {
 
     /**
@@ -42,7 +38,7 @@ public class DataSourceConfig {
      * @return
      */
     @Bean(name = "masterDataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.master")
+    @ConfigurationProperties(prefix = "spring.datasource.cluster.master")
     public DataSource masterDataSource() {
         return DataSourceBuilder.create().type(HikariDataSource.class).build();
     }
@@ -53,7 +49,7 @@ public class DataSourceConfig {
      * @return
      */
     @Bean(name = "slave1DataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.slave1")
+    @ConfigurationProperties(prefix = "spring.datasource.cluster.slave1")
     public DataSource slave1DataSource() {
         return DataSourceBuilder.create().type(HikariDataSource.class).build();
     }
@@ -64,7 +60,7 @@ public class DataSourceConfig {
      * @return
      */
     @Bean(name = "slave2DataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.slave2")
+    @ConfigurationProperties(prefix = "spring.datasource.cluster.slave2")
     public DataSource slave2DataSource() {
         return DataSourceBuilder.create().type(HikariDataSource.class).build();
     }
@@ -83,9 +79,9 @@ public class DataSourceConfig {
                                                        @Qualifier("slave1DataSource") DataSource slave1DataSource,
                                                        @Qualifier("slave2DataSource") DataSource slave2DataSource) {
         Map<Object, Object> targetDataSources = new HashMap<>();
-        targetDataSources.put(ReadWriteEnum.MASTER, masterDataSource);
-        targetDataSources.put(ReadWriteEnum.SLAVE1, slave1DataSource);
-        targetDataSources.put(ReadWriteEnum.SLAVE2, slave2DataSource);
+        targetDataSources.put(DataSourceEnum.MASTER, masterDataSource);
+        targetDataSources.put(DataSourceEnum.SLAVE1, slave1DataSource);
+        targetDataSources.put(DataSourceEnum.SLAVE2, slave2DataSource);
         DynamicRoutingDataSource routingDataSource = new DynamicRoutingDataSource();
         routingDataSource.setTargetDataSources(targetDataSources);
         routingDataSource.setDefaultTargetDataSource(masterDataSource);
@@ -133,38 +129,6 @@ public class DataSourceConfig {
     public DataSourceTransactionManager transactionManager(@Qualifier("dynamicRoutingDataSource") DataSource dynamicDataSource) {
         return new DataSourceTransactionManager(dynamicDataSource);
     }
-
-    /**
-     * mybati-plus 拦截器并设置分页
-     *
-     * @return
-     */
-    @Bean("mybatisPlusInterceptor")
-    public MybatisPlusInterceptor mybatisPlusInterceptor() {
-        PaginationInnerInterceptor paginationInnerInterceptor = new PaginationInnerInterceptor();
-        // 溢出总页数后是否进行处理，默认 false 不处理
-        paginationInnerInterceptor.setOverflow(false);
-        // 单页分页条数限制，默认无限制，小于0则为无限制
-        paginationInnerInterceptor.setMaxLimit(-1L);
-        // 开启 count 的 join 优化,只针对部分 left join
-        paginationInnerInterceptor.setOptimizeJoin(true);
-        // 数据库类型
-        paginationInnerInterceptor.setDbType(DbType.MYSQL);
-
-        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        interceptor.addInnerInterceptor(paginationInnerInterceptor);
-        return interceptor;
-    }
-
-    /**
-     * 数据源拦截器
-     *
-     * @return
-     */
-    // @Bean("readWriteInterceptor")
-    // public ReadWriteInterceptor dataSourceInterceptor() {
-    //     return new ReadWriteInterceptor();
-    // }
 
     /**
      * master jdbc template

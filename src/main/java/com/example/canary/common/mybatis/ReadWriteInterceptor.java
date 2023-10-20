@@ -12,15 +12,13 @@ import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
-import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -35,16 +33,12 @@ import java.util.concurrent.atomic.AtomicInteger;
     @Signature(type = Executor.class, method = "query", args = { MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class }),
     @Signature(type = Executor.class, method = "query", args = { MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class })
 })
+@ConditionalOnProperty(value = "spring.datasource.cluster.enabled")
 @Component
 public class ReadWriteInterceptor implements Interceptor {
 
     @Autowired
-    @Qualifier("masterDataSource")
-    private DataSource masterDataSource;
-
-    @Autowired
-    @Qualifier("slave1DataSource")
-    private DataSource slave1DataSource;
+    private DataSourceHealthIndicator dataSourceHealthIndicator;
 
     private AtomicInteger index = new AtomicInteger(0);
 
@@ -52,17 +46,17 @@ public class ReadWriteInterceptor implements Interceptor {
     public Object intercept(Invocation invocation) throws Throwable {
 
         MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
-        // boolean isMaster = mappedStatement.getId().toLowerCase(Locale.ENGLISH).contains(ReadWriteEnum.MASTER.getKey())
+        // boolean isMaster = mappedStatement.getId().toLowerCase(Locale.ENGLISH).contains(DataSourceEnum.MASTER.getKey())
         boolean synchronizationActive = TransactionSynchronizationManager.isSynchronizationActive();
         // 获取写入操作数据源 key
-        ReadWriteEnum writeDataSourceKey = getWriteDataSourceKey();
+        DataSourceEnum writeDataSourceKey = getWriteDataSourceKey();
 
         // 当前是否处于事务同步活动状态
         if (!synchronizationActive) {
             if (mappedStatement.getSqlCommandType().equals(SqlCommandType.SELECT)) {
                 // 负载均衡策略
                 int currentIndex = Math.abs(index.getAndIncrement() % 2);
-                ReadWriteEnum slaveKey = ReadWriteEnum.getSlaveValues().get(currentIndex);
+                DataSourceEnum slaveKey = DataSourceEnum.getSlaveValues().get(currentIndex);
                 DataSourceContextHolder.setDataSourceKey(slaveKey);
             } else {
                 DataSourceContextHolder.setDataSourceKey(writeDataSourceKey);
@@ -88,37 +82,17 @@ public class ReadWriteInterceptor implements Interceptor {
      *
      * @return
      */
-    private ReadWriteEnum getWriteDataSourceKey() {
-        Connection masterConn = null;
-        Connection slave1Conn = null;
-        try {
-            masterConn = masterDataSource.getConnection();
-            slave1Conn = slave1DataSource.getConnection();
-            if (masterConn.isValid(5) && !slave1Conn.isValid(5)) {
-                return ReadWriteEnum.MASTER;
-            } else if (!masterConn.isValid(5) && slave1Conn.isValid(5)) {
-                return ReadWriteEnum.SLAVE1;
-            } else {
-                return ReadWriteEnum.MASTER;
-            }
-        } catch (SQLException e) {
-            log.error("数据源主备写入服务发生异常，异常信息：" + e.getMessage());
-            throw new MyBatisSystemException(e.getCause());
-        } finally {
-            if (masterConn != null) {
-                try {
-                    masterConn.close();
-                } catch (SQLException e) {
-                    log.error("关闭主库连接发生异常，异常信息：" + e.getMessage());
-                }
-            }
-            if (slave1Conn != null) {
-                try {
-                    slave1Conn.close();
-                } catch (SQLException e) {
-                    log.error("关闭备库连接发生异常，异常信息：" + e.getMessage());
-                }
-            }
+    private DataSourceEnum getWriteDataSourceKey() {
+        Health health = dataSourceHealthIndicator.health();
+        // 获取健康状态的详细信息
+        Map<String, Object> details = health.getDetails();
+        if ("not healthy".equals(details.get("master"))) {
+            // 主库不健康，选择备库
+            return DataSourceEnum.SLAVE1;
+        } else {
+            // 主库健康，选择主库
+            return DataSourceEnum.MASTER;
         }
     }
+
 }

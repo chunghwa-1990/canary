@@ -1,10 +1,11 @@
 spring:
   datasource:
-    master:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://localhost:3307/canary?characterEncoding=utf8&useLegacyDatetimeCode=false&serverTimezone=GMT%2b8
-      username: root
-      password: Pass!234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/canary?characterEncoding=utf8&useLegacyDatetimeCode=false&serverTimezone=GMT%2b8
+    username: root
+    password: Pass!234
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
       # 最小空闲连接数量
       minimum-idle: 5
       # 空闲连接存活最大时间，默认600000（10分钟
@@ -13,45 +14,7 @@ spring:
       maximum-pool-size: 20
       # 此属性控制从池返回的连接的默认自动提交行为,默认值：true
       auto-commit: true
-      pool-name: HikariPool-master
-      # 此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
-      max-lifetime: 1800000
-      # 数据库连接超时时间,默认30秒，即30000
-      connection-timeout: 30000
-      connection-test-query: SELECT 1
-    slave-1:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://localhost:3308/canary?characterEncoding=utf8&useLegacyDatetimeCode=false&serverTimezone=GMT%2b8
-      username: root
-      password: Pass!234
-      # 最小空闲连接数量
-      minimum-idle: 5
-      # 空闲连接存活最大时间，默认600000（10分钟
-      idle-timeout: 600000
-      # 连接池最大连接数，默认是10
-      maximum-pool-size: 20
-      # 此属性控制从池返回的连接的默认自动提交行为,默认值：true
-      auto-commit: true
-      pool-name: HikariPool-slave-1
-      # 此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
-      max-lifetime: 1800000
-      # 数据库连接超时时间,默认30秒，即30000
-      connection-timeout: 30000
-      connection-test-query: SELECT 1
-    slave-2:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://localhost:3309/canary?characterEncoding=utf8&useLegacyDatetimeCode=false&serverTimezone=GMT%2b8
-      username: root
-      password: Pass!234
-      # 最小空闲连接数量
-      minimum-idle: 5
-      # 空闲连接存活最大时间，默认600000（10分钟
-      idle-timeout: 600000
-      # 连接池最大连接数，默认是10
-      maximum-pool-size: 20
-      # 此属性控制从池返回的连接的默认自动提交行为,默认值：true
-      auto-commit: true
-      pool-name: HikariPool-slave-2
+      pool-name: CanaryHikariPool
       # 此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
       max-lifetime: 1800000
       # 数据库连接超时时间,默认30秒，即30000
