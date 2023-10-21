@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringJoiner;
 
 /**
  * token
@@ -66,6 +67,24 @@ public class TokenService {
                 .withClaim(TokenConstant.CLAIM_DATA, claim)
                 // sign
                 .sign(algorithm);
+    }
+
+    /**
+     * 创建 tokenkey
+     *
+     * @param subs
+     * @return
+     */
+    public String createTokenKey(String ... subs) {
+        if (subs == null || subs.length <= 0) {
+            throw new IllegalArgumentException("redis的key拼接异常");
+        }
+        StringJoiner joiner = new StringJoiner(":");
+        joiner.add("com.example.canary").add("token");
+        for (String sub : subs) {
+            joiner.add(sub);
+        }
+        return joiner.toString();
     }
 
 

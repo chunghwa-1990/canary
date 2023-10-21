@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -16,8 +17,9 @@ import java.sql.SQLException;
  * @since 1.0
  */
 @Slf4j
+@ConditionalOnProperty(value = "spring.datasource.cluster.enabled")
 @Component
-public class DataSourceHealthIndicator  implements HealthIndicator {
+public class DataSourceHealthIndicator implements HealthIndicator {
 
     @Autowired
     @Qualifier("masterDataSource")

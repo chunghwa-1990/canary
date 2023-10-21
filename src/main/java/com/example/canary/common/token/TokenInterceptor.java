@@ -56,8 +56,10 @@ public class TokenInterceptor implements HandlerInterceptor {
             return false;
         }
 
+        // token key
+        String tokenKey = tokenService.createTokenKey(userId);
         // 从redis获取token
-        Object object = redisService.get(userId);
+        Object object = redisService.get(tokenKey);
         if (object == null) {
             setResponse(response, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
             return false;

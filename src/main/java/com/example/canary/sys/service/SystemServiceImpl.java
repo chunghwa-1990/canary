@@ -64,8 +64,10 @@ public class SystemServiceImpl implements SystemService {
             throw new BusinessException("create token has error");
         }
 
+        // token key
+        String tokenKey = tokenService.createTokenKey(userPo.getId());
         // redis
-        redisService.set(userPo.getId(), token, tokenService.getTimeout());
+        redisService.set(tokenKey, token, tokenService.getTimeout());
         return new LoginVO(token);
     }
 
