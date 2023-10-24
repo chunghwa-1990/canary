@@ -1,11 +1,12 @@
 # canary
 
 - springboot 3.0
+- jwt token
+- redis
 - mybatis plus
 - mybatis
 - mysql
-- redis
-- jwt token
+- 一主二从读写分离
 
 #### 编译
 - maven
