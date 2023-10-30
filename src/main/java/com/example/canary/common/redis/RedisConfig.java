@@ -63,11 +63,19 @@ public class RedisConfig implements CachingConfigurer {
         return RedisBuild.create(redisTemplate).build();
     }
 
-
+    /**
+     * 配置缓存的序列化方式
+     *
+     * @param cacheProperties
+     * @return
+     */
     @Bean
     public RedisCacheConfiguration cacheConfiguration(CacheProperties cacheProperties) {
+        // json 序列化
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = JacksonUtils.getJackson2JsonRedisSerializer()
+        // 配置 序列化
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig().serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(JacksonUtils.getJackson2JsonRedisSerializer()));
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer));
 
         CacheProperties.Redis redisProperties = cacheProperties.getRedis();
         if (redisProperties.getTimeToLive() != null) {
@@ -86,6 +94,13 @@ public class RedisConfig implements CachingConfigurer {
 
     }
 
+    /**
+     * redis 缓存管理器
+     *
+     * @param redisConnectionFactory
+     * @param cacheProperties
+     * @return
+     */
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory, CacheProperties cacheProperties) {
         return RedisCacheManager.builder(redisConnectionFactory)
