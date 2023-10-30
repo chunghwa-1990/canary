@@ -1,5 +1,6 @@
 package com.example.canary.common.redis;
 
+import com.example.canary.util.JacksonUtils;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,8 +56,9 @@ public class RedisConfig implements CachingConfigurer {
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
         redisTemplate.setKeySerializer(stringRedisSerializer);
         redisTemplate.setHashKeySerializer(stringRedisSerializer);
-        redisTemplate.setValueSerializer(getJackson2JsonRedisSerializer());
-        redisTemplate.setHashValueSerializer(getJackson2JsonRedisSerializer());
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = JacksonUtils.getJackson2JsonRedisSerializer();
+        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
+        redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
@@ -78,7 +80,7 @@ public class RedisConfig implements CachingConfigurer {
     @Bean
     public RedisCacheConfiguration cacheConfiguration(CacheProperties cacheProperties) {
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig().serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(getJackson2JsonRedisSerializer()));
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(JacksonUtils.getJackson2JsonRedisSerializer()));
 
         CacheProperties.Redis redisProperties = cacheProperties.getRedis();
         if (redisProperties.getTimeToLive() != null) {
@@ -104,31 +106,5 @@ public class RedisConfig implements CachingConfigurer {
                 .transactionAware()
                 .build();
     }
-
-    /**
-     * json 序列化
-     *
-     * @return
-     */
-    private Jackson2JsonRedisSerializer<Object> getJackson2JsonRedisSerializer() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        // 设置 objectMapper 的访问权限
-        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        // 记录序列化之后的数据类型，方便反序列化，保留这行会报错：Unexpected token (VALUE_STRING)
-        // objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL);
-
-        // LocalDate 和 LocalDateTime 序列化
-        JavaTimeModule javaTimeModule = new JavaTimeModule();
-        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        // 关闭日期默认的格式化方式， 默认是UTC日期格式 yyyy-MM-dd ‘T’ HH:mm:ss.SSS
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.registerModule(javaTimeModule);
-
-        return new Jackson2JsonRedisSerializer<>(objectMapper, Object.class);
-    }
-
 
 }

@@ -6,7 +6,9 @@ import com.example.canary.common.context.CurrentUser;
 import com.example.canary.common.exception.ResultCodeEnum;
 import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.common.redis.RedisService;
+import com.example.canary.sys.entity.UserPO;
 import com.example.canary.sys.entity.UserVO;
+import com.example.canary.util.JacksonUtils;
 import com.example.canary.util.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Nonnull;
@@ -66,7 +68,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         }
 
         // 校验是否一致
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = JacksonUtils.getObjectMapper();
         String redisToken = objectMapper.convertValue(object, String.class);
         if (!token.equals(redisToken)) {
             setResponse(response, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
@@ -81,7 +83,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         }
 
         // user
-        UserVO userVo = objectMapper.readValue(claimStr, UserVO.class);
+        UserVO userVo = objectMapper.readValue(claimStr, UserPO.class).convertToVo();
         if (userVo == null) {
             setResponse(response, ResultEntity.fail(ResultCodeEnum.TOKEN_ERROR));
             return false;

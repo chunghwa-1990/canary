@@ -59,7 +59,7 @@ public class SystemServiceImpl implements SystemService {
 
         String token = null;
         try {
-            token = tokenService.createJwtToken(userPo.convertToVo());
+            token = tokenService.createJwtToken(userPo);
         } catch (JsonProcessingException e) {
             throw new BusinessException("create token has error");
         }

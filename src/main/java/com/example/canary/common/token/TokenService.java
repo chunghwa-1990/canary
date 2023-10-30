@@ -3,8 +3,17 @@ package com.example.canary.common.token;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.canary.sys.entity.UserBase;
+import com.example.canary.util.JacksonUtils;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +21,9 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
@@ -49,7 +61,7 @@ public class TokenService {
         // aud
         String audience = userBase.getId();
         // 载荷
-        String claim = new ObjectMapper().writeValueAsString(userBase);
+        String claim = JacksonUtils.getObjectMapper().writeValueAsString(userBase);
 
         // header
         Map<String, Object> header = new HashMap<>();
@@ -86,6 +98,5 @@ public class TokenService {
         }
         return joiner.toString();
     }
-
 
 }
