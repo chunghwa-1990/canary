@@ -72,7 +72,7 @@ public class RedisConfig implements CachingConfigurer {
     @Bean
     public RedisCacheConfiguration cacheConfiguration(CacheProperties cacheProperties) {
         // json 序列化
-        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = JacksonUtils.getJackson2JsonRedisSerializer()
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = JacksonUtils.getJackson2JsonRedisSerializer();
         // 配置 序列化
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig().serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer));
