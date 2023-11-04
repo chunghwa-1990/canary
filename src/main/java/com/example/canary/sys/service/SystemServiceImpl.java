@@ -68,7 +68,7 @@ public class SystemServiceImpl implements SystemService {
         String tokenKey = tokenService.createTokenKey(userPo.getId());
         // redis
         redisService.set(tokenKey, token, tokenService.getTimeout());
-        return new LoginVO(token);
+        return new LoginVO(token, tokenService.getTimeout().getSeconds());
     }
 
     /**

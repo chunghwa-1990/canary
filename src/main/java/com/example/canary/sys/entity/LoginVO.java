@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Duration;
 
 /**
  * login
@@ -25,4 +26,9 @@ public class LoginVO implements Serializable {
      * token
      */
     private String token;
+
+    /**
+     * 失效时间（单位：秒）
+     */
+    private Long expire;
 }
