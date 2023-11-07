@@ -20,6 +20,11 @@ $ mvn clean install -Dmaven.test.skip=true
 $ mvnd clean install -Dmaven.test.skip=true 
 ```
 #### 优雅停服
+- httpie
 ```powershell
 $ http post http://localhost:8080/actuator/shutdown
-
+```
+- curl
+```powershell
+$ curl -X post http://localhost:8080/actuator/shutdown
+```
