@@ -15,8 +15,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class FileRepositoryImpl implements FileRepository {
 
+    private final FileMapper fileMapper;
+
     @Autowired
-    private FileMapper fileMapper;
+    public FileRepositoryImpl(FileMapper fileMapper) {
+        this.fileMapper = fileMapper;
+    }
 
     /**
      * insert

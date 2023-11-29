@@ -35,12 +35,15 @@ import java.util.Optional;
 @Service
 public class FileServiceImpl implements FileService {
 
-    @Autowired
-    private MultipartProperties multipartProperties;
+    private final MultipartProperties multipartProperties;
+
+    private final FileRepository fileRepository;
 
     @Autowired
-    private FileRepository fileRepository;
-
+    public FileServiceImpl(MultipartProperties multipartProperties, FileRepository fileRepository) {
+        this.multipartProperties = multipartProperties;
+        this.fileRepository = fileRepository;
+    }
 
     /**
      * 文件上传

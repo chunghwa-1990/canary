@@ -1,7 +1,6 @@
 package com.example.canary.file.controller;
 
 import com.example.canary.common.api.ApiVersion;
-import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.file.entity.FileAO;
 import com.example.canary.file.entity.FileVO;
 import com.example.canary.file.service.FileService;
@@ -31,8 +30,12 @@ import java.io.IOException;
 @RequestMapping("/file")
 public class FileController {
 
+    private final FileService fileService;
+
     @Autowired
-    private FileService fileService;
+    public FileController(FileService fileService) {
+        this.fileService = fileService;
+    }
 
     /**
      * 文件上传
