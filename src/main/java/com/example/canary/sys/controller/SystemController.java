@@ -23,8 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/sys")
 public class SystemController {
 
+    private final SystemService systemService;
+
     @Autowired
-    private SystemService systemService;
+    public SystemController(SystemService systemService) {
+        this.systemService = systemService;
+    }
 
     /**
      * login

@@ -26,14 +26,18 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class SystemServiceImpl implements SystemService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    private final TokenService tokenService;
+
+    private final RedisService redisService;
 
     @Autowired
-    private TokenService tokenService;
-
-    @Autowired
-    private RedisService redisService;
+    public SystemServiceImpl(UserRepository userRepository, TokenService tokenService, RedisService redisService) {
+        this.userRepository = userRepository;
+        this.tokenService = tokenService;
+        this.redisService = redisService;
+    }
 
     /**
      * login
