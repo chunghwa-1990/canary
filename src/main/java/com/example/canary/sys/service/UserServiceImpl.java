@@ -30,11 +30,15 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    private final UserRoleRepository userRoleRepository;
 
     @Autowired
-    private UserRoleRepository userRoleRepository;
+    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository) {
+        this.userRepository = userRepository;
+        this.userRoleRepository = userRoleRepository;
+    }
 
     /**
      * query

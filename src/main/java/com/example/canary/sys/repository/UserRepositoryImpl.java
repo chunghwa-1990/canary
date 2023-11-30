@@ -23,8 +23,12 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class UserRepositoryImpl implements UserRepository {
 
+    private final UserMapper userMapper;
+
     @Autowired
-    private UserMapper userMapper;
+    public UserRepositoryImpl(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
 
     /**
      * 分页
