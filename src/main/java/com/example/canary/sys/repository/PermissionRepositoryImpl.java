@@ -19,8 +19,12 @@ import java.util.List;
 @Service
 public class PermissionRepositoryImpl implements PermissionRepository {
 
+    private final PermissionMapper permissionMapper;
+
     @Autowired
-    private PermissionMapper permissionMapper;
+    public PermissionRepositoryImpl(PermissionMapper permissionMapper) {
+        this.permissionMapper = permissionMapper;
+    }
 
     /**
      * insert

@@ -35,18 +35,22 @@ import java.util.List;
 @CacheConfig(cacheNames = "permission")
 public class PermissionServiceImpl implements PermissionService {
 
-    @Autowired
-    private MenuRepository menuRepository;
+    private final MenuRepository menuRepository;
+
+    private final PermissionRepository permissionRepository;
+
+    private final MenuPermissionRepository menuPermissionRepository;
+
+    private final RolePermissionRepository rolePermissionRepository;
 
     @Autowired
-    private PermissionRepository permissionRepository;
-
-    @Autowired
-    private MenuPermissionRepository menuPermissionRepository;
-
-    @Autowired
-    private RolePermissionRepository rolePermissionRepository;
-
+    public PermissionServiceImpl(MenuRepository menuRepository, PermissionRepository permissionRepository,
+                                 MenuPermissionRepository menuPermissionRepository, RolePermissionRepository rolePermissionRepository) {
+        this.menuRepository = menuRepository;
+        this.permissionRepository = permissionRepository;
+        this.menuPermissionRepository = menuPermissionRepository;
+        this.rolePermissionRepository = rolePermissionRepository;
+    }
 
     /**
      * 根据用户id 查询菜单和权限

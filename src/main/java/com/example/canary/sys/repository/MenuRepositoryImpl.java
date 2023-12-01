@@ -20,8 +20,12 @@ import java.util.List;
 @Service
 public class MenuRepositoryImpl implements MenuRepository {
 
+    private final MenuMapper menuMapper;
+
     @Autowired
-    private MenuMapper menuMapper;
+    public MenuRepositoryImpl(MenuMapper menuMapper) {
+        this.menuMapper = menuMapper;
+    }
 
     /**
      * pages

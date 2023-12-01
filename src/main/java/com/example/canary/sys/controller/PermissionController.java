@@ -31,8 +31,12 @@ import java.util.List;
 @RequestMapping("/sys/permission")
 public class PermissionController {
 
+    private final PermissionService permissionService;
+
     @Autowired
-    private PermissionService permissionService;
+    public PermissionController(PermissionService permissionService) {
+        this.permissionService = permissionService;
+    }
 
     /**
      * 根据用户id 查询菜单和权限

@@ -18,6 +18,7 @@ public class RolePermissionRepositoryImpl implements RolePermissionRepository {
 
     private final RolePermissionMapper rolePermissionMapper;
 
+    @Autowired
     public RolePermissionRepositoryImpl(RolePermissionMapper rolePermissionMapper) {
         this.rolePermissionMapper = rolePermissionMapper;
     }

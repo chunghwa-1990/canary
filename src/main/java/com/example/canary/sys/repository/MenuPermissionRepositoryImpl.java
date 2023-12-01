@@ -17,8 +17,12 @@ import java.util.List;
 @Service
 public class MenuPermissionRepositoryImpl implements MenuPermissionRepository {
 
+    private final MenuPermissionMapper menuPermissionMapper;
+
     @Autowired
-    private MenuPermissionMapper menuPermissionMapper;
+    public MenuPermissionRepositoryImpl(MenuPermissionMapper menuPermissionMapper) {
+        this.menuPermissionMapper = menuPermissionMapper;
+    }
 
     /**
      * insert
