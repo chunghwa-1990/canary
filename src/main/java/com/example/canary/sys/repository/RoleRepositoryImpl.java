@@ -23,6 +23,7 @@ public class RoleRepositoryImpl implements RoleRepository {
 
     private final RoleMapper roleMapper;
 
+    @Autowired
     public RoleRepositoryImpl(RoleMapper roleMapper) {
         this.roleMapper = roleMapper;
     }

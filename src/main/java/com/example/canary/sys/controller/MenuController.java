@@ -30,8 +30,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/sys/menu")
 public class MenuController {
 
-    @Autowired
-    private MenuService menuService;
+    private final MenuService menuService;
+
+    public MenuController(MenuService menuService) {
+        this.menuService = menuService;
+    }
 
     /**
      * pages

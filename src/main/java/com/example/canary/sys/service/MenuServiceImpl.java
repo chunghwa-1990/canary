@@ -28,11 +28,15 @@ import java.util.List;
 @Service
 public class MenuServiceImpl implements MenuService {
 
-    @Autowired
-    private MenuRepository menuRepository;
+    private final MenuRepository menuRepository;
+
+    private final MenuPermissionRepository menuPermissionRepository;
 
     @Autowired
-    private MenuPermissionRepository menuPermissionRepository;
+    public MenuServiceImpl(MenuRepository menuRepository, MenuPermissionRepository menuPermissionRepository) {
+        this.menuRepository = menuRepository;
+        this.menuPermissionRepository = menuPermissionRepository;
+    }
 
     /**
      * pages
