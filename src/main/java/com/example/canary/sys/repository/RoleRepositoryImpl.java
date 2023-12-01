@@ -21,8 +21,11 @@ import java.util.List;
 @Service
 public class RoleRepositoryImpl implements RoleRepository {
 
-    @Autowired
-    private RoleMapper roleMapper;
+    private final RoleMapper roleMapper;
+
+    public RoleRepositoryImpl(RoleMapper roleMapper) {
+        this.roleMapper = roleMapper;
+    }
 
     /**
      * page

@@ -30,14 +30,18 @@ import java.util.List;
 @Service
 public class RoleServiceImpl implements RoleService {
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
+
+    private final RolePermissionRepository rolePermissionRepository;
+
+    private final UserRoleRepository userRoleRepository;
 
     @Autowired
-    private RolePermissionRepository rolePermissionRepository;
-
-    @Autowired
-    private UserRoleRepository userRoleRepository;
+    public RoleServiceImpl(RoleRepository roleRepository, RolePermissionRepository rolePermissionRepository, UserRoleRepository userRoleRepository) {
+        this.roleRepository = roleRepository;
+        this.rolePermissionRepository = rolePermissionRepository;
+        this.userRoleRepository = userRoleRepository;
+    }
 
     /**
      * pages

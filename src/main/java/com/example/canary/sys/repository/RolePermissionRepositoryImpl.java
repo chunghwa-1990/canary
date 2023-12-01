@@ -16,8 +16,11 @@ import java.util.List;
 @Service
 public class RolePermissionRepositoryImpl implements RolePermissionRepository {
 
-    @Autowired
-    private RolePermissionMapper rolePermissionMapper;
+    private final RolePermissionMapper rolePermissionMapper;
+
+    public RolePermissionRepositoryImpl(RolePermissionMapper rolePermissionMapper) {
+        this.rolePermissionMapper = rolePermissionMapper;
+    }
 
     /**
      * insert

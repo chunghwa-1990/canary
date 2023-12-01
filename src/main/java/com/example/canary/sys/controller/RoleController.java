@@ -29,8 +29,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/sys/role")
 public class RoleController {
 
+    private final RoleService roleService;
+
     @Autowired
-    private RoleService roleService;
+    public RoleController(RoleService roleService) {
+        this.roleService = roleService;
+    }
 
     /**
      * pages
