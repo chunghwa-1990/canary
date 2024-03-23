@@ -5,8 +5,8 @@
 - redis 7.0
 - mybatis plus 3.5.3.1
 - mybatis 3.0
-- mysql 8.0
-- 一主二从读写分离
+- [mysql 集群](mysql.md)
+- [proxysql](proxysql.md)
 - 一主二从高可用（mha）
 说明：读写分离和高可用选择一种方案，local环境为高可用环境，其他为读写分离环境
 
