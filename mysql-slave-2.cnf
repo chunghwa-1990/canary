@@ -1,0 +1,32 @@
+[mysqld]
+
+server-id = 3
+# 启用二进制日志
+log_bin = mysql-bin
+# 将执行的二进制日志事件也记录到自己的二进制日志中，会增加从库写负载和二进制文件大小
+log_slave_updates = 1
+# 设置binlog格式 STATEMENT(同步SQL脚本) / ROW(同步行数据) / MIXED(混合同步)
+binlog_format = ROW
+
+# 考虑到后期故障切换，增加slave的中继日志
+relay-log = relay-log-bin
+# 中继日志索引文件
+relay-log-index = slave-relay-bin.index
+
+# 设置日志最长保留时间
+expire_logs_days = 30
+# 0-读写 1-只读
+read-only = 1
+
+# 设置忽略同步的数据库
+binlog-ignore-db=information_schema
+binlog-ignore-db=mysql
+binlog-ignore-db=performance_schema
+binlog-ignore-db=sys
+
+# 需要同步的数据库
+binlog-do-db=canary
+
+# 如果主服务器有多个网络接口，指定一个可访问的接口地址
+# bind-address = 192.168.0.30
+
