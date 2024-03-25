@@ -6,10 +6,10 @@ PROJECT="/Users/zhaohongliang/Github/canary"
 SQL="/Users/zhaohongliang/Desktop"
 
 # 命令行工具
-COMMAND_TO_DOCKER="docker"
-COMMAND_TO_MYSQL="mysql"
-COMMAND_TO_WGET="wget"
-COMMAND_TO_CURL="curl"
+COMMAND_DOCKER="docker"
+COMMAND_MYSQL="mysql"
+COMMAND_WGET="wget"
+COMMAND_CURL="curl"
 
 # 定义旋转的光标符号
 spinner="/-\|"
@@ -48,16 +48,16 @@ progress() {
 
 
 
-if !command -v $COMMAND_TO_DOCKER &> /dev/null
+if !command -v $COMMAND_DOCKER &> /dev/null
 then
-    echo "$COMMAND_TO_DOCKER 未安装，脚本中断执行"
+    echo "$COMMAND_DOCKER 未安装，脚本中断执行"
     exit 1
 fi
 
 # 检测mysql命令是否存在
-if !command -v $COMMAND_TO_MYSQL &> /dev/null
+if !command -v $COMMAND_MYSQL &> /dev/null
 then
-    echo "$COMMAND_TO_DOCKER 未安装，脚本中断执行"
+    echo "$COMMAND_DOCKER 未安装，脚本中断执行"
     exit 1
 fi
 
@@ -103,29 +103,32 @@ else
 fi
 
 MYSQL_HOME="$HOME/mysql"
-MYSQL_MASTER_CNF="$MYSQL_HOME/mysql-master/conf/my.cnf"
-MYSQL_SLAVE_1_CNF="$MYSQL_HOME/mysql-slave-1/conf/my.cnf"
-MYSQL_SLAVE_2_CNF="$MYSQL_HOME/mysql-slave-2/conf/my.cnf"
+MASTER_HOME="$MYSQL_HOME/mysql-master"
+MASTER_CNF="$MASTER_HOME/conf/my.cnf"
+SLAVE_1_HOME="$MYSQL_HOME/mysql-slave-1"
+SLAVE_1_CNF="$SLAVE_1_HOME/conf/my.cnf"
+SLAVE_2_HOME="$MYSQL_HOME/mysql-slave-2"
+SLAVE_2_CNF="$SLAVE_2_HOME/conf/my.cnf"
 
 if [ ! -d "$MYSQL_HOME" ]; then 
-    # wget -P $MYSQL_HOME/mysql-master/conf  https://github.com/hahapigs/canary/blob/main/mysql-master.cnf 
-    mkdir -p $MYSQL_HOME/mysql-master/conf
-    mkdir -p $MYSQL_HOME/mysql-slave-1/conf
-    mkdir -p $MYSQL_HOME/mysql-slave-2/conf
-    cp -f $PROJECT/mysql-master.cnf $HOME/mysql/mysql-master/conf
-    cp -f $PROJECT/mysql-slave-1.cnf $HOME/mysql/mysql-slave-1/conf
-    cp -f $PROJECT/mysql-slave-2.cnf $HOME/mysql/mysql-slave-2/conf
+    # wget -P $MASTER_HOME/conf  https://github.com/hahapigs/canary/blob/main/mysql-master.cnf 
+    mkdir -p $MASTER_HOME/conf
+    mkdir -p $SLAVE_1_HOME/conf
+    mkdir -p $SLAVE_2_HOME/conf
+    cp -f $PROJECT/mysql-master.cnf $MASTER_HOME/conf
+    cp -f $PROJECT/mysql-slave-1.cnf $SLAVE_1_HOME/conf
+    cp -f $PROJECT/mysql-slave-2.cnf $SLAVE_2_HOME/conf
 else
-    if [ ! -f "$MYSQL_MASTER_CNF" ]; then
-        # wget -P $HOME/mysql/mysql-master/conf  https://github.com/hahapigs/canary/blob/main/mysql-master.cnf 
-        mkdir -p $HOME/mysql/mysql-master/conf
-        cp -f $PROJECT/mysql-master.cnf $HOME/mysql/mysql-master/conf/my.cnf
+    if [ ! -f "$MASTER_CNF" ]; then
+        # wget -P $MASTER_HOME/conf  https://github.com/hahapigs/canary/blob/main/mysql-master.cnf 
+        mkdir -p $MASTER_HOME/conf
+        cp -f $PROJECT/mysql-master.cnf $MASTER_HOME/conf/my.cnf
     else
         while true; do
             read -p "mysql-master 的 my.cnf 文件已存在，如需覆盖请确认？（y/n）" choice
             choice_lower=$(echo "$choice" | tr '[:upper:]' '[:lower:]')
             if [ "$choice_lower" == "y" ] || [ "$choice_lower" == "yes" ]; then
-                cp -f $PROJECT/mysql-master.cnf $HOME/mysql/mysql-master/conf/my.cnf
+                cp -f $PROJECT/mysql-master.cnf $MASTER_HOME/conf/my.cnf
                 break
             elif [ "$choice_lower" == "n" ] || [ "$choice_lower" == "no" ]; then
                 break
@@ -135,15 +138,15 @@ else
         done
     fi
 
-    if [ ! -f "$MYSQL_SLAVE_1_CNF" ]; then
-        mkdir -p $HOME/mysql/mysql-slave-1/conf
-        cp -f $PROJECT/mysql-slave-1.cnf $HOME/mysql/mysql-slave-1/conf/my.cnf
+    if [ ! -f "$SLAVE_1_CNF" ]; then
+        mkdir -p $SLAVE_1_HOME/conf
+        cp -f $PROJECT/mysql-slave-1.cnf $SLAVE_1_HOME/conf/my.cnf
     else
         while true; do
             read -p "mysql-slave-1 的 my.cnf 文件已存在，如需覆盖请确认？（y/n）" choice
             choice_lower=$(echo "$choice" | tr '[:upper:]' '[:lower:]')
             if [ "$choice_lower" == "y" ] || [ "$choice_lower" == "yes" ]; then
-                cp -f $PROJECT/mysql-slave-1.cnf $HOME/mysql/mysql-slave-1/conf/my.cnf
+                cp -f $PROJECT/mysql-slave-1.cnf $SLAVE_1_HOME/conf/my.cnf
                 break
             elif [ "$choice_lower" == "n" ] || [ "$choice_lower" == "no" ]; then
                 break
@@ -153,15 +156,15 @@ else
         done
     fi
 
-    if [ ! -f "$MYSQL_SLAVE_2_CNF" ]; then
-        mkdir -p $HOME/mysql/mysql-slave-2/conf
-        cp -f $PROJECT/mysql-slave-2.cnf $HOME/mysql/mysql-slave-2/conf/my.cnf
+    if [ ! -f "$SLAVE_2_CNF" ]; then
+        mkdir -p $SLAVE_2_HOME/conf
+        cp -f $PROJECT/mysql-slave-2.cnf $SLAVE_2_HOME/conf/my.cnf
     else
         while true; do
             read -p "mysql-slave-2 的 my.cnf 文件已存在，如需覆盖请确认？（y/n）" choice
             choice_lower=$(echo "$choice" | tr '[:upper:]' '[:lower:]')
             if [ "$choice_lower" == "y" ] || [ "$choice_lower" == "yes" ]; then
-                cp -f $PROJECT/mysql-slave-2.cnf $HOME/mysql/mysql-slave-2/conf/my.cnf
+                cp -f $PROJECT/mysql-slave-2.cnf $SLAVE_2_HOME/conf/my.cnf
                 break
             elif [ "$choice_lower" == "n" ] || [ "$choice_lower" == "no" ]; then
                 break
@@ -177,9 +180,9 @@ docker run \
     -itd \
     --name mysql-master \
     -p 3306:3306 \
-    -v $HOME/mysql/mysql-master/conf:/etc/mysql/conf.d \
-    -v $HOME/mysql/mysql-master/data:/var/lib/mysql \
-    -v $HOME/mysql/mysql-master/log:/var/log/mysql \
+    -v $MASTER_HOME/conf:/etc/mysql/conf.d \
+    -v $MASTER_HOME/data:/var/lib/mysql \
+    -v $MASTER_HOME/log:/var/log/mysql \
     -v /etc/localtime:/etc/localtime \
     -e MYSQL_ROOT_PASSWORD=123456   \
     --restart no \
@@ -202,9 +205,9 @@ docker run \
     -itd \
     --name mysql-slave-1 \
     -p 3307:3306 \
-    -v $HOME/mysql/mysql-slave-1/conf:/etc/mysql/conf.d \
-    -v $HOME/mysql/mysql-slave-1/data:/var/lib/mysql \
-    -v $HOME/mysql/mysql-slave-1/log:/var/log/mysql \
+    -v $SLAVE_1_HOME/conf:/etc/mysql/conf.d \
+    -v $SLAVE_1_HOME/data:/var/lib/mysql \
+    -v $SLAVE_1_HOME/log:/var/log/mysql \
     -v /etc/localtime:/etc/localtime \
     -e MYSQL_ROOT_PASSWORD=123456   \
     --restart no \
@@ -227,9 +230,9 @@ docker run \
     -itd \
     --name mysql-slave-2 \
     -p 3308:3306 \
-    -v $HOME/mysql/mysql-slave-2/conf:/etc/mysql/conf.d \
-    -v $HOME/mysql/mysql-slave-2/data:/var/lib/mysql \
-    -v $HOME/mysql/mysql-slave-2/log:/var/log/mysql \
+    -v $SLAVE_2_HOME/conf:/etc/mysql/conf.d \
+    -v $SLAVE_2_HOME/data:/var/lib/mysql \
+    -v $SLAVE_2_HOME/log:/var/log/mysql \
     -v /etc/localtime:/etc/localtime \
     -e MYSQL_ROOT_PASSWORD=123456   \
     --restart no \
@@ -251,15 +254,15 @@ printf "Slave-2 启动成功！\n"
 # docker restart mysql-slave-1 && \
 # docker restart mysql-slave-2
 
-PROXYSQL_CNF=$HOME/proxysql
-if [ ! -f "$PROXYSQL_CNF/proxsql.cnf" ];
+PROXYSQL_HOME=$HOME/proxysql
+if [ ! -f "$PROXYSQL_HOME/proxsql.cnf" ];
 then
-    # wget -P $HOME/proxysql https://github.com/hahapigs/canary/blob/main/proxysql.cnf
-    mkdir -p $HOME/proxysql
-    cp $PROJECT/proxysql.cnf $HOME/proxysql
+    # wget -P $PROXYSQL_HOME https://github.com/hahapigs/canary/blob/main/proxysql.cnf
+    mkdir -p $PROXYSQL_HOME
+    cp $PROJECT/proxysql.cnf $PROXYSQL_HOME
 fi
 
-docker run -p 16032:6032 -p 16033:6033 -p 16070:6070 --name proxysql --network canary-net -d -v $HOME/proxysql/proxysql.cnf:/etc/proxysql.cnf proxysql/proxysql &> /dev/null
+docker run -p 16032:6032 -p 16033:6033 -p 16070:6070 --name proxysql --network canary-net -d -v $PROXYSQL_HOME/proxysql.cnf:/etc/proxysql.cnf proxysql/proxysql &> /dev/null
 
 progress 100 "MySQL(ProxySQL)"
 
