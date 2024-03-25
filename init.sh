@@ -85,12 +85,12 @@ fi
 
 # 网络
 NETWORK_NAME="canary-net"
-if docker network ls | grep -q $NETWORK_NAME; then
+if docker network ls | grep -q $NETWORK_NAME &> /dev/null; then
     while true; do
         read -p "$NETWORK_NAME 已存在，如需覆盖请确认？（y/n）" choice
         choice_lower=$(echo "$choice" | tr '[:upper:]' '[:lower:]')
         if [ "$choice_lower" == "y" ] || [ "$choice_lower" == "yes" ]; then
-            docker network rm $NETWORK_NAME && docker network create $NETWORK_NAME
+            docker network rm $NETWORK_NAME &> /dev/null && docker network create $NETWORK_NAME &> /dev/null
             break
         elif [ "$choice_lower" == "n" ] || [ "$choice_lower" == "no" ]; then
             break
@@ -99,7 +99,7 @@ if docker network ls | grep -q $NETWORK_NAME; then
         fi
     done
 else
-    docker network create $NETWORK_NAME
+    docker network create $NETWORK_NAME &> /dev/null
 fi
 
 MYSQL_HOME="$HOME/mysql"
@@ -185,13 +185,13 @@ docker run \
     --restart no \
     --privileged=true \
     --network canary-net \
-    mysql
+    mysql &> /dev/null
 
 progress 100 "MySQL(Master)"
 
 while ! docker ps | grep mysql-master; do
     for i in $(seq 0 3); do
-        echo -en "\rmysql-master 正在启动...${spinner:$i:1}"
+        printf "\rmysql-master 正在启动...${spinner:$i:1}"
         sleep 0.2
     done
 done
@@ -210,13 +210,13 @@ docker run \
     --restart no \
     --privileged=true \
     --network canary-net \
-    mysql
+    mysql &> /dev/null
 
 progress 100 "MySQL(Slave-1)"
 
 while ! docker ps | grep mysql-slave-1; do
     for i in $(seq 0 3); do
-        echo -en "\rmysql-slave-2 正在启动...${spinner:$i:1}"
+        printf "\rmysql-slave-2 正在启动...${spinner:$i:1}"
         sleep 0.2
     done
 done
@@ -235,13 +235,13 @@ docker run \
     --restart no \
     --privileged=true \
     --network canary-net \
-    mysql
+    mysql &> /dev/null
 
 progress 100 "MySQL(Slave-2)"
 
 while ! docker ps | grep mysql-slave-2; do
     for i in $(seq 0 3); do
-        echo -en "\rmysql-slave-2 正在启动...${spinner:$i:1}"
+        printf "\rmysql-slave-2 正在启动...${spinner:$i:1}"
         sleep 0.2
     done
 done
@@ -259,22 +259,13 @@ then
     cp $PROJECT/proxysql.cnf $HOME/proxysql
 fi
 
-docker run -p 16032:6032 -p 16033:6033 -p 16070:6070 --name proxysql --network canary-net -d -v $HOME/proxysql/proxysql.cnf:/etc/proxysql.cnf proxysql/proxysql
+docker run -p 16032:6032 -p 16033:6033 -p 16070:6070 --name proxysql --network canary-net -d -v $HOME/proxysql/proxysql.cnf:/etc/proxysql.cnf proxysql/proxysql &> /dev/null
 
-b=' '
-i=0
-while [ $i -le 100  ]
-do
-    printf "ProxySQL：[%-100s] %d%%\r" $b $i
-    sleep 0.1
-    i=`expr 1 + $i`
-    b=#$b
-done
-printf "\nProxySQL 构建完成！\n"
+progress 100 "MySQL(ProxySQL)"
 
-while ! docker ps | grep mysql-slave-1; do
+while ! docker ps | grep proxysql; do
     for i in $(seq 0 3); do
-        echo -en "\rproxysql 正在启动...${spinner:$i:1}"
+        printf "\rproxysql 正在启动...${spinner:$i:1}"
         sleep 0.2
     done
 done
@@ -283,25 +274,25 @@ printf "ProxySQL 启动成功！\n"
 nc -z -v -w 3 127.0.0.1 3306
 # 检查连接状态
 if [ $? -eq 0  ]; then
-    echo "Master 数据库连接正常"
+    echo "Master 数据库连接正常！"
 else
-    echo "Master 数据库连接失败"
+    echo "Master 数据库连接失败！"
 fi
 
-nc -z -v -w 3 127.0.0.1 3306
+nc -z -v -w 3 127.0.0.1 3307
 # 检查连接状态
 if [ $? -eq 0  ]; then
-    echo "Slave-1 数据库连接正常"
+    echo "Slave-1 数据库连接正常！"
 else
-    echo "Slave-1 数据库连接失败"
+    echo "Slave-1 数据库连接失败！"
 fi
 
-nc -z -v -w 3 127.0.0.1 3306
+nc -z -v -w 3 127.0.0.1 3308
 # 检查连接状态
 if [ $? -eq 0  ]; then
-    echo "Slave-2 数据库连接正常"
+    echo "Slave-2 数据库连接正常！"
 else
-    echo "Slave-2 数据库连接失败"
+    echo "Slave-2 数据库连接失败！"
 fi
 
 # 数据库连接信息
