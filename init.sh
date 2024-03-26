@@ -7,7 +7,6 @@ PROJECT="/Users/zhaohongliang/Github/canary"
 # sql 文件根目录
 SQL="/Users/zhaohongliang/Desktop"
 
-
 # ANSI 转义码定义
 RED='\033[0;31m'    # 红色字体
 GREEN='\033[0;32m'  # 绿色字体
@@ -33,19 +32,31 @@ dynamic_cursor() {
     printf "执行完毕！\n"
 }
 
+# 容器名称
+containers=("mysql-master" "mysql-slave-1" "mysql-slave-2" "proxysql")
+ports=("3306" "3307" "3308" "16033")
 # 旋转光标（校验）
 is_load() {
-    local str=$1
+    local j=$1
 
-    while ! docker ps | grep $1; do
+    while ! docker ps | grep ${containers[$j]}; do
         for i in $(seq 0 3); do
-            printf "\r${1} 正在启动...${spinner:$i:1}"
+            printf "\r${containers[$1]} 正在启动...${spinner:$i:1}"
             sleep 0.2
         done
     done
-    printf "${1} 启动成功！\n"
-    echo ""
+    printf "${containers[$j]} 启动成功！\n"
     
+    local port=${ports[$j]}
+    
+    nc -z -v -w 3 127.0.0.1 ${port}
+    if [ $? -eq 0  ]; then
+        printf "${containers[$j]} 数据库连接正常！\n"
+    else
+        printf "${containers[$j]} 数据库连接失败！\n"
+    fi
+    
+    echo ""
 }
 
 # 进度条
@@ -55,7 +66,7 @@ progress() {
     local max=100
     local str=$1
     
-    while [ $i -le $max  ]; do
+    while [ $i -le $max ]; do
         printf "${str}：[%-100s] %d%%\r" $b $i
         sleep 0.1
         i=`expr 1 + $i`
@@ -112,7 +123,7 @@ NETWORK="canary-net"
 # 判断 network 是否存在
 if docker network ls | grep -q $NETWORK &> /dev/null; then
     while true; do
-        read -p "$NETWORK 已存在，如需覆盖请确认？（y/n）" choice
+        read -p "是否需要重新创建一个新的网络？（y/n）" choice
         choice_lower=$(printf "$choice" | tr '[:upper:]' '[:lower:]')
         if [ "$choice_lower" == "y" ] || [ "$choice_lower" == "yes" ]; then
             docker network rm $NETWORK &> /dev/null && docker network create $NETWORK &> /dev/null
@@ -175,7 +186,7 @@ docker run \
     mysql &> /dev/null
 
 progress "MySQL(Master)"
-is_load "mysql-master"
+is_load 0
 
 # 创建mysql-slave-1
 docker run \
@@ -193,7 +204,7 @@ docker run \
     mysql &> /dev/null
 
 progress "MySQL(Slave-1)"
-is_load "mysql-slave-1"
+is_load 1
 
 # 创建mysql-slave-2
 docker run \
@@ -211,7 +222,7 @@ docker run \
     mysql &> /dev/null
 
 progress "MySQL(Slave-2)"
-is_load "mysql-slave-2"
+is_load 2
 
 # proxysql
 PROXYSQL_HOME=$HOME/proxysql
@@ -222,7 +233,6 @@ if [ ! -d "$PROXYSQL_HOME" ]; then
     cp $PROJECT/proxysql.cnf $PROXYSQL_HOME
 else
     while true; do
-        echo ""
         read -p "是否需要覆盖 ProxySQL 配置？（y/n）" choice
         choice_lower=$(printf "$choice" | tr '[:upper:]' '[:lower:]')
         if [ "$choice_lower" == "y" ] || [ "$choice_lower" == "yes" ]; then
@@ -242,37 +252,30 @@ fi
 docker run -p 16032:6032 -p 16033:6033 -p 16070:6070 --name proxysql --network $NETWORK -d -v $PROXYSQL_HOME/proxysql.cnf:/etc/proxysql.cnf proxysql/proxysql &> /dev/null
 
 progress "MySQL(ProxySQL)"
-
-while ! docker ps | grep proxysql; do
-    for i in $(seq 0 3); do
-        printf "\rproxysql 正在启动...${spinner:$i:1}"
-        sleep 0.2
-    done
-done
-printf "ProxySQL 启动成功！"
+is_load 3
 
 # 检查数据库连接状态
 # master
-nc -z -v -w 3 127.0.0.1 3306
-if [ $? -eq 0  ]; then
-    printf "Master 数据库连接正常！\n"
-else
-    printf "Master 数据库连接失败！\n"
-fi
-# slave-1
-nc -z -v -w 3 127.0.0.1 3307
-if [ $? -eq 0  ]; then
-    printf "Slave-1 数据库连接正常！\n"
-else
-    printf "Slave-1 数据库连接失败！\n"
-fi
-# slave-2
-nc -z -v -w 3 127.0.0.1 3308
-if [ $? -eq 0  ]; then
-    printf "Slave-2 数据库连接正常！\n"
-else
-    printf "Slave-2 数据库连接失败！\n"
-fi
+# nc -z -v -w 3 127.0.0.1 3306
+# if [ $? -eq 0  ]; then
+#     printf "Master 数据库连接正常！\n"
+# else
+#     printf "Master 数据库连接失败！\n"
+# fi
+# # slave-1
+# nc -z -v -w 3 127.0.0.1 3307
+# if [ $? -eq 0  ]; then
+#     printf "Slave-1 数据库连接正常！\n"
+# else
+#     printf "Slave-1 数据库连接失败！\n"
+# fi
+# # slave-2
+# nc -z -v -w 3 127.0.0.1 3308
+# if [ $? -eq 0  ]; then
+#     printf "Slave-2 数据库连接正常！\n"
+# else
+#     printf "Slave-2 数据库连接失败！\n"
+# fi
 
 # 数据库连接信息
 DB_USER="root"
@@ -287,7 +290,7 @@ LAST_CHAR=${MASTER_IP:-1}
 NEW_MASTER_IP="${FRONT_PART}%"
 
 
-printf "\n==>${BOLD} 创建主从复制账号${NC}\n"
+printf "==>${BOLD} 创建主从复制账号${NC}\n"
 mysql -h 127.0.0.1 -P 3306 -u$DB_USER -p$DB_PASS <<EOF
 CREATE USER 'replication.user'@'$NEW_MASTER_IP' IDENTIFIED WITH mysql_native_password BY 'Copy!234';
 GRANT REPLICATION SLAVE ON *.* TO 'replication.user'@'$NEW_MASTER_IP';
