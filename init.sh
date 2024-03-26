@@ -7,14 +7,9 @@ PROJECT="/Users/zhaohongliang/Github/canary"
 # sql 文件根目录
 SQL="/Users/zhaohongliang/Desktop"
 
-# 命令行工具
-COMMAND_DOCKER="docker"
-COMMAND_MYSQL="mysql"
-COMMAND_WGET="wget"
-COMMAND_CURL="curl"
-
 # 定义旋转的光标符号
 spinner="/-\|"
+
 # 旋转光标
 dynamic_cursor() {
     local j=0
@@ -49,25 +44,30 @@ progress() {
 }
 
 
+# 命令行工具
+COMMAND_DOCKER="docker"
+COMMAND_MYSQL="mysql"
 
+# 检测 docker 命令是否存在
 if !command -v $COMMAND_DOCKER &> /dev/null
 then
     echo "$COMMAND_DOCKER 未安装，脚本中断执行"
     exit 1
 fi
 
-# 检测mysql命令是否存在
+# 检测 mysql 命令是否存在
 if !command -v $COMMAND_MYSQL &> /dev/null
 then
     echo "$COMMAND_DOCKER 未安装，脚本中断执行"
     exit 1
 fi
 
-# 镜像名称
+# mysql
 IMAGE_NAME_MYSQL="mysql:8.0"
+# proxysql 
 IMAGE_NAME_PROXYSQL="proxysql/proxysql"
 
-# 如果mysql镜像不存在，则拉取
+# 如果 mysql 镜像不存在，则拉取
 if !docker image inspect $IMAGE_NAME_MYSQL &> /dev/null
 then
     docker pull mysql:8.0
@@ -76,7 +76,7 @@ then
     fi
 fi
 
-# 如果proxy镜像不存在，则拉取
+# 如果 proxysql 镜像不存在，则拉取
 if !docker image inspect $IMAGE_NAME_PROXYSQL &> /dev/null
 then
     docker pull proxysql/proxysql
@@ -85,8 +85,10 @@ then
     fi
 fi
 
-# 网络
-NETWORK_NAME="canary-net"
+# network
+NETWORK_NAME="$NETWORK"
+
+# 判断 network 是否存在
 if docker network ls | grep -q $NETWORK_NAME &> /dev/null; then
     while true; do
         read -p "$NETWORK_NAME 已存在，如需覆盖请确认？（y/n）" choice
@@ -104,77 +106,36 @@ else
     docker network create $NETWORK_NAME &> /dev/null
 fi
 
+# mysql
 MYSQL_HOME="$HOME/mysql"
 MASTER_HOME="$MYSQL_HOME/mysql-master"
-MASTER_CNF="$MASTER_HOME/conf/my.cnf"
 SLAVE_1_HOME="$MYSQL_HOME/mysql-slave-1"
-SLAVE_1_CNF="$SLAVE_1_HOME/conf/my.cnf"
 SLAVE_2_HOME="$MYSQL_HOME/mysql-slave-2"
-SLAVE_2_CNF="$SLAVE_2_HOME/conf/my.cnf"
 
+# 判断 mysql 目录是否在
 if [ ! -d "$MYSQL_HOME" ]; then 
     # wget -P $MASTER_HOME/conf  https://github.com/hahapigs/canary/blob/main/mysql-master.cnf 
-    mkdir -p $MASTER_HOME/conf
-    mkdir -p $SLAVE_1_HOME/conf
-    mkdir -p $SLAVE_2_HOME/conf
-    cp -f $PROJECT/mysql-master.cnf $MASTER_HOME/conf
-    cp -f $PROJECT/mysql-slave-1.cnf $SLAVE_1_HOME/conf
-    cp -f $PROJECT/mysql-slave-2.cnf $SLAVE_2_HOME/conf
+    mkdir -p $MASTER_HOME/conf && mkdir -p $SLAVE_1_HOME/conf && mkdir -p $SLAVE_2_HOME/conf
+    cp -f $PROJECT/mysql-master.cnf $MASTER_HOME/conf/my.cnf
+    cp -f $PROJECT/mysql-slave-1.cnf $SLAVE_1_HOME/conf/my.cnf
+    cp -f $PROJECT/mysql-slave-2.cnf $SLAVE_2_HOME/conf/my.cnf
 else
-    if [ ! -f "$MASTER_CNF" ]; then
-        # wget -P $MASTER_HOME/conf  https://github.com/hahapigs/canary/blob/main/mysql-master.cnf 
-        mkdir -p $MASTER_HOME/conf
-        cp -f $PROJECT/mysql-master.cnf $MASTER_HOME/conf/my.cnf
-    else
-        while true; do
-            read -p "mysql-master 的 my.cnf 文件已存在，如需覆盖请确认？（y/n）" choice
-            choice_lower=$(echo "$choice" | tr '[:upper:]' '[:lower:]')
-            if [ "$choice_lower" == "y" ] || [ "$choice_lower" == "yes" ]; then
-                cp -f $PROJECT/mysql-master.cnf $MASTER_HOME/conf/my.cnf
-                break
-            elif [ "$choice_lower" == "n" ] || [ "$choice_lower" == "no" ]; then
-                break
-            else
-                echo "输入不合法，请重新输入"
-            fi
-        done
-    fi
-
-    if [ ! -f "$SLAVE_1_CNF" ]; then
-        mkdir -p $SLAVE_1_HOME/conf
-        cp -f $PROJECT/mysql-slave-1.cnf $SLAVE_1_HOME/conf/my.cnf
-    else
-        while true; do
-            read -p "mysql-slave-1 的 my.cnf 文件已存在，如需覆盖请确认？（y/n）" choice
-            choice_lower=$(echo "$choice" | tr '[:upper:]' '[:lower:]')
-            if [ "$choice_lower" == "y" ] || [ "$choice_lower" == "yes" ]; then
-                cp -f $PROJECT/mysql-slave-1.cnf $SLAVE_1_HOME/conf/my.cnf
-                break
-            elif [ "$choice_lower" == "n" ] || [ "$choice_lower" == "no" ]; then
-                break
-            else
-                echo "输入不合法，请重新输入"
-            fi
-        done
-    fi
-
-    if [ ! -f "$SLAVE_2_CNF" ]; then
-        mkdir -p $SLAVE_2_HOME/conf
-        cp -f $PROJECT/mysql-slave-2.cnf $SLAVE_2_HOME/conf/my.cnf
-    else
-        while true; do
-            read -p "mysql-slave-2 的 my.cnf 文件已存在，如需覆盖请确认？（y/n）" choice
-            choice_lower=$(echo "$choice" | tr '[:upper:]' '[:lower:]')
-            if [ "$choice_lower" == "y" ] || [ "$choice_lower" == "yes" ]; then
-                cp -f $PROJECT/mysql-slave-2.cnf $SLAVE_2_HOME/conf/my.cnf
-                break
-            elif [ "$choice_lower" == "n" ] || [ "$choice_lower" == "no" ]; then
-                break
-            else
-                echo "输入不合法，请重新输入"
-            fi
-        done
-    fi
+    while true; do
+        read -p "是否需要覆盖 MySQL 配置？（y/n）" choice
+        choice_lower=$(echo "$choice" | tr '[:upper:]' '[:lower:]')
+        if [ "$choice_lower" == "y" ] || [ "$choice_lower" == "yes" ]; then
+            rm -rf $MYSQL_HOME &&
+            mkdir -p $MASTER_HOME/conf && mkdir -p $SLAVE_1_HOME && mkdir -p $SLAVE_2_HOME
+            cp -f $PROJECT/mysql-master.cnf $MASTER_HOME/conf/my.cnf
+            cp -f $PROJECT/mysql-slave-1.cnf $SLAVE_1_HOME/conf/my.cnf
+            cp -f $PROJECT/mysql-slave-2.cnf $SLAVE_2_HOME/conf/my.cnf
+            break
+        elif [ "$choice_lower" == "n" ] || [ "$choice_lower" == "no" ]; then
+            break
+        else
+            echo "输入不合法，请重新输入"
+        fi
+    done
 fi
 
 # 创建mysql-master
@@ -189,7 +150,7 @@ docker run \
     -e MYSQL_ROOT_PASSWORD=123456   \
     --restart no \
     --privileged=true \
-    --network canary-net \
+    --network $NETWORK \
     mysql &> /dev/null
 
 progress 100 "MySQL(Master)"
@@ -214,7 +175,7 @@ docker run \
     -e MYSQL_ROOT_PASSWORD=123456   \
     --restart no \
     --privileged=true \
-    --network canary-net \
+    --network $NETWORK \
     mysql &> /dev/null
 
 progress 100 "MySQL(Slave-1)"
@@ -239,7 +200,7 @@ docker run \
     -e MYSQL_ROOT_PASSWORD=123456   \
     --restart no \
     --privileged=true \
-    --network canary-net \
+    --network $NETWORK \
     mysql &> /dev/null
 
 progress 100 "MySQL(Slave-2)"
@@ -252,19 +213,32 @@ while ! docker ps | grep mysql-slave-2; do
 done
 printf "Slave-2 启动成功！\n"
 
-# docker restart mysql-master && \
-# docker restart mysql-slave-1 && \
-# docker restart mysql-slave-2
-
+# proxysql
 PROXYSQL_HOME=$HOME/proxysql
-if [ ! -f "$PROXYSQL_HOME/proxsql.cnf" ];
-then
-    # wget -P $PROXYSQL_HOME https://github.com/hahapigs/canary/blob/main/proxysql.cnf
-    mkdir -p $PROXYSQL_HOME
+
+# 判断 proxysql 目录是否存在
+if [ ! -d "$PROXYSQL_HOME" ]; then
+    mkdir -p $PROXYSQL_HOME &&
     cp $PROJECT/proxysql.cnf $PROXYSQL_HOME
+else
+    while true; do
+        read -p "是否需要覆盖 ProxySQL 配置？（y/n）" choice
+        choice_lower=$(echo "$choice" | tr '[:upper:]' '[:lower:]')
+        if [ "$choice_lower" == "y" ] || [ "$choice_lower" == "yes" ]; then
+            rm -rf $PROXYSQL_HOME &&
+            mkdir -p $PROXYSQL_HOME &&
+            cp $PROJECT/proxysql.cnf $PROXYSQL_HOME
+            break
+        elif [ "$choice_lower" == "n" ] || [ "$choice_lower" == "no" ]; then
+            break
+        else
+            echo "输入不合法，请重新输入"
+        fi
+    done
 fi
 
-docker run -p 16032:6032 -p 16033:6033 -p 16070:6070 --name proxysql --network canary-net -d -v $PROXYSQL_HOME/proxysql.cnf:/etc/proxysql.cnf proxysql/proxysql &> /dev/null
+# 创建 proxsql
+docker run -p 16032:6032 -p 16033:6033 -p 16070:6070 --name proxysql --network $NETWORK -d -v $PROXYSQL_HOME/proxysql.cnf:/etc/proxysql.cnf proxysql/proxysql &> /dev/null
 
 progress 100 "MySQL(ProxySQL)"
 
@@ -276,24 +250,23 @@ while ! docker ps | grep proxysql; do
 done
 printf "ProxySQL 启动成功！\n"
 
+# 检查数据库连接状态
+# master
 nc -z -v -w 3 127.0.0.1 3306
-# 检查连接状态
 if [ $? -eq 0  ]; then
     echo "Master 数据库连接正常！"
 else
     echo "Master 数据库连接失败！"
 fi
-
+# slave-1
 nc -z -v -w 3 127.0.0.1 3307
-# 检查连接状态
 if [ $? -eq 0  ]; then
     echo "Slave-1 数据库连接正常！"
 else
     echo "Slave-1 数据库连接失败！"
 fi
-
+# slave-2
 nc -z -v -w 3 127.0.0.1 3308
-# 检查连接状态
 if [ $? -eq 0  ]; then
     echo "Slave-2 数据库连接正常！"
 else
@@ -312,9 +285,10 @@ FRONT_PART=${MASTER_IP:0:$(($MASTER_IP_LENGTH-1))}
 LAST_CHAR=${MASTER_IP:-1}
 NEW_MASTER_IP="${FRONT_PART}%"
 
-dynamic_cursor 10 "Master 正在创建主从复制账号..."
 
 # 创建主从同步复制用户
+dynamic_cursor 10 "Master 正在创建主从复制账号..."
+
 mysql -h 127.0.0.1 -P 3306 -u$DB_USER -p$DB_PASS <<EOF
 CREATE USER 'replication.user'@'$NEW_MASTER_IP' IDENTIFIED WITH mysql_native_password BY 'Copy!234';
 GRANT REPLICATION SLAVE ON *.* TO 'replication.user'@'$NEW_MASTER_IP';
