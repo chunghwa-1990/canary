@@ -1,8 +1,10 @@
 #!/bin/bash
 
-# 目录
+# docker 挂载本地访问容器内的根目录
 HOME="/Users/zhaohongliang/DockerData"
+# 项目根目录
 PROJECT="/Users/zhaohongliang/Github/canary"
+# sql 文件根目录
 SQL="/Users/zhaohongliang/Desktop"
 
 # 命令行工具
