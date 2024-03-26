@@ -86,15 +86,15 @@ then
 fi
 
 # network
-NETWORK_NAME="$NETWORK"
+NETWORK="canary-net"
 
 # 判断 network 是否存在
-if docker network ls | grep -q $NETWORK_NAME &> /dev/null; then
+if docker network ls | grep -q $NETWORK &> /dev/null; then
     while true; do
-        read -p "$NETWORK_NAME 已存在，如需覆盖请确认？（y/n）" choice
+        read -p "$NETWORK 已存在，如需覆盖请确认？（y/n）" choice
         choice_lower=$(echo "$choice" | tr '[:upper:]' '[:lower:]')
         if [ "$choice_lower" == "y" ] || [ "$choice_lower" == "yes" ]; then
-            docker network rm $NETWORK_NAME &> /dev/null && docker network create $NETWORK_NAME &> /dev/null
+            docker network rm $NETWORK &> /dev/null && docker network create $NETWORK &> /dev/null
             break
         elif [ "$choice_lower" == "n" ] || [ "$choice_lower" == "no" ]; then
             break
@@ -103,7 +103,7 @@ if docker network ls | grep -q $NETWORK_NAME &> /dev/null; then
         fi
     done
 else
-    docker network create $NETWORK_NAME &> /dev/null
+    docker network create $NETWORK &> /dev/null
 fi
 
 # mysql
@@ -125,7 +125,7 @@ else
         choice_lower=$(echo "$choice" | tr '[:upper:]' '[:lower:]')
         if [ "$choice_lower" == "y" ] || [ "$choice_lower" == "yes" ]; then
             rm -rf $MYSQL_HOME &&
-            mkdir -p $MASTER_HOME/conf && mkdir -p $SLAVE_1_HOME && mkdir -p $SLAVE_2_HOME
+            mkdir -p $MASTER_HOME/conf && mkdir -p $SLAVE_1_HOME/conf && mkdir -p $SLAVE_2_HOME/conf
             cp -f $PROJECT/mysql-master.cnf $MASTER_HOME/conf/my.cnf
             cp -f $PROJECT/mysql-slave-1.cnf $SLAVE_1_HOME/conf/my.cnf
             cp -f $PROJECT/mysql-slave-2.cnf $SLAVE_2_HOME/conf/my.cnf
