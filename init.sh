@@ -75,6 +75,23 @@ progress() {
     printf "\n${str} build successfully!\n"
 }
 
+# 打印logo
+function print_logo()
+{
+    color="$(tput setaf 6)"
+    normal="$(tput sgr0)"
+    printf "${color}"
+    echo '  _____  ____ _   ____   ____ _   _____   __  __ ' 
+    echo ' / ___/ / __ `/  / __ \ / __ `/  / ___/  / / / / '
+    echo '/ /__  / /_/ /  / / / // /_/ /  / /     / /_/ /  '
+    echo '\___/  \__,_/  /_/ /_/ \__,_/  /_/      \__, /   '
+    echo '                                       /____/   ...is now finished!'
+    echo ''
+    echo 'Just enjoy it!'
+    echo 'p.s. Follow me at https://github.com/hahapigs/canary'
+    echo ''
+    printf "${normal}"
+}
 
 # 命令行工具
 COMMAND_DOCKER="docker"
@@ -338,7 +355,7 @@ dynamic_cursor
 #     # exit 1
 # fi
 
-printf "\n==>${BOLD} 修改主从数据库root账号信息${NC}\n"
+printf "\n==>${BOLD} 修改主从数据库 root 账号信息${NC}\n"
 mysql -h 127.0.0.1 -P 3306 -u $DB_USER -p$DB_PASS <<EOF
 ALTER USER 'root'@'localhost' IDENTIFIED BY 'Pass!234';
 ALTER USER 'root'@'%' IDENTIFIED BY 'Pass!234';
@@ -390,7 +407,7 @@ dynamic_cursor
 #     mysql -h 127.0.0.1 -P 3306 -u $DB_USER -p$DB_NEW_PASS canary < $SQL/canary.sql
 # fi
 
-printf "\n==>${BOLD} 添加ProxySQL主从分组信息${NC}\n"
+printf "\n==>${BOLD} 添加 ProxySQL 主从分组信息${NC}\n"
 mysql -h 127.0.0.1 -P 16032 -uradmin -pradmin --prompt "ProxySQL Admin>" <<EOF
 insert into mysql_replication_hostgroups(writer_hostgroup,reader_hostgroup,check_type, COMMENT) values(10, 20,'read_only', 'proxy');
 load mysql servers to runtime;
@@ -401,7 +418,7 @@ dynamic_cursor
 SLAVE_1_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mysql-slave-1)
 SLAVE_2_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mysql-slave-2)
 
-printf "\n==>${BOLD} 添加ProxySQL主从服务器的节点${NC}\n"
+printf "\n==>${BOLD} 添加 ProxySQL 主从服务器的节点${NC}\n"
 mysql -h 127.0.0.1 -P 16032 -uradmin -pradmin --prompt "ProxySQL Admin>" <<EOF
 insert into mysql_servers(hostgroup_id,hostname,port)  values(10,'$MASTER_IP',3306),(20,'$SLAVE_1_IP',3306),(20,'$SLAVE_2_IP',3306);
 load mysql servers to runtime;
@@ -409,7 +426,7 @@ save mysql servers to disk;
 EOF
 dynamic_cursor
 
-printf "\n==>${BOLD} 配置ProxySQL监测账号${NC}\n"
+printf "\n==>${BOLD} 配置 ProxySQL 监测账号${NC}\n"
 mysql -h 127.0.0.1 -P 16032 -uradmin -pradmin --prompt "ProxySQL Admin>" <<EOF
 UPDATE global_variables SET variable_value='proxy.monitor' WHERE variable_name='mysql-monitor_username';
 UPDATE global_variables SET variable_value='123456' WHERE variable_name='mysql-monitor_password';
@@ -418,7 +435,7 @@ save mysql variables to disk;
 EOF
 dynamic_cursor
 
-printf "\n==>${BOLD} 配置ProxySQL访问账号${NC}\n"
+printf "\n==>${BOLD} 配置 ProxySQL 访问账号${NC}\n"
 mysql -h 127.0.0.1 -P 16032 -uradmin -pradmin --prompt "ProxySQL Admin>" << EOF
 insert into mysql_users(username,password,default_hostgroup) values('proxy.admin','Pass!234',10);
 load mysql users to runtime;
@@ -433,3 +450,7 @@ load mysql query rules to runtime;
 save mysql query rules to disk;
 EOF
 dynamic_cursor
+
+print_logo
+
+
