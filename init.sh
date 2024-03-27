@@ -32,11 +32,27 @@ dynamic_cursor() {
     printf "执行完毕！\n"
 }
 
+# 移除容器
+remove_containers() {
+    # 检查容器是否存在
+    while [ $(docker ps -aq --filter "name=sql" | wc -l) -gt 0  ]; do
+        for i in $(seq 0 3); do
+            printf "\r正在准备安装环境...${spinner:$i:1}"   # 使用回车符（\r）实现光标回到行首
+            sleep 0.2
+        done
+        docker stop `docker ps -a | grep sql | awk -F " " '{print $1}'` &> /dev/null
+        docker rm `docker ps -a | grep sql | awk -F " " '{print $1}'` &> /dev/null
+    done
+    printf "\r\033[K"
+    printf "正在准备安装环境..."
+    printf "\n准备完成！\n"
+}
+
 # 容器名称
 containers=("mysql-master" "mysql-slave-1" "mysql-slave-2" "proxysql")
 ports=("3306" "3307" "3308" "16033")
 # 旋转光标（校验）
-is_load() {
+is_start() {
     local j=$1
 
     while ! docker ps | grep ${containers[$j]}; do
@@ -72,7 +88,7 @@ progress() {
         i=`expr 1 + $i`
         b=#$b
     done
-    printf "\n${str} build successfully!\n"
+    printf "\n${str} successfully!\n"
 }
 
 # 打印logo
@@ -134,26 +150,16 @@ then
     fi
 fi
 
+remove_containers
+
 # network
 NETWORK="canary-net"
 
 # 判断 network 是否存在
 if docker network ls | grep -q $NETWORK &> /dev/null; then
-    while true; do
-        read -p "是否需要重新创建一个新的网络？（y/n）" choice
-        choice_lower=$(printf "$choice" | tr '[:upper:]' '[:lower:]')
-        if [ "$choice_lower" == "y" ] || [ "$choice_lower" == "yes" ]; then
-            docker network rm $NETWORK &> /dev/null && docker network create $NETWORK &> /dev/null
-            break
-        elif [ "$choice_lower" == "n" ] || [ "$choice_lower" == "no" ]; then
-            break
-        else
-            printf "输入不合法，请重新输入"
-        fi
-    done
-else
-    docker network create $NETWORK &> /dev/null
+    docker network rm $NETWORK &> /dev/null
 fi
+docker network create $NETWORK &> /dev/null
 
 # mysql
 MYSQL_HOME="$HOME/mysql"
@@ -161,31 +167,14 @@ MASTER_HOME="$MYSQL_HOME/mysql-master"
 SLAVE_1_HOME="$MYSQL_HOME/mysql-slave-1"
 SLAVE_2_HOME="$MYSQL_HOME/mysql-slave-2"
 
-# 判断 mysql 目录是否在
-if [ ! -d "$MYSQL_HOME" ]; then 
+if [ -d "$MYSQL_HOME" ]; then 
     # wget -P $MASTER_HOME/conf  https://github.com/hahapigs/canary/blob/main/mysql-master.cnf 
-    mkdir -p $MASTER_HOME/conf && mkdir -p $SLAVE_1_HOME/conf && mkdir -p $SLAVE_2_HOME/conf
-    cp -f $PROJECT/mysql-master.cnf $MASTER_HOME/conf/my.cnf
-    cp -f $PROJECT/mysql-slave-1.cnf $SLAVE_1_HOME/conf/my.cnf
-    cp -f $PROJECT/mysql-slave-2.cnf $SLAVE_2_HOME/conf/my.cnf
-else
-    while true; do
-        read -p "是否需要覆盖 MySQL 配置？（y/n）" choice
-        choice_lower=$(printf "$choice" | tr '[:upper:]' '[:lower:]')
-        if [ "$choice_lower" == "y" ] || [ "$choice_lower" == "yes" ]; then
-            rm -rf $MYSQL_HOME &&
-            mkdir -p $MASTER_HOME/conf && mkdir -p $SLAVE_1_HOME/conf && mkdir -p $SLAVE_2_HOME/conf
-            cp -f $PROJECT/mysql-master.cnf $MASTER_HOME/conf/my.cnf
-            cp -f $PROJECT/mysql-slave-1.cnf $SLAVE_1_HOME/conf/my.cnf
-            cp -f $PROJECT/mysql-slave-2.cnf $SLAVE_2_HOME/conf/my.cnf
-            break
-        elif [ "$choice_lower" == "n" ] || [ "$choice_lower" == "no" ]; then
-            break
-        else
-            printf "输入不合法，请重新输入"
-        fi
-    done
+    rm -rf $MYSQL_HOME
 fi
+mkdir -p $MASTER_HOME/conf && mkdir -p $SLAVE_1_HOME/conf && mkdir -p $SLAVE_2_HOME/conf
+cp -f $PROJECT/mysql-master.cnf $MASTER_HOME/conf/my.cnf
+cp -f $PROJECT/mysql-slave-1.cnf $SLAVE_1_HOME/conf/my.cnf
+cp -f $PROJECT/mysql-slave-2.cnf $SLAVE_2_HOME/conf/my.cnf
 
 # 创建mysql-master
 docker run \
@@ -201,9 +190,9 @@ docker run \
     --privileged=true \
     --network $NETWORK \
     mysql &> /dev/null
-
-progress "MySQL(Master)"
-is_load 0
+echo ""
+progress "Build Master"
+is_start 0
 
 # 创建mysql-slave-1
 docker run \
@@ -220,8 +209,8 @@ docker run \
     --network $NETWORK \
     mysql &> /dev/null
 
-progress "MySQL(Slave-1)"
-is_load 1
+progress "Build Slave-1"
+is_start 1
 
 # 创建mysql-slave-2
 docker run \
@@ -238,8 +227,8 @@ docker run \
     --network $NETWORK \
     mysql &> /dev/null
 
-progress "MySQL(Slave-2)"
-is_load 2
+progress "Build Slave-2"
+is_start 2
 
 # proxysql
 PROXYSQL_HOME=$HOME/proxysql
@@ -268,31 +257,8 @@ fi
 # 创建 proxsql
 docker run -p 16032:6032 -p 16033:6033 -p 16070:6070 --name proxysql --network $NETWORK -d -v $PROXYSQL_HOME/proxysql.cnf:/etc/proxysql.cnf proxysql/proxysql &> /dev/null
 
-progress "MySQL(ProxySQL)"
-is_load 3
-
-# 检查数据库连接状态
-# master
-# nc -z -v -w 3 127.0.0.1 3306
-# if [ $? -eq 0  ]; then
-#     printf "Master 数据库连接正常！\n"
-# else
-#     printf "Master 数据库连接失败！\n"
-# fi
-# # slave-1
-# nc -z -v -w 3 127.0.0.1 3307
-# if [ $? -eq 0  ]; then
-#     printf "Slave-1 数据库连接正常！\n"
-# else
-#     printf "Slave-1 数据库连接失败！\n"
-# fi
-# # slave-2
-# nc -z -v -w 3 127.0.0.1 3308
-# if [ $? -eq 0  ]; then
-#     printf "Slave-2 数据库连接正常！\n"
-# else
-#     printf "Slave-2 数据库连接失败！\n"
-# fi
+progress "Build ProxySQL"
+is_start 3
 
 # 数据库连接信息
 DB_USER="root"
