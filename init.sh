@@ -156,10 +156,9 @@ remove_containers
 NETWORK="canary-net"
 
 # 判断 network 是否存在
-if docker network ls | grep -q $NETWORK &> /dev/null; then
-    docker network rm $NETWORK &> /dev/null
+if ! docker network ls | grep -q $NETWORK &> /dev/null; then
+    docker network create $NETWORK &> /dev/null
 fi
-docker network create $NETWORK &> /dev/null
 
 # mysql
 MYSQL_HOME="$HOME/mysql"
@@ -238,20 +237,21 @@ if [ ! -d "$PROXYSQL_HOME" ]; then
     mkdir -p $PROXYSQL_HOME &&
     cp $PROJECT/proxysql.cnf $PROXYSQL_HOME
 else
-    while true; do
-        read -p "是否需要覆盖 ProxySQL 配置？（y/n）" choice
-        choice_lower=$(printf "$choice" | tr '[:upper:]' '[:lower:]')
-        if [ "$choice_lower" == "y" ] || [ "$choice_lower" == "yes" ]; then
-            rm -rf $PROXYSQL_HOME &&
-            mkdir -p $PROXYSQL_HOME &&
-            cp $PROJECT/proxysql.cnf $PROXYSQL_HOME
-            break
-        elif [ "$choice_lower" == "n" ] || [ "$choice_lower" == "no" ]; then
-            break
-        else
-            printf "输入不合法，请重新输入"
-        fi
-    done
+#    while true; do
+#        read -p "是否需要覆盖 ProxySQL 配置？（y/n）" choice
+#        choice_lower=$(printf "$choice" | tr '[:upper:]' '[:lower:]')
+#        if [ "$choice_lower" == "y" ] || [ "$choice_lower" == "yes" ]; then
+#            rm -rf $PROXYSQL_HOME &&
+#            mkdir -p $PROXYSQL_HOME &&
+#            cp $PROJECT/proxysql.cnf $PROXYSQL_HOME
+#            break
+#        elif [ "$choice_lower" == "n" ] || [ "$choice_lower" == "no" ]; then
+#            break
+#        else
+#            printf "输入不合法，请重新输入"
+#        fi
+#    done
+    rm -rf $PROXYSQL_HOME && mkdir -p $PROXYSQL_HOME && cp $PROJECT/proxysql.cnf $PROXYSQL_HOME
 fi
 
 # 创建 proxsql
@@ -272,7 +272,7 @@ FRONT_PART=${MASTER_IP:0:$(($MASTER_IP_LENGTH-1))}
 LAST_CHAR=${MASTER_IP:-1}
 NEW_MASTER_IP="${FRONT_PART}%"
 
-
+# sha256_password / mysql_native_password
 printf "==>${BOLD} 创建主从复制账号${NC}\n"
 mysql -h 127.0.0.1 -P 3306 -u$DB_USER -p$DB_PASS <<EOF
 CREATE USER 'replication.user'@'$NEW_MASTER_IP' IDENTIFIED WITH mysql_native_password BY 'Copy!234';
@@ -367,11 +367,12 @@ dynamic_cursor
 # FLUSH PRIVILEGES;
 # EOF
 
-# mysql -h 127.0.0.1 -P 3306 -u $DB_USER -p$DB_NEW_PASS -e "CREATE DATABASE IF NOT EXISTS canary DEFAULT CHARACTER SET = utf8mb4;"
-# 
-# if [ $? -eq 0 ]; then
-#     mysql -h 127.0.0.1 -P 3306 -u $DB_USER -p$DB_NEW_PASS canary < $SQL/canary.sql
-# fi
+printf "\n==>${BOLD} 创建数据库结构并执行数据脚本${NC}\n"
+mysql -h 127.0.0.1 -P 3306 -u $DB_USER -p$DB_NEW_PASS -e "CREATE DATABASE IF NOT EXISTS canary DEFAULT CHARACTER SET = utf8mb4;"
+if [ $? -eq 0 ]; then
+    mysql -h 127.0.0.1 -P 3306 -u $DB_USER -p$DB_NEW_PASS canary < $SQL/canary.sql
+fi
+dynamic_cursor
 
 printf "\n==>${BOLD} 添加 ProxySQL 主从分组信息${NC}\n"
 mysql -h 127.0.0.1 -P 16032 -uradmin -pradmin --prompt "ProxySQL Admin>" <<EOF
@@ -411,7 +412,7 @@ dynamic_cursor
 
 printf "\n==>${BOLD} 创建路由规则${NC}\n"
 mysql -h 127.0.0.1 -P 16032 -uradmin -pradmin --prompt "ProxySQL Admin>" << EOF
-INSERT INTO mysql_query_rules (rule_id, active, match_pattern, destination_hostgroup, apply) VALUES (1, 1, '^select', 20, 1),(2, 1, '^select.*for update$', 10, 1),(3, 1, '.*', 10, 1);
+INSERT INTO mysql_query_rules (rule_id, active, match_pattern, destination_hostgroup, apply) VALUES (1, 1, '^select', 20, 1),(2, 1, '^select.*for update$', 10, 1);
 load mysql query rules to runtime;
 save mysql query rules to disk;
 EOF
