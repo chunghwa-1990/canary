@@ -16,7 +16,13 @@ MYSQL_3_HOME="$MYSQL_HOME/${CONTAINERS[2]}"
 MYSQL_HOMES=("$MYSQL_1_HOME" "$MYSQL_2_HOME" "$MYSQL_3_HOME")
 DB_USER="root"
 DB_PASSWORD="123456"
+FRAMEWORK=""
+MASTER_IP=""
 MASTER_NAME=""
+REPLICATION_USER="replicaion.user"
+REPLICATION_PASSWORD="123456"
+
+alphabet=("A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z")
 
 # 定义旋转的光标符号
 SPINNER="/-\|"
@@ -37,7 +43,7 @@ function progress() {
     local continer_name=${CONTAINERS[$1]}
     
     while [ $i -le $max  ]; do
-        printf "${continer_name}：[%-100s] %d%%\r" $b $i
+        printf "${continer_name}:[%-100s] %d%%\r" $b $i
         sleep 0.1
         i=`expr 1 + $i`
         b=#$b
@@ -100,20 +106,56 @@ function checkNetwork() {
     fi
 }
 
-# 选择框架
-function choiceFramework() {
-    # frameworks 
-    frameworks=("MGR" "DEFAULT")
+function choiceDeploy() {
     # labels A, B
-    options=("A" "B")
+    options=(${alphabet[@]:0:2})
+    # 架构
+    architecture=("standalone" "cluster")
+    
     
     # Prompt the user to choose from A or B
-    echo "请选择 MySql-Replicaion framework:"
-    for ((i=0; i<${#options[@]}; i++)); do
-        echo "${options[i]}. ${frameworks[i]}"
+    echo "部署模式："
+    for index in ${!options[@]}; do
+        echo "${options[index]}. ${architecture[index]}"
+        option=${options[index]}
+        eval "${option}=${architecture[index]}"
     done
     
-    FRAMEWORK=""
+    flag=0
+    while [ $flag -ne 1 ]; do
+        # User selection
+        read -p "Enter your choice (A or B): " choice
+        
+        # Check user choice and display the selected line
+        case $choice in
+            A | a)
+                standalone
+                flag=1
+            ;;
+            B | b)
+                cluster
+                flag=1
+            ;;
+            *) echo "Invalid choice";;
+        esac
+    done
+}
+
+# 选择框架
+function choiceFramework() {
+    # labels A, B
+    options=(${alphabet[@]:0:2})
+    # framework
+    frameworks=("MGR" "DEFAULT")
+    
+    # Prompt the user to choose from A or B
+    echo "MySql-Replicaion Framework:"
+    for index in ${!options[@]}; do
+        echo "${options[index]}. ${frameworks[index]}"
+        option=${options[index]}
+        eval "${option}=${frameworks[index]}"
+    done
+    
     while [ -z "$FRAMEWORK" ]; do
         # User selection
         read -p "Enter your choice (A or B): " choice
@@ -122,10 +164,10 @@ function choiceFramework() {
         # Check user choice and display the selected line
         case $choice_upper in
             A)
-                FRAMEWORK=${options[0]}
+                FRAMEWORK=$A
             ;;
             B)
-                FRAMEWORK=${options[1]}
+                FRAMEWORK=$B
                 choiceMaster
                 writeMySqlCnf
             ;;
@@ -137,14 +179,19 @@ function choiceFramework() {
 # 选择 master
 function choiceMaster() {
     # labels A, B, C
-    options=("A" "B" "C")
+    options=(${alphabet[@]:0:3})
+    # mysql-1, mysql-2, mysql-3
+    containers=(${CONTAINERS[@]})
+    
     # Prompt the user to choose from A、B or C
-    echo "请选择 MySql-Replicaion framework:"
-    for ((i=0; i<${#options[@]}; i++)); do
-        echo "${options[i]}. ${CONTAINERS[i]}"
+    echo "MySql-Replicaion Master:"
+    for index in ${!options[@]}; do
+        echo "${options[index]}. ${containers[index]}"
+        option=${options[index]}
+        eval "${option}=${containers[index]}"
     done
     
-    while [ -z "$MASTER_NAME" ]; do
+    while [ -z "$MASTER_NAME"  ]; do
         # User selection
         read -p "Enter your choice (A、B or C): " choice
         choice_upper=$(printf "$choice" | tr '[:lower:]' '[:upper:]')
@@ -152,13 +199,13 @@ function choiceMaster() {
         # Check user choice and display the selected line
         case $choice_upper in
             A)
-                MASTER_NAME=${CONTAINERS[0]}
+                MASTER_NAME=$A
             ;;
             B)
-                MASTER_NAME=${CONTAINERS[1]}
+                MASTER_NAME=$B
             ;;
             C)
-                MASTER_NAME=${CONTAINERS[1]}
+                MASTER_NAME=$C
             ;;
             *) echo "Invalid choice";;
         esac
@@ -167,7 +214,6 @@ function choiceMaster() {
 
 # 创建 my.cnf
 function writeMySqlCnf() {
-    echo $MASTER_NAME
     for index in "${!CONTAINERS[@]}"; do
         mkdir -p $MYSQL_HOME/${CONTAINERS[$index]}/conf
         if [ "${CONTAINERS[$index]}" == "$MASTER_NAME" ]; then
@@ -264,11 +310,50 @@ function createMySql3() {
     progress 2
 }
 
+# 启动复制
+function startSlave() {
+    MASTER_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $MASTER_NAME)
+    MASTER_IP_LENGTH=${#MASTER_IP}
+    FONT_PART=${MASTER_IP:0:$(($MASTER_IP_LENGTH-1))}
+    LAST_CHAR=${MASTER_IP:-1}
+    REPLICATION_HOST="${FONT_PART}%"
+    
+    MASTER_PORT=$(docker port $MASTER_NAME | grep 3306 | awk '{print $3}' | cut -d ":" -f 2)
+    MASTER_LOG_FILE=$(mysql -h 127.0.0.1 -P $MASTER_PORT -u $DB_USER -p$DB_PASSWORD -e "SHOW MASTER STATUS\G" | grep "File" | awk '{print $2}')
+    MASTER_LOG_POS=$(mysql -h 127.0.0.1 -P $MASTER_PORT -u $DB_USER -p$DB_PASSWORD -e "SHOW MASTER STATUS\G" | grep "Position" | awk '{print $2}')
+    
+    mysql -h 127.0.0.1 -P $MASTER_PORT -u$DB_USER -p$DB_PASSWORD << EOF
+CREATE USER '$REPLICATION_USER'@'$REPLICATION_HOST' IDENTIFIED WITH mysql_native_password BY '$REPLICATION_PASSWORD';
+GRANT REPLICATION SLAVE ON *.* TO '$REPLICATION_USER'@'$REPLICATION_HOST';
+FLUSH PRIVILEGES;
+EOF
+    
+    for ((i=0; i<${#CONTAINERS[@]}; i++)); do
+        if [ "$MASTER_NAME" != "${CONTAINERS[i]}" ]; then
+            mysql -h 127.0.0.1 -P ${PORTS[i]} -u$DB_USER -p$DB_PASSWORD << EOF
+CHANGE MASTER TO MASTER_HOST='$MASTER_IP', MASTER_USER='$REPLICATION_USER', MASTER_PASSWORD='$REPLICATION_PASSWORD', MASTER_LOG_FILE='$MASTER_LOG_FILE', MASTER_LOG_POS=$MASTER_LOG_POS;
+START SLAVE;
+EOF
+        fi
+    done
+}
+
+# standalone
+function standalone() {
+    echo "构建进程："
+    createMySql1
+}
+
 # cluster
-function createCluster() {
+function cluster() {
+    choiceFramework
+    echo "构建进程："
     createMySql1
     createMySql2
     createMySql3
+    if [ "$FRAMEWORK" != "MGR" ]; then
+        startSlave
+    fi
 }
 
 # 打印logo
@@ -292,9 +377,7 @@ function logo()
 # main
 function main() {
     checkNetwork
-    choiceFramework
-    echo "构建进程："
-    createCluster
+    choiceDeploy
     logo
 }
 
