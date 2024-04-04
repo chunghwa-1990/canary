@@ -16,12 +16,14 @@ MYSQL_3_HOME="$MYSQL_HOME/${CONTAINERS[2]}"
 MYSQL_HOMES=("$MYSQL_1_HOME" "$MYSQL_2_HOME" "$MYSQL_3_HOME")
 DB_USER="root"
 DB_PASSWORD="123456"
-FRAMEWORK=""
-master_ip=""
-master_name=""
 REPLICATION_USER="replicaion.user"
 REPLICATION_PASSWORD="123456"
+framework=""
+master_ip=""
+master_port=""
+master_name=""
 
+# 字母表
 ALPHABET=("A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z")
 
 # 定义旋转的光标符号
@@ -106,12 +108,12 @@ function checkNetwork() {
     fi
 }
 
+# 部署模式
 function choiceDeploy() {
     # labels A, B
     options=(${ALPHABET[@]:0:2})
     # 架构
     architecture=("standalone" "cluster")
-    
     
     # Prompt the user to choose from A or B
     echo "部署模式："
@@ -156,7 +158,7 @@ function choiceFramework() {
         eval "${option}=${frameworks[index]}"
     done
     
-    while [ -z "$FRAMEWORK" ]; do
+    while [ -z "$framework" ]; do
         # User selection
         read -p "Enter your choice (A or B): " choice
         choice_upper=$(printf "$choice" | tr '[:lower:]' '[:upper:]')
@@ -164,10 +166,10 @@ function choiceFramework() {
         # Check user choice and display the selected line
         case $choice_upper in
             A)
-                FRAMEWORK=$A
+                framework=$A
             ;;
             B)
-                FRAMEWORK=$B
+                framework=$B
                 choiceMaster
                 writeMySqlCnf
             ;;
@@ -194,17 +196,16 @@ function choiceMaster() {
     while [ -z "$master_name"  ]; do
         # User selection
         read -p "Enter your choice (A、B or C): " choice
-        choice_upper=$(printf "$choice" | tr '[:lower:]' '[:upper:]')
         
         # Check user choice and display the selected line
-        case $choice_upper in
-            A)
+        case $choice in
+            A | a)
                 master_name=$A
             ;;
-            B)
+            B | b)
                 master_name=$B
             ;;
-            C)
+            C | c)
                 master_name=$C
             ;;
             *) echo "Invalid choice";;
@@ -311,7 +312,7 @@ function createMySql3() {
 }
 
 # 启动复制
-function startSlave() {
+function startReplication() {
     master_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $master_name)
     master_ip_length=${#master_ip}
     font_part=${master_ip:0:$(($master_ip_length-1))}
@@ -330,7 +331,6 @@ EOF
     sleep 5
     for ((i=0; i<${#CONTAINERS[@]}; i++)); do
         if [ "$master_name" != "${CONTAINERS[i]}" ]; then
-            echo "+++++++++++"
             mysql -h 127.0.0.1 -P ${PORTS[i]} -u $DB_USER -p$DB_PASSWORD << EOF
 CHANGE MASTER TO MASTER_HOST='$master_ip', MASTER_USER='$REPLICATION_USER', MASTER_PASSWORD='$REPLICATION_PASSWORD', master_log_file='$master_log_file', master_log_pos=$master_log_pos;
 START SLAVE;
@@ -352,8 +352,8 @@ function cluster() {
     createMySql1
     createMySql2
     createMySql3
-    if [ "$FRAMEWORK" != "MGR" ]; then
-        startSlave
+    if [ "$framework" != "MGR" ]; then
+        startReplication
     fi
 }
 
