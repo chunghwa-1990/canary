@@ -17,12 +17,12 @@ MYSQL_HOMES=("$MYSQL_1_HOME" "$MYSQL_2_HOME" "$MYSQL_3_HOME")
 DB_USER="root"
 DB_PASSWORD="123456"
 FRAMEWORK=""
-MASTER_IP=""
-MASTER_NAME=""
+master_ip=""
+master_name=""
 REPLICATION_USER="replicaion.user"
 REPLICATION_PASSWORD="123456"
 
-alphabet=("A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z")
+ALPHABET=("A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z")
 
 # 定义旋转的光标符号
 SPINNER="/-\|"
@@ -108,7 +108,7 @@ function checkNetwork() {
 
 function choiceDeploy() {
     # labels A, B
-    options=(${alphabet[@]:0:2})
+    options=(${ALPHABET[@]:0:2})
     # 架构
     architecture=("standalone" "cluster")
     
@@ -144,7 +144,7 @@ function choiceDeploy() {
 # 选择框架
 function choiceFramework() {
     # labels A, B
-    options=(${alphabet[@]:0:2})
+    options=(${ALPHABET[@]:0:2})
     # framework
     frameworks=("MGR" "DEFAULT")
     
@@ -179,7 +179,7 @@ function choiceFramework() {
 # 选择 master
 function choiceMaster() {
     # labels A, B, C
-    options=(${alphabet[@]:0:3})
+    options=(${ALPHABET[@]:0:3})
     # mysql-1, mysql-2, mysql-3
     containers=(${CONTAINERS[@]})
     
@@ -191,7 +191,7 @@ function choiceMaster() {
         eval "${option}=${containers[index]}"
     done
     
-    while [ -z "$MASTER_NAME"  ]; do
+    while [ -z "$master_name"  ]; do
         # User selection
         read -p "Enter your choice (A、B or C): " choice
         choice_upper=$(printf "$choice" | tr '[:lower:]' '[:upper:]')
@@ -199,13 +199,13 @@ function choiceMaster() {
         # Check user choice and display the selected line
         case $choice_upper in
             A)
-                MASTER_NAME=$A
+                master_name=$A
             ;;
             B)
-                MASTER_NAME=$B
+                master_name=$B
             ;;
             C)
-                MASTER_NAME=$C
+                master_name=$C
             ;;
             *) echo "Invalid choice";;
         esac
@@ -216,7 +216,7 @@ function choiceMaster() {
 function writeMySqlCnf() {
     for index in "${!CONTAINERS[@]}"; do
         mkdir -p $MYSQL_HOME/${CONTAINERS[$index]}/conf
-        if [ "${CONTAINERS[$index]}" == "$MASTER_NAME" ]; then
+        if [ "${CONTAINERS[$index]}" == "$master_name" ]; then
             cat << EOF >> $MYSQL_HOME/${CONTAINERS[$index]}/conf/my.cnf
 [mysqld]
 server-id = $((index+1))
@@ -312,26 +312,27 @@ function createMySql3() {
 
 # 启动复制
 function startSlave() {
-    MASTER_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $MASTER_NAME)
-    MASTER_IP_LENGTH=${#MASTER_IP}
-    FONT_PART=${MASTER_IP:0:$(($MASTER_IP_LENGTH-1))}
-    LAST_CHAR=${MASTER_IP:-1}
-    REPLICATION_HOST="${FONT_PART}%"
+    master_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $master_name)
+    master_ip_length=${#master_ip}
+    font_part=${master_ip:0:$(($master_ip_length-1))}
+    last_char=${master_ip:-1}
+    replication_host="${font_part}%"
     
-    MASTER_PORT=$(docker port $MASTER_NAME | grep 3306 | awk '{print $3}' | cut -d ":" -f 2)
-    MASTER_LOG_FILE=$(mysql -h 127.0.0.1 -P $MASTER_PORT -u $DB_USER -p$DB_PASSWORD -e "SHOW MASTER STATUS\G" | grep "File" | awk '{print $2}')
-    MASTER_LOG_POS=$(mysql -h 127.0.0.1 -P $MASTER_PORT -u $DB_USER -p$DB_PASSWORD -e "SHOW MASTER STATUS\G" | grep "Position" | awk '{print $2}')
+    master_port=$(docker port $master_name | grep 3306 | awk '{print $3}' | cut -d ":" -f 2)
+    master_log_file=$(mysql -h 127.0.0.1 -P $master_port -u $DB_USER -p$DB_PASSWORD -e "SHOW MASTER STATUS\G" | grep "File" | awk '{print $2}')
+    master_log_pos=$(mysql -h 127.0.0.1 -P $master_port -u $DB_USER -p$DB_PASSWORD -e "SHOW MASTER STATUS\G" | grep "Position" | awk '{print $2}')
     
-    mysql -h 127.0.0.1 -P $MASTER_PORT -u$DB_USER -p$DB_PASSWORD << EOF
-CREATE USER '$REPLICATION_USER'@'$REPLICATION_HOST' IDENTIFIED WITH mysql_native_password BY '$REPLICATION_PASSWORD';
-GRANT REPLICATION SLAVE ON *.* TO '$REPLICATION_USER'@'$REPLICATION_HOST';
+    mysql -h 127.0.0.1 -P $master_port -u$DB_USER -p$DB_PASSWORD << EOF
+CREATE USER '$REPLICATION_USER'@'$replication_host' IDENTIFIED WITH mysql_native_password BY '$REPLICATION_PASSWORD';
+GRANT REPLICATION SLAVE ON *.* TO '$REPLICATION_USER'@'$replication_host';
 FLUSH PRIVILEGES;
 EOF
-    
+    sleep 5
     for ((i=0; i<${#CONTAINERS[@]}; i++)); do
-        if [ "$MASTER_NAME" != "${CONTAINERS[i]}" ]; then
-            mysql -h 127.0.0.1 -P ${PORTS[i]} -u$DB_USER -p$DB_PASSWORD << EOF
-CHANGE MASTER TO MASTER_HOST='$MASTER_IP', MASTER_USER='$REPLICATION_USER', MASTER_PASSWORD='$REPLICATION_PASSWORD', MASTER_LOG_FILE='$MASTER_LOG_FILE', MASTER_LOG_POS=$MASTER_LOG_POS;
+        if [ "$master_name" != "${CONTAINERS[i]}" ]; then
+            echo "+++++++++++"
+            mysql -h 127.0.0.1 -P ${PORTS[i]} -u $DB_USER -p$DB_PASSWORD << EOF
+CHANGE MASTER TO MASTER_HOST='$master_ip', MASTER_USER='$REPLICATION_USER', MASTER_PASSWORD='$REPLICATION_PASSWORD', master_log_file='$master_log_file', master_log_pos=$master_log_pos;
 START SLAVE;
 EOF
         fi
