@@ -122,7 +122,7 @@ function writeMysqlCnf() {
 	for index in "${!CONTAINERS[@]}"; do
 		local_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${CONTAINERS[$index]})
 		mkdir -p $MYSQL_HOME/${CONTAINERS[$index]}/conf
-		cat << EOF | tee $MYSQL_HOME/${CONTAINERS[$index]}/conf/my.cnf
+		cat << EOF >> $MYSQL_HOME/${CONTAINERS[$index]}/conf/my.cnf
 [mysqld]
 server-id = $((index+1))
 # 启用二进制日志
