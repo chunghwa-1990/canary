@@ -193,7 +193,7 @@ function choiceMaster() {
         eval "${option}=${containers[index]}"
     done
     
-    while [ -z "$master_name"  ]; do
+    while [ -z "$master_name" ]; do
         # User selection
         read -p "Enter your choice (A、B or C): " choice
         
