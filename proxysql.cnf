@@ -1,9 +1,23 @@
 datadir="/var/lib/proxysql"
+
 admin_variables=
 {
-    admin_credentials="admin:admin;radmin:radmin"   ##管理端账号密码
+    admin_credentials="admin:admin;cluster_admin"   # 管理端账号密码
     mysql_ifaces="0.0.0.0:6032"
+    cluster_username="cluster_admin"                # 集群用户名称,与admin_credentials中配置的相同
+    cluster_password="cluster_admin"                # 集群用户密码,与admin_credentials中配置的相同
+    cluster_check_interval_ms=200
+    cluster_check_status_frequency=100
+    cluster_mysql_query_rules_save_to_disk=true
+    cluster_mysql_servers_save_to_disk=true
+    cluster_mysql_users_save_to_disk=true
+    cluster_proxysql_servers_save_to_disk=true
+    cluster_mysql_query_rules_diffs_before_sync=3
+    cluster_mysql_servers_diffs_before_sync=3
+    cluster_mysql_users_diffs_before_sync=3
+    cluster_proxysql_servers_diffs_before_sync=3
 }
+
 mysql_variables=
 {
     threads=4
@@ -12,13 +26,13 @@ mysql_variables=
     default_query_timeout=36000000
     have_compress=true
     poll_timeout=2000
-    interfaces="0.0.0.0:6033"
+    interfaces="0.0.0.0:6033"                       # 代理请求端口
     default_schema="information_schema"
     stacksize=1048576
-    server_version="8.0.4"
+    server_version="8.0.4"                          # 指定数据库版本
     connect_timeout_server=3000
-    monitor_username="proxy.monitor" ##监控账号
-    monitor_password="123456" ##监控密码
+    monitor_username="proxy.monitor"                # 监控账号
+    monitor_password="123456"                       # 监控密码
     monitor_history=600000
     monitor_connect_interval=60000
     monitor_ping_interval=10000
@@ -31,3 +45,19 @@ mysql_variables=
     connect_retries_on_failure=10
 }
 
+
+proxysql_servers =
+(
+    {
+        hostname="172.19.0.4"
+        port=6032
+        weight=1
+        comment="ProxySQL_node1"
+    },
+    {
+        hostname="172.31.0.5"
+        port=6032
+        weight=1
+        comment="ProxySQL_node2"
+    }
+)
