@@ -4,21 +4,22 @@
 HOME="/Users/zhaohongliang/DockerData"
 # network
 NETWORK="canary-net"
+subnet=""
+gateway=""
 # containers
 CONTAINERS=("mysql-1" "mysql-2" "mysql-3")
 PORTS=("3306" "3307" "3308")
 
 ###################### mysql #######################
 MYSQL_HOME="$HOME/mysql"
-MYSQL_1_HOME="$MYSQL_HOME/${CONTAINERS[0]}"
-MYSQL_2_HOME="$MYSQL_HOME/${CONTAINERS[1]}"
-MYSQL_3_HOME="$MYSQL_HOME/${CONTAINERS[2]}"
-MYSQL_HOMES=("$MYSQL_1_HOME" "$MYSQL_2_HOME" "$MYSQL_3_HOME")
+# 管理员用户名、密码
 DB_USER="root"
 DB_PASSWORD="123456"
+# 主从复制用户名、密码
 REPLICATION_USER="replicaion.user"
 REPLICATION_PASSWORD="123456"
 framework=""
+# master节点的IP、端口和主机名
 master_ip=""
 master_port=""
 master_name=""
@@ -219,9 +220,9 @@ function choiceMaster() {
 # 创建 my.cnf
 function writeMySqlCnf() {
     for index in "${!CONTAINERS[@]}"; do
-        mkdir -p $MYSQL_HOME/${CONTAINERS[$index]}/conf
-        if [ "${CONTAINERS[$index]}" == "$master_name" ]; then
-            cat << EOF >> $MYSQL_HOME/${CONTAINERS[$index]}/conf/my.cnf
+        mkdir -p $MYSQL_HOME/${CONTAINERS[index]}/conf
+        if [ "${CONTAINERS[index]}" == "$master_name" ]; then
+            cat << EOF >> $MYSQL_HOME/${CONTAINERS[index]}/conf/my.cnf
 [mysqld]
 server-id = $((index+1))
 # 启用二进制日志
@@ -248,77 +249,42 @@ EOF
     done
 }
 
-# mysql-1
-function createMySql1() {
-    if [ ! -d "$MYSQL_1_HOME/conf" ]; then
-        mkdir -p $MYSQL_1_HOME/conf
-    fi
+# create mysql
+function createMySql() {
+    local end=$1
+    echo "$end ===========>"
+    containers=(${CONTAINERS[@]:0:$end})
     
-    docker run \
-        -itd \
-        --name ${CONTAINERS[0]} \
-        -p ${PORTS[0]}:3306 \
-        -v $MYSQL_1_HOME/conf:/etc/mysql/conf.d \
-        -v $MYSQL_1_HOME/data:/var/lib/mysql \
-        -v $MYSQL_1_HOME/log:/var/log/mysql \
-        -v /etc/localtime:/etc/localtime \
-        -e MYSQL_ROOT_PASSWORD=$DB_PASSWORD   \
-        --restart no \
-        --privileged=true \
-        --network $NETWORK \
-        mysql &> /dev/null
-    progress 0
-}
-
-# mysql-2
-function createMySql2() {
-    if [ ! -d "$MYSQL_2_HOME/conf" ]; then
-        mkdir -p $MYSQL_2_HOME/conf
-    fi
+    echo "构建进程："
+    for index in "${!containers[@]}"; do
+        container_home=$MYSQL_HOME/${containers[index]}
+        if [ ! -d "$container_home/conf" ]; then
+            mkdir -p $container_home/conf
+        fi
     
-    docker run \
-    -itd \
-        --name ${CONTAINERS[1]} \
-        -p ${PORTS[1]}:3306 \
-        -v $MYSQL_2_HOME/conf:/etc/mysql/conf.d \
-        -v $MYSQL_2_HOME/data:/var/lib/mysql \
-        -v $MYSQL_2_HOME/log:/var/log/mysql \
-        -v /etc/localtime:/etc/localtime \
-        -e MYSQL_ROOT_PASSWORD=$DB_PASSWORD   \
-        --restart no \
-        --privileged=true \
-        --network $NETWORK \
-        mysql &> /dev/null
-    progress 1
-}
-
-# mysql-3
-function createMySql3() {
-    if [ ! -d "$MYSQL_3_HOME/conf" ]; then
-        mkdir -p $MYSQL_3_HOME/conf
-    fi
-    
-    docker run \
-        -itd \
-        --name ${CONTAINERS[2]} \
-        -p ${PORTS[2]}:3306 \
-        -v $MYSQL_3_HOME/conf:/etc/mysql/conf.d \
-        -v $MYSQL_3_HOME/data:/var/lib/mysql \
-        -v $MYSQL_3_HOME/log:/var/log/mysql \
-        -v /etc/localtime:/etc/localtime \
-        -e MYSQL_ROOT_PASSWORD=$DB_PASSWORD   \
-        --restart no \
-        --privileged=true \
-        --network $NETWORK \
-        mysql &> /dev/null
-    progress 2
+        docker run \
+            -itd \
+            --name ${containers[index]} \
+            -p ${PORTS[index]}:3306 \
+            -v $container_home/conf:/etc/mysql/conf.d \
+            -v $container_home/data:/var/lib/mysql \
+            -v $container_home/log:/var/log/mysql \
+            -v /etc/localtime:/etc/localtime \
+            -e MYSQL_ROOT_PASSWORD=$DB_PASSWORD \
+            --restart no \
+            --privileged=true \
+            --network $NETWORK \
+            mysql &> /dev/null
+            
+        progress $index
+    done
 }
 
 # 启动复制
 function startReplication() {
     master_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $master_name)
     master_port=$(docker port $master_name | grep 3306 | awk '{print $3}' | cut -d ":" -f 2)
-    gateway=$(docker network inspect $NETWORK | jq -r '.[0].IPAM.Config.[0].Gateway')
+    
     replication_host=$(echo $gateway | sed 's/\.1$/\.%/g')
     master_log_file=$(mysql -h 127.0.0.1 -P $master_port -u $DB_USER -p$DB_PASSWORD -e "SHOW MASTER STATUS\G" | grep "File" | awk '{print $2}')
     master_log_pos=$(mysql -h 127.0.0.1 -P $master_port -u $DB_USER -p$DB_PASSWORD -e "SHOW MASTER STATUS\G" | grep "Position" | awk '{print $2}')
@@ -341,17 +307,13 @@ EOF
 
 # standalone
 function standalone() {
-    echo "构建进程："
-    createMySql1
+    createMySql 1
 }
 
 # cluster
 function cluster() {
     choiceFramework
-    echo "构建进程："
-    createMySql1
-    createMySql2
-    createMySql3
+    createMySql 3
     if [ "$framework" != "MGR" ]; then
         startReplication
     fi
