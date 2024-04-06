@@ -16,7 +16,7 @@ DB_PASSWORD="123456"
 # 主从复制用户名、密码
 REPLICATION_USER="replicaion.user"
 REPLICATION_PASSWORD="123456"
-# MGR 端口
+# MGR服务器ip、端口和白名单
 MGR_PORT="33061"
 group_seeds=""
 whitelist=""
