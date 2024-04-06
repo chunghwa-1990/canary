@@ -2,6 +2,7 @@
 
 ###################### docker ######################
 HOME="/Users/zhaohongliang/DockerData"
+# network
 NETWORK="canary-net"
 
 ###################### mysql #######################
