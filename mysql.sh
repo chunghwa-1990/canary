@@ -84,11 +84,10 @@ function isValid() {
 
 # 网路
 function checkNetwork() {
-    local network_exists=$(docker network ls --format '{{.Name}}' | grep -w "$NETWORK")
+    network_exists=$(docker network ls --format '{{.Name}}' | grep -w "$NETWORK")
     if [ -z "$network_exists" ]; then
         echo "Creating network...(might take a while)"
         docker network create $NETWORK &> /dev/null
-        sleep 2
         echo "${BLUE}===>${NC}${BOLD} Successfully created network${NC}"
     else
         echo "The network $NETWORK already exists."
@@ -106,6 +105,10 @@ function checkNetwork() {
             fi
         done
     fi
+    subnet=$(docker network inspect $NETWORK | jq -r '.[0].IPAM.Config.[0].Subnet')
+    gateway=$(docker network inspect $NETWORK | jq -r '.[0].IPAM.Config.[0].Gateway')
+    echo "Subnet: $subnet"
+    echo "Gateway: $gateway"
 }
 
 # 部署模式
@@ -314,12 +317,9 @@ function createMySql3() {
 # 启动复制
 function startReplication() {
     master_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $master_name)
-    master_ip_length=${#master_ip}
-    font_part=${master_ip:0:$(($master_ip_length-1))}
-    last_char=${master_ip:-1}
-    replication_host="${font_part}%"
-    
     master_port=$(docker port $master_name | grep 3306 | awk '{print $3}' | cut -d ":" -f 2)
+    gateway=$(docker network inspect $NETWORK | jq -r '.[0].IPAM.Config.[0].Gateway')
+    replication_host=$(echo $gateway | sed 's/\.1$/\.%/g')
     master_log_file=$(mysql -h 127.0.0.1 -P $master_port -u $DB_USER -p$DB_PASSWORD -e "SHOW MASTER STATUS\G" | grep "File" | awk '{print $2}')
     master_log_pos=$(mysql -h 127.0.0.1 -P $master_port -u $DB_USER -p$DB_PASSWORD -e "SHOW MASTER STATUS\G" | grep "Position" | awk '{print $2}')
     
