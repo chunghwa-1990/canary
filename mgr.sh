@@ -113,7 +113,8 @@ function getGroupSeeds() {
 	done
 	
 	group_seeds="$A:$MGR_PORT,$B:$MGR_PORT,$C:$MGR_PORT"
-	whitelist="$A,$B,$C"
+	# whitelist="$A,$B,$C"
+	whitelist=$(docker network inspect $NETWORK | jq -r '.[0].IPAM.Config.[0].Subnet')
 }
 
 # 创建 my.cnf
