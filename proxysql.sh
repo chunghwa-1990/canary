@@ -1,42 +1,38 @@
 #!/bin/bash
 
-# 容器名称
-CONTAINERS=("mysql-1" "mysql-2" "mysql-3" "proxysql-1" "proxysql-2")
-PORTS=("3306" "3307" "3308" "16033" "26033")
-
+###################### docker ######################
 HOME="/Users/zhaohongliang/DockerData"
+# network
+NETWORK="canary-net"
+# containers
+CONTAINERS=("proxysql-1" "proxysql-2")
+PROXYSQL_1=("16032" "16033" "16070")
+PROXYSQL_2=("26032" "26033" "26070")
 
+###################### proxysql #####################
 PROXYSQL_HOME="$HOME/proxysql"
-PROXYSQL_1_HOME="$PROXYSQL_HOME/${CONTAINERS[3]}"
-PROXYSQL_2_HOME="$PROXYSQL_HOME/${CONTAINERS[4]}"
-PROXYSQL_HOMES=("$PROXYSQL_1_HOME" "$PROXYSQL_2_HOME")
+PROXYSQL_ADMIN_USER="radmin"
+PROXYSQL_ADMIN_PASSWORD="radmin"
 PROXYSQL_DATA_PATH="/var/lib/proxysql"
 PROXYSQL_DATA_FILE=$PROXYSQL_DATA_PATH/proxysql.db
 
-PROXYSQL_1_HOST=""
-PROXYSQL_2_HOST=""
-
-MGR_PRIMARY_PORT=""
-MGR_PRIMARY_NAME=""
-PROXYSQL_PORT=""
-PROXYSQL_ADMIN="radmin"
-PROXYSQL_ADMIN_PASSWORD="radmin"
-
-HOST_IP=""
-HOST_PORT=""
-HOST_NAME=""
-HOST_LINES=""
-
+###################### mysql ######################
+# 管理员用户名、密码
 DB_USER="root"
-DB_PASSWORD="123456"
-DB_NEW_PASSWORD="Pass!234"
-
-MONITOR_HOST=""
-MONITOR_USER="proxy.monitor"
-MONITOR_PASSWORD="123456"
-ADMIN_HOST="%"
+DB_PASSWORD="Pass!234"
+# proxysql管理员用户名、密码
 ADMIN_USER="proxy.admin"
 ADMIN_PASSWORD="Pass!234"
+# proxysql监测用户名、密码
+MONITOR_USER="proxy.monitor"
+MONITOR_PASSWORD="123456"
+# master节点的IP、端口和主机名
+master_ip=""
+master_port=""
+master_name=""
+
+# 字母表
+ALPHABET=("A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z")
 
 # 定义旋转的光标符号
 SPINNER="/-\|"
@@ -48,133 +44,153 @@ BLUE='\033[0;34m'   # 蓝色字体
 BOLD='\033[1m'      # 加粗字体
 NC='\033[0m'        # 恢复默认格式
 
-# 打印logo
-function logo()
-{
-	color="$(tput setaf 6)"
-	normal="$(tput sgr0)"
-	printf "${color}"
-	echo '  _____  ____ _   ____   ____ _   _____   __  __ ' 
-	echo ' / ___/ / __ `/  / __ \ / __ `/  / ___/  / / / / '
-	echo '/ /__  / /_/ /  / / / // /_/ /  / /     / /_/ /  '
-	echo '\___/  \__,_/  /_/ /_/ \__,_/  /_/      \__, /   '
-	echo '                                       /____/   ...is now finished!'
-	echo ''
-	echo 'Just enjoy it!'
-	echo 'p.s. Follow me at https://github.com/hahapigs/canary'
-	echo ''
-	printf "${normal}"
+
+# progress
+function progress() {
+	local i=0
+	local b=' '
+	local max=100
+	local continer_name=$1
+	
+	while [ $i -le $max  ]; do
+		printf "${continer_name}:[%-100s] %d%%\r" $b $i
+		sleep 0.1
+		i=`expr 1 + $i`
+		b=#$b
+	done
+	printf "\n${continer_name} build successful!\n"
 }
 
-function choiceProxySql() {
-	# Run the command and store the output in a variable
-	output=$(docker ps -q --filter "name=proxysql" | xargs docker inspect --format '{{.Name}}' | sed 's|^/||')
+# 校验数据库是否启动
+function isStart() {
+	local continer_name=$1
 	
-	if [ ! -n "$output" ]; then
-		echo "Output is empty"
-		exit 0;
-	fi
-	
-	# Split the output into lines
-	IFS=$'\n' read -rd '' -a lines <<<"$output"
-	
-	# Create an array with labels A, B
-	options=("A" "B")
-	
-	# Loop through the lines and assign them to options A, B
-	for index in ${!options[@]}; do
-		option=${options[index]}
-		eval "${option}=${lines[index]}"
+	while ! docker ps | grep ${CONTAINERS[$index]}; do
+		for i in $(seq 0 3); do
+			printf "\r${continer_name} 正在启动...${SPINNER:$i:1}"
+			sleep 0.2
+		done
 	done
+	printf "${continer_name} start successful！\n"
+}
+
+# 校验连接是否正常
+function isValid() {
+	local continer_name=$1
+	local port=$2
 	
-	# Prompt the user to choose from A or B
-	echo "Please choose from the following options:"
-	echo "A: $A"
-	echo "B: $B"
+	nc -z -v -w 3 127.0.0.1 ${port}
+	if [ $? -eq 0  ]; then
+		printf "${CONTAINERS[$index]} connection successful!\n"
+	else
+		printf "${CONTAINERS[$index]} connection failed!\n"
+	fi
+	echo ""
+}
+
+# create proxysql
+function createProxySql() {
+	containers=(${CONTAINERS[@]})
 	
-	while [ -z "$HOST_NAME" ]; do
-		# User selection
-		read -p "Enter your choice (A or B): " choice
-		choice_upper=$(printf "$choice" | tr '[:lower:]' '[:upper:]')
+	echo "构建进程："
+	for index in ${!containers[@]}; do
+		volume_home=$PROXYSQL_HOME/${containers[index]}
+		alias=$(echo "${containers[index]}" | sed 's/-/_/' | tr '[:lower:]' '[:upper:]')[@]
+		ports=(${!alias})
 		
-		# Check user choice and display the selected line
-		case $choice_upper in
-			A)
-				HOST_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $A)
-				HOST_PORT=$(docker port $A | grep 6033 | awk '{print $3}' | cut -d ":" -f 2)
-				PROXYSQL_PORT=$(docker port $A | grep 6032 | awk '{print $3}' | cut -d ":" -f 2)
-				HOST_NAME=$A
-			;;
-			B)
-				HOST_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $B)
-				HOST_PORT=$(docker port $B | grep 6033 | awk '{print $3}' | cut -d ":" -f 2)
-				PROXYSQL_PORT=$(docker port $B | grep 6032 | awk '{print $3}' | cut -d ":" -f 2)
-				HOST_NAME=$B
-			;;
-			*) echo "Invalid choice";;
-		esac
+		mkdir -p $volume_home/conf
+		docker run \
+			-d \
+			--name ${containers[index]} \
+			-p ${ports[0]}:6032 \
+			-p ${ports[1]}:6033 \
+			-p ${ports[2]}:6070 \
+			-v $volume_home/conf/proxysql.cnf:/etc/proxysql.cnf \
+			-v /etc/localtime:/etc/localtime \
+			--restart no \
+			--privileged=true \
+			--network $NETWORK \
+			proxysql/proxysql &> /dev/null
+		progress ${containers[index]}
+		isStart ${containers[index]}
+		sleep 2
+		isValid ${containers[index]} ${ports[0]}
+		
+		# docker run -p 16032:6032 -p 16033:6033 -p 16070:6070 -d -v /path/to/proxysql.cnf:/etc/proxysql.cnf proxysql/proxysql
 	done
 }
 
-function getProxyServers() {
-	# Run the command and store the output in a variable
-	output=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -q --filter "name=proxysql"))
-	
-	if [ ! -n "$output" ]; then
-		echo "Output is empty"
-		exit 0;
-	fi
-	
-	# Split the output into lines
-	IFS=$'\n' read -rd '' -a lines <<<"$output"
-	
-	# Create an array with labels A, B
-	options=("A" "B")
-	
-	# Loop through the lines and assign them to options A, B
-	for index in ${!options[@]}; do
-		option=${options[index]}
-		eval "${option}=${lines[index]}"
-	done
-	
-	if [[ $A == *-1* ]]; then
-		PROXYSQL_1_HOST=$A
-	else
-		PROXYSQL_2_HOST=$A
-	fi
-	
-	if [[ $B == *-2* ]]; then
-		PROXYSQL_2_HOST=$B
-	else
-		PROXYSQL_1_HOST=$B
-	fi
-}
-
-function getGroupSeeds() {
-	# Run the command and store the output in a variable
-	output=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -q --filter "name=mysql"))
-	
-	if [ ! -n "$output" ]; then
-		echo "Output is empty"
-		exit 0;
-	fi
-	
-	# Split the output into HOST_LINES
-	IFS=$'\n' read -rd '' -a HOST_LINES <<<"$output"
-}
-
-function writeProxyConf() {
-	local dir=$1
-	mkdir -p $dir/conf
-	cat << EOF > $dir/conf/proxysql.cnf
+# proxysql 单机配置
+function writeProxySqlCnf() {
+	for container in ${CONTAINERS[@]}; do
+		mkdir -p  $PROXYSQL_HOME/$container/conf
+		cat << EOF > $PROXYSQL_HOME/$container/conf/proxysql.cnf
 datadir="/var/lib/proxysql"
 
 admin_variables=
 {
-	admin_credentials="admin:admin;$PROXYSQL_ADMIN:$PROXYSQL_ADMIN_PASSWORD"   # 管理端账号密码
+	admin_credentials="admin:admin;$PROXYSQL_ADMIN_USER:$PROXYSQL_ADMIN_PASSWORD"   # 管理端账号密码
 	mysql_ifaces="0.0.0.0:6032"
-	cluster_username="cluster.admin"				# 集群用户名称,与admin_credentials中配置的相同
-	cluster_password="cluster.admin"                # 集群用户密码,与admin_credentials中配置的相同
+}
+
+mysql_variables=
+{
+	threads=4
+	max_connections=2048
+	default_query_delay=0
+	default_query_timeout=36000000
+	have_compress=true
+	poll_timeout=2000
+	interfaces="0.0.0.0:6033"                       # 代理请求端口
+	default_schema="information_schema"
+	stacksize=1048576
+	server_version="8.0.4"                          # 指定数据库版本
+	connect_timeout_server=3000
+	monitor_username="$MONITOR_USER"                # 监控账号
+	monitor_password="$MONITOR_PASSWORD"            # 监控密码
+	monitor_history=600000
+	monitor_connect_interval=60000
+	monitor_ping_interval=10000
+	monitor_read_only_interval=1500
+	monitor_read_only_timeout=500
+	ping_interval_server_msec=120000
+	ping_timeout_server=500
+	commands_stats=true
+	sessions_sort=true
+	connect_retries_on_failure=10
+}
+EOF
+	done
+	
+}
+
+# 获取 proxysql sever ip
+function getProxySqlServer() {
+	output=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -q --filter "name=proxysql") | sort)
+	if [ ! -n "$output" ]; then
+		echo "Output is empty"
+		exit 0;
+	fi
+	
+	# Split the output into servers
+	IFS=$'\n' read -rd '' -a servers <<<"$output"
+	echo ${servers[@]}
+}
+
+# proxysql 集群配置
+function writeClusterCnf() {
+	servers=($(getProxySqlServer))
+	for container in ${CONTAINERS[@]}; do
+		mkdir -p $PROXYSQL_HOME/$container/conf
+		cat << EOF > $PROXYSQL_HOME/$container/conf/proxysql.cnf
+datadir="/var/lib/proxysql"
+
+admin_variables=
+{
+	admin_credentials="admin:admin;$PROXYSQL_ADMIN_USER:$PROXYSQL_ADMIN_PASSWORD"   # 管理端账号密码
+	mysql_ifaces="0.0.0.0:6032"
+	cluster_username="$PROXYSQL_ADMIN_USER"				# 集群用户名称,与admin_credentials中配置的相同
+	cluster_password="$PROXYSQL_ADMIN_PASSWORD"        	# 集群用户密码,与admin_credentials中配置的相同
 	cluster_check_interval_ms=200
 	cluster_check_status_frequency=100
 	cluster_mysql_query_rules_save_to_disk=true
@@ -200,8 +216,8 @@ mysql_variables=
 	stacksize=1048576
 	server_version="8.0.4"                          # 指定数据库版本
 	connect_timeout_server=3000
-	monitor_username="proxy.monitor"                # 监控账号
-	monitor_password="123456"                       # 监控密码
+	monitor_username="$MONITOR_USER"                # 监控账号
+	monitor_password="$MONITOR_PASSWORD"            # 监控密码
 	monitor_history=600000
 	monitor_connect_interval=60000
 	monitor_ping_interval=10000
@@ -217,95 +233,233 @@ mysql_variables=
 proxysql_servers =
 (
 	{
-		hostname="$PROXYSQL_1_HOST"
+		hostname="${servers[0]}"
 		port=6032
 		weight=1
-		comment="${CONTAINERS[3]}"
+		comment="${CONTAINERS[0]}"
 	},
 	{
-		hostname="$PROXYSQL_2_HOST"
+		hostname="${servers[1]}"
 		port=6032
 		weight=1
-		comment="${CONTAINERS[4]}"
+		comment="${CONTAINERS[1]}"
 	}
 )
 EOF
-}
-
-function getPrimaryPort() {
-	# 注意：当前 127.0.0.1:3306 不一定是 primary，不过我们可以通过 MGR 和 docker 查询出 primary 映射在物理机上的 prot
-	result=$(mysql -h 127.0.0.1 -P ${PORTS[0]} -u $DB_USER -p$DB_PASSWORD -e "SELECT MEMBER_HOST FROM performance_schema.replication_group_members WHERE MEMBER_ROLE='PRIMARY';")
-	primary_host=$(echo "$result" | grep -v "MEMBER_HOST" | tr -s " " | cut -d " " -f 2)
-	
-	docker ps --format "{{.ID}}: {{.Names}}" | grep mysql | while read line ; do
-		container_id=$(echo $line | cut -d':' -f1)
-		container_name=$(echo $line | cut -d':' -f2)
-		container_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $container_id)
-		if [ "$container_ip" == "$primary_host" ]; then
-			MGR_PRIMARY_PORT=$(docker port $container_name | grep 3306 | awk '{print $3}' | cut -d ":" -f 2)
-			break
-		fi
 	done
 }
 
-function choiceMgr() {
+# 删除 proxysql.db
+function removeProxySqlData() {
+	for container in ${CONTAINERS[@]}; do
+		# 删除 proxysql.db
+		docker exec $container rm /var/lib/proxysql/proxysql.db
+	done
+}
+
+# 重启 proxysql
+function restartProxySql() {
+	echo "Stopping proxsql...(might take a while)"
+	docker restart `docker ps -a | grep proxysql | awk -F " " '{print $1}'` &> /dev/null
+	sleep 5
+	echo "${BLUE}===>${NC}${BOLD} Successfully stopped proxsql${NC}"
+	echo "${BLUE}===>${NC}${BOLD} Successfully started proxsql${NC}"
+}
+
+# 选择 master
+function choiceMySqlMaster() {
 	# Run the command and store the output in a variable
-	output=$(docker ps -q --filter "name=mysql" | xargs docker inspect --format '{{.Name}}' | sed 's|^/||')
+	output=$(docker ps -q --filter "name=mysql" | xargs docker inspect --format '{{.Name}}' | sed 's|^/||' | sort)
 	
 	if [ ! -n "$output" ]; then
 		echo "Output is empty"
 		exit 0;
 	fi
 	
-	# Split the output into lines
-	IFS=$'\n' read -rd '' -a lines <<<"$output"
+	# Split the output into containers
+	IFS=$'\n' read -rd '' -a containers <<<"$output"
 	
-	# Create an array with labels A, B, C
-	options=("A" "B" "C")
+	# 数量
+	number=${#containers[@]}
+	# labels A, B, C
+	options=(${ALPHABET[@]:0:$number})
 	
-	# Loop through the lines and assign them to options A, B, C
+	# Prompt the user to choose from A、B or C
+	echo "MySql-Replicaion Master:"
 	for index in ${!options[@]}; do
+		echo "${options[index]}. ${containers[index]}"
 		option=${options[index]}
-		eval "${option}=${lines[index]}"
+		eval "${option}=${containers[index]}"
 	done
 	
 	# Prompt the user to choose from A, B, or C
-	echo "Please choose from the following options:"
-	echo "A: $A"
-	echo "B: $B"
-	echo "C: $C"
+	# echo "Please choose from the following options:"
+	# echo "A: $A"
+	# echo "B: $B"
+	# echo "C: $C"
 	
-	while [ -z "$MGR_PRIMARY_NAME" ]; do
+	while [ -z "$master_name" ]; do
 		# User selection
-		read -p "Enter your choice (A, B, or C): " choice
-		choice_upper=$(printf "$choice" | tr '[:lower:]' '[:upper:]')
+		read -p "Enter your choice (A、B or C): " choice
 		
 		# Check user choice and display the selected line
-		case $choice_upper in
-			A)
-				MGR_PRIMARY_PORT=$(docker port $A | grep 3306 | awk '{print $3}' | cut -d ":" -f 2)
-				MGR_PRIMARY_NAME=$A
+		case $choice in
+			A | a)
+				master_name=$A
 			;;
-			B)
-				MGR_PRIMARY_PORT=$(docker port $B | grep 3306 | awk '{print $3}' | cut -d ":" -f 2)
-				MGR_PRIMARY_NAME=$B
+			B | b)
+				master_name=$B
 			;;
-			C)
-				MGR_PRIMARY_PORT=$(docker port $C | grep 3306 | awk '{print $3}' | cut -d ":" -f 2)
-				MGR_PRIMARY_NAME=$C
+			C | c)
+				master_name=$C
 			;;
 			*) echo "Invalid choice";;
 		esac
 	done
 }
 
-function createProxyUser() {
-	local HOST_IP_LENGTH=${#HOST_IP}
-	local FRONT_PART=${HOST_IP:0:$(($HOST_IP_LENGTH-1))}
-	local LAST_CHAR=${HOST_IP:-1}
-	MONITOR_HOST="${FRONT_PART}%"
+# 选择复制模式
+function choiceReplicationModel() {
+	# labels A, B
+	options=(${ALPHABET[@]:0:2})
+	model=("master-slave" "group-replication")
+	
+	for index in ${!options[@]}; do
+		option=${options[index]}
+		eval "${option}=${model[index]}"
+	done
+	
+	# Prompt the user to choose from A or B
+	echo "MySql-Replicaion Model:"
+	echo "A: $A"
+	echo "B: $B"
+	
+	model=""
+	while [ -z "$model" ]; do
+		# User selection
+		read -p "Enter your choice (A、B or C): " choice
+		
+		# Check user choice and display the selected line
+		case $choice in
+			A | a)
+				masterSlaveReplication
+				model=$A
+			;;
+			B | b)
+				groupReplication
+				# createView
+				model=$B
+			;;
+			*) echo "Invalid choice";;
+		esac
+	done
+}
 
-	mysql -h 127.0.0.1 -P $MGR_PRIMARY_PORT -u $DB_USER -p$DB_PASSWORD << EOF
+# 主从复制 模式
+function masterSlaveReplication() {
+	mysql -h 127.0.0.1 -P ${PROXYSQL_1[0]} -u $PROXYSQL_ADMIN_USER -p$PROXYSQL_ADMIN_PASSWORD --prompt "ProxySQL Admin>" << EOF
+INSERT INTO mysql_replication_hostgroups (writer_hostgroup, reader_hostgroup, check_type, COMMENT)
+values(10, 20, 'read_only', 'proxy');
+load mysql servers to runtime;
+save mysql servers to disk;
+EOF
+}
+
+# 组复制 模式
+function groupReplication() {
+	mysql -h 127.0.0.1 -P ${PROXYSQL_1[0]} -u $PROXYSQL_ADMIN_USER -p$PROXYSQL_ADMIN_PASSWORD --prompt "ProxySQL Admin>" << EOF
+INSERT INTO mysql_group_replication_hostgroups (writer_hostgroup, backup_writer_hostgroup, reader_hostgroup, offline_hostgroup, active, max_writers, writer_is_also_reader, max_transactions_behind, COMMENT)
+values(10, 20, 30, 40, 1, 1, 1, 100, 'mgr_cluster_01');load mysql servers to runtime;
+save mysql servers to disk;
+EOF
+}
+
+function createView() {
+	master_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $master_name)
+	master_port=$(docker port $master_name | grep 3306 | awk '{print $3}' | cut -d ":" -f 2)
+	
+	mysql -h 127.0.0.1 -P $master_port -u $DB_USER -p$DB_PASSWORD << EOF
+		USE sys;
+DELIMITER $$
+CREATE FUNCTION IFZERO(a INT, b INT)
+RETURNS INT
+DETERMINISTIC
+RETURN IF(a = 0, b, a)$$
+
+CREATE FUNCTION LOCATE2(needle TEXT(10000), haystack TEXT(10000), offset INT)
+RETURNS INT
+DETERMINISTIC
+RETURN IFZERO(LOCATE(needle, haystack, offset), LENGTH(haystack) + 1)$$
+
+CREATE FUNCTION GTID_NORMALIZE(g TEXT(10000))
+RETURNS TEXT(10000)
+DETERMINISTIC
+RETURN GTID_SUBTRACT(g, '')$$
+
+CREATE FUNCTION GTID_COUNT(gtid_set TEXT(10000))
+RETURNS INT
+DETERMINISTIC
+BEGIN
+	DECLARE result BIGINT DEFAULT 0;
+	DECLARE colon_pos INT;
+	DECLARE next_dash_pos INT;
+	DECLARE next_colon_pos INT;
+	DECLARE next_comma_pos INT;
+	SET gtid_set = GTID_NORMALIZE(gtid_set);
+	SET colon_pos = LOCATE2(':', gtid_set, 1);
+	WHILE colon_pos != LENGTH(gtid_set) + 1 DO
+			SET next_dash_pos = LOCATE2('-', gtid_set, colon_pos + 1);
+			SET next_colon_pos = LOCATE2(':', gtid_set, colon_pos + 1);
+			SET next_comma_pos = LOCATE2(',', gtid_set, colon_pos + 1);
+			IF next_dash_pos < next_colon_pos AND next_dash_pos < next_comma_pos THEN
+				SET result = result +
+					SUBSTR(gtid_set, next_dash_pos + 1,
+								LEAST(next_colon_pos, next_comma_pos) - (next_dash_pos + 1)) -
+					SUBSTR(gtid_set, colon_pos + 1, next_dash_pos - (colon_pos + 1)) + 1;
+			ELSE
+				SET result = result + 1;
+			END IF;
+			SET colon_pos = next_colon_pos;
+	END WHILE;
+	RETURN result;
+END$$
+
+CREATE FUNCTION gr_applier_queue_length()
+RETURNS INT
+DETERMINISTIC
+BEGIN
+	RETURN (SELECT sys.gtid_count( GTID_SUBTRACT( (SELECT
+Received_transaction_set FROM performance_schema.replication_connection_status
+WHERE Channel_name = 'group_replication_applier' ), (SELECT
+@@global.GTID_EXECUTED) )));
+END$$
+
+CREATE FUNCTION gr_member_in_primary_partition()
+RETURNS VARCHAR(3)
+DETERMINISTIC
+BEGIN
+	RETURN (SELECT IF( MEMBER_STATE='ONLINE' AND ((SELECT COUNT(*) FROM
+performance_schema.replication_group_members WHERE MEMBER_STATE != 'ONLINE') >=
+((SELECT COUNT(*) FROM performance_schema.replication_group_members)/2) = 0),
+'YES', 'NO' ) FROM performance_schema.replication_group_members JOIN
+performance_schema.replication_group_member_stats USING(member_id));
+END$$
+
+CREATE VIEW gr_member_routing_candidate_status AS SELECT
+sys.gr_member_in_primary_partition() as viable_candidate,
+IF( (SELECT (SELECT GROUP_CONCAT(variable_value) FROM
+performance_schema.global_variables WHERE variable_name IN ('read_only',
+'super_read_only')) != 'OFF,OFF'), 'YES', 'NO') as read_only,
+sys.gr_applier_queue_length() as transactions_behind, Count_Transactions_in_queue as 'transactions_to_cert' from performance_schema.replication_group_member_stats;$$
+
+DELIMITER;
+EOF
+	
+	result1 = $(mysql -h 127.0.0.1 -P $master_port -u $DB_USER -p$DB_PASSWORD -e "select gr_member_in_primary_partition();" sys);
+	result2 = $(mysql -h 127.0.0.1 -P $master_port -u $DB_USER -p$DB_PASSWORD -e "select * from sys.gr_member_routing_candidate_status;" sys);
+	
+	if [ -z "$result" ] || [ -z "$result2" ]; then
+		mysql -h 127.0.0.1 -P $master_port -u $DB_USER -p$DB_PASSWORD << EOF
 USE sys;
 
 DELIMITER $$
@@ -316,7 +470,7 @@ CREATE FUNCTION gr_member_in_primary_partition()
 RETURNS VARCHAR(3)
 DETERMINISTIC
 BEGIN
-	RETURN (SELECT IF( MEMBER_STATE='ONLINE' AND ((SELECT COUNT(*) FROM
+RETURN (SELECT IF( MEMBER_STATE='ONLINE' AND ((SELECT COUNT(*) FROM
 performance_schema.replication_group_members WHERE MEMBER_STATE != 'ONLINE') >=
 ((SELECT COUNT(*) FROM performance_schema.replication_group_members)/2) = 0),
 'YES', 'NO' ) FROM performance_schema.replication_group_members JOIN
@@ -336,29 +490,44 @@ where rgms.MEMBER_ID=(select gv.VARIABLE_VALUE
 
 DELIMITER ;
 EOF
-	
-	mysql -h 127.0.0.1 -P $MGR_PRIMARY_PORT -u $DB_USER -p$DB_PASSWORD << EOF
-CREATE USER '$MONITOR_USER'@'$MONITOR_HOST' identified BY '$MONITOR_PASSWORD';
-GRANT replication client ON *.* TO '$MONITOR_USER'@'$MONITOR_HOST';
-GRANT SELECT ON sys.* TO '$MONITOR_USER'@'$MONITOR_HOST';
-CREATE USER '$ADMIN_USER'@'$ADMIN_HOST' identified BY '$ADMIN_PASSWORD';
-GRANT ALL privileges ON *.* TO '$ADMIN_USER'@'$ADMIN_HOST' WITH GRANT option;
+	fi
+}
+
+# 创建用户(proxy.admin、proxy.monitor)
+function createProxyUser() {
+	master_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $master_name)
+	master_port=$(docker port $master_name | grep 3306 | awk '{print $3}' | cut -d ":" -f 2)
+	gateway=$(docker network inspect $NETWORK | jq -r '.[0].IPAM.Config.[0].Gateway')
+	monitor_host=$(echo $gateway | sed 's/\.1$/\.%/g')
+		
+	mysql -h 127.0.0.1 -P $master_port -u $DB_USER -p$DB_PASSWORD << EOF
+CREATE USER '$MONITOR_USER'@'$monitor_host' identified BY '$MONITOR_PASSWORD';
+GRANT replication client ON *.* TO '$MONITOR_USER'@'$monitor_host';
+GRANT SELECT ON sys.* TO '$MONITOR_USER'@'$monitor_host';
+CREATE USER '$ADMIN_USER'@'%' identified BY '$ADMIN_PASSWORD';
+GRANT ALL privileges ON *.* TO '$ADMIN_USER'@'%' WITH GRANT option;
 FLUSH PRIVILEGES;
 EOF
 }
 
 # 读写分离
 function readWriteSeparation() {
+	
+	# Run the command and store the output in a variable
+	output=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -q --filter "name=mysql") | sort)
+	
+	if [ ! -n "$output" ]; then
+		echo "Output is empty"
+		exit 0;
+	fi
+	
+	# Split the output into lines
+	IFS=$'\n' read -rd '' -a lines <<<"$output"
 		
-	mysql -h 127.0.0.1 -P $PROXYSQL_PORT -u $PROXYSQL_ADMIN -p$PROXYSQL_ADMIN_PASSWORD --prompt "ProxySQL Admin>" << EOF
+	mysql -h 127.0.0.1 -P ${PROXYSQL_1[0]} -u $PROXYSQL_ADMIN_USER -p$PROXYSQL_ADMIN_PASSWORD --prompt "ProxySQL Admin>" << EOF
 
--- INSERT INTO mysql_replication_hostgroups (writer_hostgroup, reader_hostgroup, check_type, comment)
--- values (10, 20, 'read_only', 'proxy');
--- load mysql servers to runtime;
--- save mysql servers to disk;
-
-INSERT INTO mysql_servers (hostgroup_id, hostname, port) 
-values(10, '${HOST_LINES[0]}', 3306), (20, '${HOST_LINES[1]}', 3306), (20, '${HOST_LINES[2]}', 3306);
+INSERT INTO mysql_servers (hostgroup_id, hostname, port)
+values(10, '${lines[0]}', 3306), (30, '${lines[1]}', 3306), (30, '${lines[2]}', 3306);
 load mysql servers to runtime;
 save mysql servers to disk;
 
@@ -373,53 +542,45 @@ load mysql users to runtime;
 save mysql users to disk;
 
 INSERT INTO mysql_query_rules (rule_id, active, match_pattern, destination_hostgroup, apply) 
-values(1, 1, '^select', 20, 1),(2, 1, '^select.*for update$', 10, 1);
+values(1, 1, '^select.*for update$', 10, 1),(2, 1, '^select', 30, 1);
 load mysql query rules to runtime;
 save mysql query rules to disk;
 
 EOF
 }
 
-# 重置密码
-function resetPassword() {
-	mysql -h 127.0.0.1 -P $MGR_PRIMARY_PORT -u$DB_USER -p$DB_PASSWORD << EOF
-ALTER USER 'root'@'localhost' IDENTIFIED BY '$DB_NEW_PASSWORD';
-ALTER USER 'root'@'%' IDENTIFIED BY '$DB_NEW_PASSWORD';
-FLUSH PRIVILEGES;
-EOF
+# 打印logo
+function logo()
+{
+	color="$(tput setaf 6)"
+	normal="$(tput sgr0)"
+	printf "${color}"
+	echo '  _____  ____ _   ____   ____ _   _____   __  __ ' 
+	echo ' / ___/ / __ `/  / __ \ / __ `/  / ___/  / / / / '
+	echo '/ /__  / /_/ /  / / / // /_/ /  / /     / /_/ /  '
+	echo '\___/  \__,_/  /_/ /_/ \__,_/  /_/      \__, /   '
+	echo '                                       /____/   ...is now finished!'
+	echo ''
+	echo 'Just enjoy it!'
+	echo 'p.s. Follow me at https://github.com/hahapigs/canary'
+	echo ''
+	printf "${normal}"
 }
 
 # main
 function main() {
-	choiceProxySql
-	
-	getProxyServers
-	
-	# 更改 proxysql.cnf
-	for index in "${!PROXYSQL_DIRS[@]}"; do
-		writeProxyConf ${PROXYSQL_DIRS[index]}
-	done
-	
-	# 删除 proxysql.db
-	for container_name in "${CONTAINERS[@]:3}"; do
-		docker exec $container_name rm $PROXYSQL_DATA_FILE
-	done
-	
-	printf "\nStopping \`proxsql\`...(might take a while)\n"
-	docker restart `docker ps -a | grep proxysql | awk -F " " '{print $1}'` &> /dev/null
-	sleep 5
-	printf "${BLUE}===>${NC}${BOLD} Successfully stopped \`proxsql\`!${NC}\n"
-	printf "${BLUE}===>${NC}${BOLD} Successfully started \`proxsql\`!${NC}\n"
-	
-	# getPrimaryPort
-	choiceMgr
+	writeProxySqlCnf 
+	createProxySql
+	if [ ${#CONTAINERS[@]} -gt 1 ]; then
+		writeClusterCnf
+		removeProxySqlData
+		restartProxySql
+	fi
+	choiceMySqlMaster
+	choiceReplicationModel
 	createProxyUser
-	
-	
-	getGroupSeeds
 	readWriteSeparation
-	
-	# resetPassword
+	logo
 }
 
 ########################## main #########################

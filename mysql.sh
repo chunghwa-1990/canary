@@ -13,6 +13,7 @@ MYSQL_HOME="$HOME/mysql"
 # 管理员用户名、密码
 DB_USER="root"
 DB_PASSWORD="123456"
+DB_NEW_PASSWORD="Pass!234"
 # 主从复制用户名、密码
 REPLICATION_USER="replicaion.user"
 REPLICATION_PASSWORD="123456"
@@ -24,7 +25,6 @@ whitelist=""
 master_ip=""
 master_port=""
 master_name=""
-
 
 # 字母表
 ALPHABET=("A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z")
@@ -96,10 +96,10 @@ function checkNetwork() {
             if [ "$choice" == "Y"  ] || [ "$choice" == "y" ]; then
                 docker network rm $NETWORK &> /dev/null
                 docker network create $NETWORK &> /dev/null
-                break 
+                break
             elif [ "$choice" == "N"  ] || [ "$choice" == "n" ]; then
                 echo "Continuing to use the existing $NETWORK network"
-                break 
+                break
             else
                 echo "Invalid choice"
             fi
@@ -126,6 +126,12 @@ function choiceDeploy() {
         eval "${option}=${architecture[index]}"
     done
     
+    # Prompt the user to choose from A, B, or C
+    # echo "Please choose from the following options:"
+    # echo "A: $A"
+    # echo "B: $B"
+    # echo "C: $C"
+    
     flag=0
     while [ $flag -ne 1 ]; do
         # User selection
@@ -149,11 +155,13 @@ function choiceDeploy() {
 # standalone
 function standalone() {
     createMySql ${CONTAINERS[@]:0:1}
+    resetPassword ${PORTS[0]}
 }
 
 # cluster
 function cluster() {
     choiceFramework
+    resetPassword $master_port
 }
 
 # 选择框架
@@ -171,11 +179,16 @@ function choiceFramework() {
         eval "${option}=${frameworks[index]}"
     done
     
+    # Prompt the user to choose from A or B
+    # echo "Please choose from the following options:"
+    # echo "A: $A"
+    # echo "B: $B"
+    
+    framework=""
     while [ -z "$framework" ]; do
         # User selection
         read -p "Enter your choice (A or B): " choice
         
-        framework=""
         # Check user choice and display the selected line
         case $choice in
             A | a)
@@ -184,12 +197,14 @@ function choiceFramework() {
                 writeMgnCnf
                 restarMySql
                 startGroupReplication
+                framework=$A
             ;;
             B | b)
                 choiceMaster
                 writeMySqlCnf
                 createMySql ${CONTAINERS[@]}
                 startReplication
+                framework=$B
             ;;
             *) echo "Invalid choice";;
         esac
@@ -211,6 +226,12 @@ function choiceMaster() {
         eval "${option}=${containers[index]}"
     done
     
+    # Prompt the user to choose from A, B, or C
+    # echo "Please choose from the following options:"
+    # echo "A: $A"
+    # echo "B: $B"
+    # echo "C: $C"
+    
     while [ -z "$master_name" ]; do
         # User selection
         read -p "Enter your choice (A、B or C): " choice
@@ -231,8 +252,9 @@ function choiceMaster() {
     done
 }
 
-# MGR GROUP
+# MGR group
 function getGroupSeeds() {
+    
     # Run the command and store the output in a variable
     output=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -q --filter "name=mysql") | sort)
     
@@ -244,11 +266,11 @@ function getGroupSeeds() {
     # Split the output into lines
     IFS=$'\n' read -rd '' -a lines <<<"$output"
     # 数量
-    number=${#lines[@]}
+    number=${#containers[@]}
     # labels A, B, C
     options=(${ALPHABET[@]:0:$number})
     
-    # Loop through the lines and assign them to options A, B, C
+    # Loop through the containers and assign them to options A, B, C
     for index in ${!options[@]}; do
         option=${options[index]}
         eval "${option}=${lines[index]}"
@@ -262,10 +284,10 @@ function getGroupSeeds() {
 # MySQL 组复制配置
 function writeMgnCnf() {
     getGroupSeeds
-    for index in "${!CONTAINERS[@]}"; do
+    for index in ${!CONTAINERS[@]}; do
         local_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${CONTAINERS[index]})
         mkdir -p $MYSQL_HOME/${CONTAINERS[index]}/conf
-        cat << EOF >> $MYSQL_HOME/${CONTAINERS[index]}/conf/my.cnf
+        cat << EOF > $MYSQL_HOME/${CONTAINERS[index]}/conf/my.cnf
 [mysqld]
 server-id = $((index+1))
 # 启用二进制日志
@@ -314,10 +336,10 @@ EOF
 
 # MySQL 主从复制配置
 function writeMySqlCnf() {
-    for index in "${!CONTAINERS[@]}"; do
+    for index in ${!CONTAINERS[@]}; do
         mkdir -p $MYSQL_HOME/${CONTAINERS[index]}/conf
         if [ "${CONTAINERS[index]}" == "$master_name" ]; then
-            cat << EOF >> $MYSQL_HOME/${CONTAINERS[index]}/conf/my.cnf
+            cat << EOF > $MYSQL_HOME/${CONTAINERS[index]}/conf/my.cnf
 [mysqld]
 server-id = $((index+1))
 # 启用二进制日志
@@ -326,7 +348,7 @@ log_bin = mysql-bin
 binlog_format = ROW
 EOF
         else
-            cat << EOF >> $MYSQL_HOME/${CONTAINERS[$index]}/conf/my.cnf
+            cat << EOF > $MYSQL_HOME/${CONTAINERS[$index]}/conf/my.cnf
 [mysqld]
 server-id = $((index+1))
 # 启用二进制日志
@@ -349,12 +371,10 @@ function createMySql() {
     local containers=(${@})
     
     echo "构建进程："
-    for index in "${!containers[@]}"; do
+    for index in ${!containers[@]}; do
         container_home=$MYSQL_HOME/${containers[index]}
-        if [ ! -d "$container_home/conf" ]; then
-            mkdir -p $container_home/conf
-        fi
-    
+        
+        mkdir -p $container_home/conf
         docker run \
             -itd \
             --name ${containers[index]} \
@@ -371,6 +391,7 @@ function createMySql() {
             
         progress ${containers[index]}
         isStart ${containers[index]}
+        sleep 2
         isValid ${containers[index]} ${PORTS[index]}
     done
 }
@@ -392,6 +413,7 @@ function startGroupReplication() {
     gateway=$(docker network inspect $NETWORK | jq -r '.[0].IPAM.Config.[0].Gateway')
     replication_host=$(echo $gateway | sed 's/\.1$/\.%/g')
     
+    echo ""
     mysql -h 127.0.0.1 -P $master_port -u$DB_USER -p$DB_PASSWORD << EOF
 SET session sql_log_bin = 0;
 CREATE USER '$REPLICATION_USER'@'$replication_host' IDENTIFIED WITH mysql_native_password BY '$REPLICATION_PASSWORD';
@@ -445,6 +467,30 @@ EOF
         fi
         
     done
+}
+
+# 重置密码
+function resetPassword() {
+    local port=$1
+    flag=0
+    while [ $flag -ne 1 ]; do
+        echo ""
+        read -p "Do you want to reset the root password?（Y/N）" choice
+        if [ "$choice" == "Y"  ] || [ "$choice" == "y" ]; then
+            mysql -h 127.0.0.1 -P $port -u $DB_USER -p$DB_PASSWORD << EOF
+ALTER USER 'root'@'localhost' IDENTIFIED BY '$DB_NEW_PASSWORD';
+ALTER USER 'root'@'%' IDENTIFIED BY '$DB_NEW_PASSWORD';
+FLUSH PRIVILEGES;
+EOF
+            flag=1
+        elif [ "$choice" == "N"  ] || [ "$choice" == "n" ]; then
+            flag=1
+        else
+            echo "Invalid choice. Please enter 'Y' or 'N'"
+        fi
+    done
+    
+    
 }
 
 # 打印logo
