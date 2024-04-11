@@ -347,7 +347,6 @@ function choiceReplicationModel() {
 			;;
 			B | b)
 				groupReplication
-				# createView
 				model=$B
 			;;
 			*) echo "Invalid choice";;
@@ -359,7 +358,7 @@ function choiceReplicationModel() {
 function masterSlaveReplication() {
 	mysql -h 127.0.0.1 -P ${PROXYSQL_1[0]} -u $PROXYSQL_ADMIN_USER -p$PROXYSQL_ADMIN_PASSWORD --prompt "ProxySQL Admin>" << EOF
 INSERT INTO mysql_replication_hostgroups (writer_hostgroup, reader_hostgroup, check_type, COMMENT)
-values(10, 20, 'read_only', 'proxy');
+values(10, 30, 'read_only', 'proxy');
 load mysql servers to runtime;
 save mysql servers to disk;
 EOF
@@ -374,6 +373,7 @@ save mysql servers to disk;
 EOF
 }
 
+# 创建视图
 function createView() {
 	master_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $master_name)
 	master_port=$(docker port $master_name | grep 3306 | awk '{print $3}' | cut -d ":" -f 2)
@@ -455,11 +455,7 @@ sys.gr_applier_queue_length() as transactions_behind, Count_Transactions_in_queu
 DELIMITER;
 EOF
 	
-	result1 = $(mysql -h 127.0.0.1 -P $master_port -u $DB_USER -p$DB_PASSWORD -e "select gr_member_in_primary_partition();" sys);
-	result2 = $(mysql -h 127.0.0.1 -P $master_port -u $DB_USER -p$DB_PASSWORD -e "select * from sys.gr_member_routing_candidate_status;" sys);
-	
-	if [ -z "$result" ] || [ -z "$result2" ]; then
-		mysql -h 127.0.0.1 -P $master_port -u $DB_USER -p$DB_PASSWORD << EOF
+	mysql -h 127.0.0.1 -P $master_port -u $DB_USER -p$DB_PASSWORD << EOF
 USE sys;
 
 DELIMITER $$
@@ -488,9 +484,8 @@ from performance_schema.replication_group_member_stats rgms
 where rgms.MEMBER_ID=(select gv.VARIABLE_VALUE 
 	from `performance_schema`.global_variables gv where gv.VARIABLE_NAME='server_uuid');$$
 
-DELIMITER ;
+DELIMITER;
 EOF
-	fi
 }
 
 # 创建用户(proxy.admin、proxy.monitor)
@@ -580,6 +575,8 @@ function main() {
 	choiceReplicationModel
 	createProxyUser
 	readWriteSeparation
+	# 创建视图，如果脚本创建失败，请手动执行
+	createView
 	logo
 }
 
