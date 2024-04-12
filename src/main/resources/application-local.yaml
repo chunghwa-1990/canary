@@ -1,8 +1,8 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/canary?characterEncoding=utf8&useLegacyDatetimeCode=false&serverTimezone=GMT%2b8
-    username: root
+    url: jdbc:mysql://127.0.0.1:16033/canary?characterEncoding=utf8&useLegacyDatetimeCode=false&serverTimezone=GMT%2b8
+    username: proxy.admin
     password: Pass!234
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
