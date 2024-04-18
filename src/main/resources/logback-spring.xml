@@ -177,7 +177,7 @@
 
 
     <!-- 生产环境:输出到文件 -->
-    <springProfile name="pro">
+    <springProfile name="pro | standalone | cluster">
         <logger name="com.example.canary" level="INFO" additivity="false">
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="ALL_FILE" />

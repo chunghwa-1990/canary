@@ -47,7 +47,7 @@ logging:
   file:
     path: /app/${spring.application.name}/logs
   level:
-    com.example.canary: debug
+    com.example.canary: info
 
 task:
   scheduling:

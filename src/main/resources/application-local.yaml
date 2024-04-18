@@ -40,12 +40,12 @@ spring:
           min-idle: 5
   servlet:
     multipart:
-      location: ${user.home}/Desktop/${spring.application.name}/medias
+      location: ${user.home}/${spring.application.name}/medias
 
 logging:
   config: classpath:logback-spring.xml
   file:
-    path: ${user.home}/Desktop/${spring.application.name}/logs
+    path: ${user.home}/${spring.application.name}/logs
   level:
     com.example.canary: debug
 
