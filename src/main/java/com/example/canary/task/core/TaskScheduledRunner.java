@@ -23,8 +23,8 @@ import java.util.List;
  */
 @Slf4j
 @Component
-@ConditionalOnProperty(value = "task.auto-execute")
-public class ScheduledTaskRunner implements ApplicationRunner {
+@ConditionalOnProperty(value = "task.scheduling.enabled", havingValue = "true")
+public class TaskScheduledRunner implements ApplicationRunner {
 
     @Autowired
     private CronTaskRegistrar cronTaskRegistrar;
@@ -38,7 +38,7 @@ public class ScheduledTaskRunner implements ApplicationRunner {
     private void registerCronTask() {
 
         // clear
-        cronTaskRegistrar.getScheduledTaskHolderMap().clear();
+        cronTaskRegistrar.getTaskScheduledHolderMap().clear();
 
         // dynamic task
         List<TaskPO> tasks = taskRepository.listEnableTask();
@@ -67,8 +67,8 @@ public class ScheduledTaskRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         log.info("任务调度器开始执行...");
         this.registerCronTask();
-        if (!CollectionUtils.isEmpty(cronTaskRegistrar.getScheduledTaskHolderMap())) {
-            cronTaskRegistrar.getScheduledTaskHolderMap().forEach((k, v) ->
+        if (!CollectionUtils.isEmpty(cronTaskRegistrar.getTaskScheduledHolderMap())) {
+            cronTaskRegistrar.getTaskScheduledHolderMap().forEach((k, v) ->
                     log.info("register taskId {}, taskName {} complete, cron expression {}",
                             k, v.getTask().getTaskName(), v.getTask().getCornExpression()));
         }

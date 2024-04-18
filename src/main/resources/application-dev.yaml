@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:16033/canary?characterEncoding=utf8&useLegacyDatetimeCode=false&serverTimezone=GMT%2b8
+    url: jdbc:mysql://172.24.0.5:6033/canary?characterEncoding=utf8&useLegacyDatetimeCode=false&serverTimezone=GMT%2b8
     username: proxy.admin
     password: Pass!234
     type: com.zaxxer.hikari.HikariDataSource
@@ -22,8 +22,6 @@ spring:
       connection-test-query: SELECT 1
   data:
     redis:
-      host: localhost
-      port: 6379
       password:
       database: 0
       # 连接超时时长（毫秒）
@@ -38,25 +36,39 @@ spring:
           max-idle: 10
           # 连接池中的最小空闲连接
           min-idle: 5
+      sentinel:
+        master: mymaster
+        nodes: 172.24.0.10:26379,172.24.0.11:26379,172.24.0.12:26379
   servlet:
     multipart:
-      location: /Users/zhaohongliang/Desktop
+      location: /app/${spring.application.name}/medias
 
 logging:
   config: classpath:logback-spring.xml
   file:
-    path: /Users/zhaohongliang/Desktop/log
+    path: /app/${spring.application.name}/logs
   level:
     com.example.canary: debug
 
 task:
-  # 是否开启 scheduled
-  auto-execute: false
-  monitor:
-    # 是否开启监测任务
+  scheduling:
+    # 是否开启 scheduled
     enabled: false
-    # 监测任务执行频率
-    cron: 0/5 * * * * ?
+    # 线程池名称前缀
+    thread-name-prefix: TaskExecutor-
+    pool:
+      # 线程池大小,默认为 1
+      size: 20
+    shutdown:
+      # 应用关闭时，是否等待任务执行完成，默认为 false
+      await-termination: true
+      # 等待任务完成的最大时长，默认为 0, 单位为秒
+      await-termination-period: 60s
+    monitor:
+      # 是否开启监测任务
+      enabled: false
+      # 监测任务执行频率
+      cron: 0/5 * * * * ?
 
 token:
   secret: canary

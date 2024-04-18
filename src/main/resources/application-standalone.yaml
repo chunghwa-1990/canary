@@ -40,19 +40,19 @@ spring:
           min-idle: 5
   servlet:
     multipart:
-      location: ${user.home}/Desktop/${spring.application.name}/medias
+      location: /app/${spring.application.name}/medias
 
 logging:
   config: classpath:logback-spring.xml
   file:
-    path: ${user.home}/Desktop/${spring.application.name}/logs
+    path: /app/${spring.application.name}/logs
   level:
     com.example.canary: debug
 
 task:
   scheduling:
     # 是否开启 scheduled
-    enabled: false
+    enabled: true
     # 线程池名称前缀
     thread-name-prefix: TaskExecutor-
     pool:
@@ -65,7 +65,7 @@ task:
       await-termination-period: 60s
     monitor:
       # 是否开启监测任务
-      enabled: false
+      enabled: true
       # 监测任务执行频率
       cron: 0/5 * * * * ?
 

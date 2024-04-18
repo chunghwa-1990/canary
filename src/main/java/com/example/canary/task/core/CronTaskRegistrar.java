@@ -23,10 +23,10 @@ public class CronTaskRegistrar {
     /**
      * business task
      */
-    private final Map<String, ScheduledTaskHolder> scheduledTaskHolderMap = new ConcurrentHashMap<>(16);
+    private final Map<String, TaskScheduledHolder> taskScheduledHolderMap = new ConcurrentHashMap<>(16);
 
-    public Map<String, ScheduledTaskHolder> getScheduledTaskHolderMap() {
-        return scheduledTaskHolderMap;
+    public Map<String, TaskScheduledHolder> getTaskScheduledHolderMap() {
+        return taskScheduledHolderMap;
     }
 
     @Autowired
@@ -50,8 +50,8 @@ public class CronTaskRegistrar {
      */
     public void addCronTask(String taskId, AbstractTask task, String cronExpression) {
         ScheduledFuture<?> scheduledFuture = taskScheduler.schedule(task, new CronTrigger(cronExpression));
-        ScheduledTaskHolder holder = new ScheduledTaskHolder(task, scheduledFuture);
-        scheduledTaskHolderMap.put(taskId, holder);
+        TaskScheduledHolder holder = new TaskScheduledHolder(task, scheduledFuture);
+        taskScheduledHolderMap.put(taskId, holder);
     }
 
     /**
@@ -60,7 +60,7 @@ public class CronTaskRegistrar {
      * @param taskId
      */
     public void removeCronTask(String taskId) {
-        ScheduledTaskHolder holder = scheduledTaskHolderMap.remove(taskId);
+        TaskScheduledHolder holder = taskScheduledHolderMap.remove(taskId);
         if (holder != null) {
             if (holder.isCancelled()) {
                 return;

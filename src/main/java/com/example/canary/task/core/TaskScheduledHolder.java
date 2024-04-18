@@ -11,7 +11,7 @@ import java.util.concurrent.ScheduledFuture;
  * @author zhaohongliang
  */
 @Data
-public class ScheduledTaskHolder {
+public class TaskScheduledHolder {
 
     /**
      * task
@@ -20,10 +20,10 @@ public class ScheduledTaskHolder {
 
     private ScheduledFuture<?> scheduledFuture;
 
-    public ScheduledTaskHolder() {
+    public TaskScheduledHolder() {
     }
 
-    public ScheduledTaskHolder(AbstractTask task, ScheduledFuture<?> scheduledFuture) {
+    public TaskScheduledHolder(AbstractTask task, ScheduledFuture<?> scheduledFuture) {
         this.task = task;
         this.scheduledFuture = scheduledFuture;
     }

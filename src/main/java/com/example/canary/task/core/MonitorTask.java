@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-@ConditionalOnProperty(value = "task.monitor.enabled")
+@ConditionalOnProperty(value = "task.scheduling.monitor.enabled", havingValue = "true")
 public class MonitorTask {
 
     @Autowired
@@ -33,11 +33,11 @@ public class MonitorTask {
     private CronTaskRegistrar cronTaskRegistrar;
 
     @Async
-    @Scheduled(cron = "${task.monitor.cron}")
+    @Scheduled(cron = "${task.scheduling.monitor.cron}")
     protected void execute() {
         List<TaskPO> tasks = taskRepository.listEnableTask();
         Set<String> taskIds = tasks.stream().map(TaskPO::getId).collect(Collectors.toSet());
-        Map<String, ScheduledTaskHolder> scheduledTaskHolderMap = cronTaskRegistrar.getScheduledTaskHolderMap();
+        Map<String, TaskScheduledHolder> scheduledTaskHolderMap = cronTaskRegistrar.getTaskScheduledHolderMap();
         if (CollectionUtils.isEmpty(scheduledTaskHolderMap)) {
             tasks.forEach(task -> log.warn("taskId {}, taskName {} has stopped", task.getId(), task.getName()));
         } else {

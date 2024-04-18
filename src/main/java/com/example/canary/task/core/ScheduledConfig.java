@@ -2,8 +2,7 @@ package com.example.canary.task.core;
 
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.task.TaskSchedulingProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -36,11 +35,10 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 @EnableAsync
 @Configuration
 @EnableScheduling
-@EnableConfigurationProperties({ TaskProperties.class })
 public class ScheduledConfig implements SchedulingConfigurer {
 
     @Resource
-    private TaskSchedulingProperties taskSchedulingProperties;
+    private TaskSchedulerProperties taskSchedulerProperties;
 
     /**
      * 定时任务线程池
@@ -48,12 +46,13 @@ public class ScheduledConfig implements SchedulingConfigurer {
      * @return
      */
     @Bean
+    @ConditionalOnMissingBean
     public ThreadPoolTaskScheduler taskScheduler() {
         ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
-        taskScheduler.setPoolSize(taskSchedulingProperties.getPool().getSize());
-        taskScheduler.setThreadNamePrefix(taskSchedulingProperties.getThreadNamePrefix());
-        taskScheduler.setWaitForTasksToCompleteOnShutdown(taskSchedulingProperties.getShutdown().isAwaitTermination());
-        taskScheduler.setAwaitTerminationSeconds((int) taskSchedulingProperties.getShutdown().getAwaitTerminationPeriod().toSeconds());
+        taskScheduler.setPoolSize(taskSchedulerProperties.getPool().getSize());
+        taskScheduler.setThreadNamePrefix(taskSchedulerProperties.getThreadNamePrefix());
+        taskScheduler.setWaitForTasksToCompleteOnShutdown(taskSchedulerProperties.getShutdown().isAwaitTermination());
+        taskScheduler.setAwaitTerminationSeconds((int) taskSchedulerProperties.getShutdown().getAwaitTerminationPeriod().toSeconds());
         return taskScheduler;
     }
 
