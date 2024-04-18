@@ -46,7 +46,7 @@ spring:
 logging:
   config: classpath:logback-spring.xml
   file:
-    path: /app/${spring.application.name}/Desktop/logs
+    path: /app/${spring.application.name}/logs
   level:
     com.example.canary: info
 

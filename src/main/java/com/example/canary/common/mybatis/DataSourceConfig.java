@@ -28,7 +28,7 @@ import java.util.Map;
  * @since 1.0
  */
 @Configuration
-@ConditionalOnProperty(value = "spring.datasource.cluster.enabled")
+@ConditionalOnProperty(value = "spring.datasource.cluster.enabled", havingValue = "true")
 @EnableConfigurationProperties
 public class DataSourceConfig {
 
