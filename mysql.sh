@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ###################### docker ######################
-HOME="/Users/zhaohongliang/DockerData"
+DOCKER_HOME="$HOME/DockerData"
 # network
 NETWORK="canary-net"
 # containers
@@ -9,7 +9,7 @@ CONTAINERS=("mysql-1" "mysql-2" "mysql-3")
 PORTS=("3306" "3307" "3308")
 
 ###################### mysql #######################
-MYSQL_HOME="$HOME/mysql"
+MYSQL_HOME="$DOCKER_HOME/mysql"
 # 管理员用户名、密码
 DB_USER="root"
 DB_PASSWORD="123456"
@@ -45,7 +45,7 @@ function progress() {
     local b=' '
     local max=100
     local continer_name=$1
-    
+
     while [ $i -le $max  ]; do
         printf "${continer_name}:[%-100s] %d%%\r" $b $i
         sleep 0.1
@@ -58,7 +58,7 @@ function progress() {
 # 校验数据库是否启动
 function isStart() {
     local continer_name=$1
-    
+
     while ! docker ps | grep ${CONTAINERS[$index]}; do
         for i in $(seq 0 3); do
             printf "\r${continer_name} 正在启动...${SPINNER:$i:1}"
@@ -72,7 +72,7 @@ function isStart() {
 function isValid() {
     local continer_name=$1
     local port=$2
-    
+
     nc -z -v -w 3 127.0.0.1 ${port}
     if [ $? -eq 0  ]; then
         printf "${CONTAINERS[$index]} connection successful!\n"
@@ -117,7 +117,7 @@ function choiceDeploy() {
     options=(${ALPHABET[@]:0:2})
     # 架构
     architecture=("standalone" "cluster")
-    
+
     # Prompt the user to choose from A or B
     echo "部署模式："
     for index in ${!options[@]}; do
@@ -125,18 +125,18 @@ function choiceDeploy() {
         option=${options[index]}
         eval "${option}=${architecture[index]}"
     done
-    
+
     # Prompt the user to choose from A, B, or C
     # echo "Please choose from the following options:"
     # echo "A: $A"
     # echo "B: $B"
     # echo "C: $C"
-    
+
     flag=0
     while [ $flag -ne 1 ]; do
         # User selection
         read -p "Enter your choice (A or B): " choice
-        
+
         # Check user choice and display the selected line
         case $choice in
             A | a)
@@ -170,7 +170,7 @@ function choiceFramework() {
     options=(${ALPHABET[@]:0:2})
     # framework
     frameworks=("MGR" "DEFAULT")
-    
+
     # Prompt the user to choose from A or B
     echo "MySql-Replicaion Framework:"
     for index in ${!options[@]}; do
@@ -178,17 +178,17 @@ function choiceFramework() {
         option=${options[index]}
         eval "${option}=${frameworks[index]}"
     done
-    
+
     # Prompt the user to choose from A or B
     # echo "Please choose from the following options:"
     # echo "A: $A"
     # echo "B: $B"
-    
+
     framework=""
     while [ -z "$framework" ]; do
         # User selection
         read -p "Enter your choice (A or B): " choice
-        
+
         # Check user choice and display the selected line
         case $choice in
             A | a)
@@ -225,17 +225,17 @@ function choiceMaster() {
         option=${options[index]}
         eval "${option}=${containers[index]}"
     done
-    
+
     # Prompt the user to choose from A, B, or C
     # echo "Please choose from the following options:"
     # echo "A: $A"
     # echo "B: $B"
     # echo "C: $C"
-    
+
     while [ -z "$master_name" ]; do
         # User selection
         read -p "Enter your choice (A、B or C): " choice
-        
+
         # Check user choice and display the selected line
         case $choice in
             A | a)
@@ -254,28 +254,28 @@ function choiceMaster() {
 
 # MGR group
 function getGroupSeeds() {
-    
+
     # Run the command and store the output in a variable
     output=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -q --filter "name=mysql") | sort)
-    
+
     if [ ! -n "$output" ]; then
         echo "Output is empty"
         exit 0;
     fi
-    
+
     # Split the output into lines
     IFS=$'\n' read -rd '' -a lines <<<"$output"
     # 数量
     number=${#containers[@]}
     # labels A, B, C
     options=(${ALPHABET[@]:0:$number})
-    
+
     # Loop through the containers and assign them to options A, B, C
     for index in ${!options[@]}; do
         option=${options[index]}
         eval "${option}=${lines[index]}"
     done
-    
+
     group_seeds="$A:$MGR_PORT,$B:$MGR_PORT,$C:$MGR_PORT"
     # whitelist="$A,$B,$C"
     whitelist=$(docker network inspect $NETWORK | jq -r '.[0].IPAM.Config.[0].Subnet')
@@ -290,14 +290,32 @@ function writeMgnCnf() {
         cat << EOF > $MYSQL_HOME/${CONTAINERS[index]}/conf/my.cnf
 [mysqld]
 server-id = $((index+1))
-# 启用二进制日志
+# 启用二进制日志功能
 log_bin = mysql-bin
-# 将执行的二进制日志事件也记录到自己的二进制日志中，会增加从库写负载和二进制文件大小
-log_slave_updates = 1
-# 设置binlog格式 STATEMENT(同步SQL脚本) / ROW(同步行数据) / MIXED(混合同步)
+# 指定错误日志文件的路径
+log_error = "/var/log/mysql/error.log"
+# 指定二进制日志中记录的内容限制为行级别的更改
 binlog_format = ROW
-# 考虑到后期故障切换，增加slave的中继日志
-relay-log = relay-log-bin
+
+# 指定将告警信息写入错误日志 1:只记录错误信息 2:记录错误和警告信息 3:记录所有错误和警告信息 默认:3
+log_error_verbosity = 1
+
+# 指定数据文件的存储路径
+datadir="/var/lib/mysql"
+
+# 启用慢查询日志
+slow_query_log = 1
+# 指定查询执行时间超过多少秒才被记录到慢查询日志中（例如1表示超过1秒的查询）
+long_query_time = 1
+# 慢查询日志的输出方式为写入文件
+log_output = FILE
+# 指定慢查询日志文件的保存路径
+slow_query_log_file = /var/log/mysql/slow-query.log
+
+# 启用全局查询日志
+general_log = 1
+# 全局查询日志保存路径
+general_log_file = /var/log/mysql/general-query.log
 
 # 全局事务
 gtid_mode = ON
@@ -342,21 +360,66 @@ function writeMySqlCnf() {
             cat << EOF > $MYSQL_HOME/${CONTAINERS[index]}/conf/my.cnf
 [mysqld]
 server-id = $((index+1))
-# 启用二进制日志
+# 启用二进制日志功能
 log_bin = mysql-bin
-# 设置binlog格式 STATEMENT(同步SQL脚本) / ROW(同步行数据) / MIXED(混合同步)
+# 指定错误日志文件的路径
+log_error = "/var/log/mysql/error.log"
+# 指定二进制日志中记录的内容限制为行级别的更改
 binlog_format = ROW
+
+# 指定将告警信息写入错误日志 1:只记录错误信息 2:记录错误和警告信息 3:记录所有错误和警告信息 默认:3
+log_error_verbosity = 1
+
+# 指定数据文件的存储路径
+datadir="/var/lib/mysql"
+
+# 启用慢查询日志
+slow_query_log = 1
+# 指定查询执行时间超过多少秒才被记录到慢查询日志中（例如1表示超过1秒的查询）
+long_query_time = 1
+# 慢查询日志的输出方式为写入文件
+log_output = FILE
+# 指定慢查询日志文件的保存路径
+slow_query_log_file = /var/log/mysql/slow-query.log
+
+# 启用全局查询日志
+general_log = 1
+# 全局查询日志保存路径
+general_log_file = /var/log/mysql/general-query.log
 EOF
         else
             cat << EOF > $MYSQL_HOME/${CONTAINERS[$index]}/conf/my.cnf
 [mysqld]
 server-id = $((index+1))
-# 启用二进制日志
+# 启用二进制日志功能
 log_bin = mysql-bin
+# 指定错误日志文件的路径
+log_error = "/var/log/mysql/error.log"
+# 指定二进制日志中记录的内容限制为行级别的更改
+binlog_format = ROW
+
+# 指定将告警信息写入错误日志 1:只记录错误信息 2:记录错误和警告信息 3:记录所有错误和警告信息 默认:3
+log_error_verbosity = 1
+
+# 指定数据文件的存储路径
+datadir="/var/lib/mysql"
+
+# 启用慢查询日志
+slow_query_log = 1
+# 指定查询执行时间超过多少秒才被记录到慢查询日志中（例如1表示超过1秒的查询）
+long_query_time = 1
+# 慢查询日志的输出方式为写入文件
+log_output = FILE
+# 指定慢查询日志文件的保存路径
+slow_query_log_file = /var/log/mysql/slow-query.log
+
+# 启用全局查询日志
+general_log = 1
+# 全局查询日志保存路径
+general_log_file = /var/log/mysql/general-query.log
+
 # 将执行的二进制日志事件也记录到自己的二进制日志中，会增加从库写负载和二进制文件大小
 log_slave_updates = 1
-# 设置binlog格式 STATEMENT(同步SQL脚本) / ROW(同步行数据) / MIXED(混合同步)
-binlog_format = ROW
 # 考虑到后期故障切换，增加slave的中继日志
 relay-log = relay-log-bin
 # 0-读写 1-只读
@@ -369,11 +432,11 @@ EOF
 # 创建 mysql
 function createMySql() {
     local containers=(${@})
-    
+
     echo "构建进程："
     for index in ${!containers[@]}; do
         container_home=$MYSQL_HOME/${containers[index]}
-        
+
         mkdir -p $container_home/conf
         docker run \
             -itd \
@@ -381,7 +444,7 @@ function createMySql() {
             -p ${PORTS[index]}:3306 \
             -v $container_home/conf:/etc/mysql/conf.d \
             -v $container_home/data:/var/lib/mysql \
-            -v $container_home/log:/var/log/mysql \
+            -v $container_home/logs:/var/log/mysql \
             -v /etc/localtime:/etc/localtime \
             -e MYSQL_ROOT_PASSWORD=$DB_PASSWORD \
             --restart no \
