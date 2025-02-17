@@ -21,7 +21,8 @@ public interface SystemService {
 
     /**
      * logout
+     *
+     * @param token
      */
-    void logout();
-
+    void logout(String token);
 }

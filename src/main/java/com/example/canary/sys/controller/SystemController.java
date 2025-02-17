@@ -6,10 +6,7 @@ import com.example.canary.sys.entity.LoginVO;
 import com.example.canary.sys.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * system
@@ -43,10 +40,12 @@ public class SystemController {
 
     /**
      * logout
+     *
+     * @param token
      */
     @PostMapping("/logout")
-    public void logout() {
-        systemService.logout();
+    public void logout(@RequestHeader("token") String token) {
+        systemService.logout(token);
     }
 
 }

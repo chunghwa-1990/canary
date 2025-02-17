@@ -18,6 +18,11 @@ public class HeaderConstant {
     public static final String TOKEN = "token";
 
     /**
+     * deviceId
+     */
+    public static final String DEVICE_ID = "deviceId";
+
+    /**
      * version
      */
     public static final String API_VERSION = "api-version";

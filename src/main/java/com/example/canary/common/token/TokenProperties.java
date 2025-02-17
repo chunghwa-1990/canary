@@ -3,9 +3,9 @@ package com.example.canary.common.token;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
 import java.time.Duration;
-import java.util.Date;
 
 /**
  * token properties
@@ -15,17 +15,28 @@ import java.util.Date;
  */
 @Setter
 @Getter
+@Configuration
 @ConfigurationProperties(prefix = TokenProperties.PREFIX, ignoreUnknownFields = false)
 public class TokenProperties {
 
-    private TokenProperties() {}
+    // private TokenProperties() {}
 
     public static final String PREFIX = "token";
 
     /**
+     * 签发者
+     */
+    private String issuer;
+
+    /**
+     * 受众
+     */
+    private String[] audience;
+
+    /**
      * 密钥
      */
-    private String secret;
+    private String secretKey;
 
     /**
      * 过期时间, 默认: 7200000 毫秒
@@ -34,11 +45,8 @@ public class TokenProperties {
     private Duration timeout = Duration.ofMillis(7200000);
 
     /**
-     * Initialize a {@link TokenBuilder} with the state of this instance.
-     * @return a {@link TokenBuilder} initialized with the customizations defined on
-     * this instance
+     * token version
      */
-    public TokenBuilder initializeTokenBuilder() {
-        return TokenBuilder.create(this);
-    }
+    private Integer version = 1;
+
 }

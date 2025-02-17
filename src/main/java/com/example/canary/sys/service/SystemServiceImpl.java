@@ -1,6 +1,5 @@
 package com.example.canary.sys.service;
 
-import com.example.canary.common.context.CanaryContext;
 import com.example.canary.common.exception.BusinessException;
 import com.example.canary.common.redis.RedisService;
 import com.example.canary.common.token.TokenService;
@@ -10,11 +9,12 @@ import com.example.canary.sys.entity.UserPO;
 import com.example.canary.sys.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 
 /**
  * system
@@ -26,13 +26,15 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class SystemServiceImpl implements SystemService {
 
+    @Value("${token.timeout}")
+    private Duration timeout;
+
     private final UserRepository userRepository;
 
     private final TokenService tokenService;
 
     private final RedisService redisService;
 
-    @Autowired
     public SystemServiceImpl(UserRepository userRepository, TokenService tokenService, RedisService redisService) {
         this.userRepository = userRepository;
         this.tokenService = tokenService;
@@ -63,25 +65,23 @@ public class SystemServiceImpl implements SystemService {
 
         String token = null;
         try {
-            token = tokenService.createJwtToken(userPo);
+            // create jwt-token
+            token = tokenService.generateJwtToken(userPo);
         } catch (JsonProcessingException e) {
             throw new BusinessException("create token has error");
         }
 
-        // token key
-        String tokenKey = tokenService.createTokenKey(userPo.getId());
-        // redis
-        redisService.set(tokenKey, token, tokenService.getTimeout());
-        return new LoginVO(token, tokenService.getTimeout().getSeconds());
+        return new LoginVO(token, timeout.toSeconds());
     }
 
     /**
      * logout
+     *
+     * @param token
      */
     @Override
-    public void logout() {
-        String key = CanaryContext.getCurrentUser().getUserId();
-        redisService.delete(key);
+    public void logout(String token) {
+        tokenService.addToBlacklist(token);
     }
 
 }

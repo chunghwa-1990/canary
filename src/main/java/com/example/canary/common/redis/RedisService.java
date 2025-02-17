@@ -56,8 +56,8 @@ public class RedisService {
      * @param timeout
      * @return
      */
-    public void set(String key, Object value, long timeout) {
-        redisTemplate.opsForValue().set(key, value, timeout, TimeUnit.SECONDS);
+    public void set(String key, Object value, long timeout, TimeUnit timeUnit) {
+        redisTemplate.opsForValue().set(key, value, timeout, timeUnit);
     }
 
     /**

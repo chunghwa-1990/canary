@@ -70,5 +70,9 @@ task:
       cron: 0/5 * * * * ?
 
 token:
-  secret: canary
+  issuer: canary-app
+  audience: canary-app,cat-app
   timeout: 7200s
+  # wait-time: 10000ms
+  secret-key: w3yL2rmDQPRao1mLCI
+  version: 1

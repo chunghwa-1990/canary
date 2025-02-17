@@ -2,6 +2,7 @@ package com.example.canary.common.mybatis;
 
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.canary.util.StringUtil;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
@@ -68,7 +69,7 @@ public class BasePage<T extends Serializable> {
         BeanUtils.copyProperties(this, page);
         if (!CollectionUtils.isEmpty(orders)) {
             orders.forEach(item -> {
-                String column = com.example.canary.util.StringUtils.toUnderlineCase(item.getColumn());
+                String column = StringUtil.toUnderlineCase(item.getColumn());
                 item.setColumn(column);
             });
         }

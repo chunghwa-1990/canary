@@ -3,7 +3,6 @@ package com.example.canary.task.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.canary.common.context.SpringContext;
 import com.example.canary.common.exception.BusinessException;
-import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.task.entity.TaskAO;
 import com.example.canary.task.entity.TaskPO;
 import com.example.canary.task.entity.TaskQuery;
@@ -12,13 +11,12 @@ import com.example.canary.task.repository.TaskRepository;
 import com.example.canary.task.core.AbstractTask;
 import com.example.canary.task.core.BusinessTask;
 import com.example.canary.task.core.CronTaskRegistrar;
+import com.example.canary.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
-import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
  * 任务
@@ -100,7 +98,7 @@ public class TaskServiceImpl implements TaskService {
         Method method = null;
         try {
             Class<?> clazz = Class.forName(taskPo.getClassName());
-            String beanName = com.example.canary.util.StringUtils.toLowerCamelCase(clazz.getSimpleName());
+            String beanName = StringUtil.toLowerCamelCase(clazz.getSimpleName());
             object = SpringContext.getBean(beanName);
             method = clazz.getMethod(taskPo.getMethodName());
         } catch (ClassNotFoundException e) {
@@ -132,7 +130,7 @@ public class TaskServiceImpl implements TaskService {
         Method method = null;
         try {
             Class<?> clazz = Class.forName(taskPo.getClassName());
-            String beanName = com.example.canary.util.StringUtils.toLowerCamelCase(clazz.getSimpleName());
+            String beanName = StringUtil.toLowerCamelCase(clazz.getSimpleName());
             object = SpringContext.getBean(beanName);
             method = clazz.getMethod(taskPo.getMethodName());
         } catch (ClassNotFoundException e) {

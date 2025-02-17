@@ -3,7 +3,7 @@ package com.example.canary.task.core;
 import com.example.canary.common.context.SpringContext;
 import com.example.canary.task.entity.TaskPO;
 import com.example.canary.task.repository.TaskRepository;
-import com.example.canary.util.StringUtils;
+import com.example.canary.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -49,7 +49,7 @@ public class TaskScheduledRunner implements ApplicationRunner {
         tasks.forEach(taskPo -> {
             try {
                 Class<?> clazz = Class.forName(taskPo.getClassName());
-                String beanName = StringUtils.toLowerCamelCase(clazz.getSimpleName());
+                String beanName = StringUtil.toLowerCamelCase(clazz.getSimpleName());
                 Object object = SpringContext.getBean(beanName);
                 Method method = clazz.getMethod(taskPo.getMethodName());
                 AbstractTask task = new BusinessTask(taskPo.getName(), taskPo.getCronExpression(), object, method);

@@ -1,13 +1,13 @@
 package com.example.canary.file.service;
 
 import com.example.canary.common.exception.BusinessException;
-import com.example.canary.common.exception.ResultEntity;
 import com.example.canary.file.entity.FileAO;
 import com.example.canary.file.entity.FilePO;
 import com.example.canary.file.entity.FileVO;
 import com.example.canary.file.repository.FileRepository;
 import com.example.canary.util.DigesUtils;
 import com.example.canary.util.FileUtils;
+import com.example.canary.util.StringUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -23,7 +23,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.security.NoSuchAlgorithmException;
-import java.util.Optional;
 
 /**
  * 文件
@@ -66,7 +65,7 @@ public class FileServiceImpl implements FileService {
         // 文件后缀
         String fileSuffix = FileUtils.getFileSuffix(originalFilename);
         // 文件名
-        String fileName = com.example.canary.util.StringUtils.randomUUID()  + fileSuffix;
+        String fileName = StringUtil.randomUUID()  + fileSuffix;
         // 文件下载时用的 key
         String keyName = FileUtils.getKeyName(fileName);
         // 文件磁盘的存储路径

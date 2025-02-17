@@ -31,6 +31,16 @@ public class CurrentUser<T> {
     /**
      * 带参构造
      *
+     * @param userId
+     */
+    public CurrentUser(String userId) {
+        this.userId = userId;
+        this.data = null;
+    }
+
+    /**
+     * 带参构造
+     *
      * @param data
      */
     public CurrentUser(T data) {
